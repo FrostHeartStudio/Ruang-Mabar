@@ -5228,16 +5228,22 @@
 
         // ARCADE & LUCKY WHEEL
         const wheelPrizes = [
-            { id: 'keberuntungan', name: 'Hiasan Keberuntungan', label: 'Keberuntungan', chance: 5, color: '#ef4444', type: 'hiasan_nama' },
-            { id: 'terpilih', name: 'Hiasan Terpilih', label: 'Terpilih', chance: 10, color: '#38bdf8', type: 'hiasan_nama' },
-            { id: 'spesial_ungu', name: 'Hiasan Spesial Ungu (7 Hari)', label: 'Spesial Ungu', chance: 5, color: '#a855f7', type: 'hiasan_nama' },
-            { id: 'star_2', name: '+2 Star', label: '+2 Star', chance: 20, color: '#f59e0b', type: 'star', val: 2 },
-            { id: 'star_5', name: '+5 Star', label: '+5 Star', chance: 5, color: '#eab308', type: 'star', val: 5 },
-            { id: 'dm_20', name: 'Bonus 20 Diamond', label: '+20 Diamond', chance: 35, color: '#06b6d4', type: 'diamond', val: 20 },
-            { id: 'dm_50', name: 'Bonus 50 Diamond', label: '+50 Diamond', chance: 15, color: '#3b82f6', type: 'diamond', val: 50 },
-            { id: 'dm_100', name: 'Bonus 100 Diamond', label: '+100 Diamond', chance: 5, color: '#8b5cf6', type: 'diamond', val: 100 }
+            { id: "sunset_shiny", name: "Hiasan Sunset Shiny", label: "Sunset Shiny", chance: 2, color: "#F4434F", type: "hiasan_nama" },
+            { id: "relik_es", name: "Hiasan Relik ES", label: "Relik ES", chance: 1, color: "#F2C400", type: "hiasan_profil" },
+            { id: "cyber_circuit", name: "Hiasan Cyber Circuit", label: "Cyber Circuit", chance: 0.1, color: "#26B9E8", type: "hiasan_detail_profil" },
+            { id: "neon_matrix", name: "Hiasan Neon Matrix", label: "???", chance: 0.1, color: "#A94CEB", type: "hiasan_profil" },
+            { id: "dm_200", name: "-200 Diamond", label: "-200 Diamond", chance: 1, color: "#6858F5", type: "diamond", val: -200 },
+            { id: "dm_100", name: "Hadiah 100 Diamond", label: "+100 Diamond", chance: 5, color: "#8950F5", type: "diamond", val: 100 },
+            { id: "dm_250", name: "Hadiah 250 Diamond", label: "+250 Diamond", chance: 3, color: "#19C85A", type: "diamond", val: 250 },
+            { id: "dm_500", name: "Hadiah 500 Diamond", label: "+500 Diamond", chance: 1, color: "#FF990A", type: "diamond", val: 500 },
+            { id: "dm_1000", name: "HADIAH BESAR! 1000 Diamond", label: "+1000 Diamond", chance: 0.1, color: "#16B9A7", type: "diamond", val: 1000 },
+            { id: "star_10", name: "+10 Star", label: "+10 Star", chance: 2, color: "#4285F4", type: "star", val: 10 },
+            { id: "star_2", name: "+2 Star", label: "+2 Star", chance: 15, color: "#F59E0B", type: "star", val: 2 },
+            { id: "star_5", name: "+5 Star", label: "+5 Star", chance: 5, color: "#EAB900", type: "star", val: 5 },
+            { id: "star_2", name: "Kamu kalah -2 Star", label: "-2 Star", chance: 10, color: "#0DBA83", type: "star", val: -2 },
+            { id: "star_1", name: "Kamu Kalah -1 Star", label: "-1 Star", chance: 15, color: "#08B5CB", type: "star", val: -1}
         ];
-
+    
         let isSpinning = false;
         let currentWheelRotation = 0;
         const wheelStarUpdatePending = {};
