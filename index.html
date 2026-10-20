@@ -2364,6 +2364,38 @@
 @media (prefers-reduced-motion:reduce) {
  .profile-detail-frost::before,.profile-detail-emerald::before,.profile-detail-celestial::before { animation:none !important; }
 }
+
+/* Papan peringkat: tombol ikon saja, mengikuti gaya tab yang sudah ada. */
+.leaderboard-icon-tab { min-width:38px; height:32px; padding:0 10px !important; border-radius:8px !important; background:#2563eb !important; color:white !important; border:none !important; font-size:0.85rem !important; }
+.header-btn-group .leaderboard-icon-tab:hover { background:#1d4ed8 !important; }
+.header-btn-group .leaderboard-icon-tab { display:inline-flex; align-items:center; justify-content:center; }
+.information-icon-tab { min-width:38px; height:32px; padding:0 10px !important; border-radius:8px !important; background:#2563eb !important; color:white !important; border:none !important; font-size:0.95rem !important; display:inline-flex; align-items:center; justify-content:center; }
+.header-btn-group .information-icon-tab:hover { background:#1d4ed8 !important; }
+.leaderboard-shell { background:linear-gradient(145deg,#f8fafc,#eef2ff); border-color:#c7d2fe; }
+.leaderboard-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+.leaderboard-heading h2 { margin:0 0 4px; color:#1e1b4b; font-size:1.25rem; }
+.leaderboard-heading p { color:#64748b; font-size:.8rem; margin:0; }
+.leaderboard-refresh-mark { width:38px; height:38px; border-radius:12px; display:grid; place-items:center; background:#e0e7ff; color:#4338ca; font-size:1.5rem; }
+.leaderboard-category-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.leaderboard-category-btn { border:1px solid #cbd5e1; border-radius:10px; padding:9px 13px; background:#fff; color:#334155; font-weight:700; cursor:pointer; }
+.leaderboard-category-btn.active { background:#4338ca; border-color:#4338ca; color:#fff; }
+.leaderboard-claim-panel { border:1px solid #c7d2fe; background:rgba(255,255,255,.8); border-radius:12px; padding:12px; margin-bottom:14px; color:#312e81; font-size:.88rem; }
+.leaderboard-claim-panel .btn-action { margin-top:9px; }
+.leaderboard-list { display:flex; flex-direction:column; gap:8px; }
+.leaderboard-row { display:grid; grid-template-columns:42px minmax(0,1fr) auto; gap:10px; align-items:center; padding:11px 12px; background:#fff; border:1px solid #e2e8f0; border-radius:12px; }
+.leaderboard-row.is-self { border-color:#818cf8; background:#eef2ff; box-shadow:0 0 0 1px rgba(129,140,248,.15); }
+.leaderboard-rank-number { font-weight:900; color:#475569; text-align:center; }
+.leaderboard-rank-number.top-one { color:#b45309; font-size:1.1rem; }
+.leaderboard-player-name { min-width:0; overflow-wrap:anywhere; color:#0f172a; font-weight:750; }
+.leaderboard-player-sub { font-size:.72rem; color:#64748b; margin-top:3px; }
+.leaderboard-player-value { font-weight:850; color:#3730a3; white-space:nowrap; text-align:right; }
+.leaderboard-footnote { color:#64748b; font-size:.75rem; line-height:1.5; margin:14px 0 0; }
+@media(max-width:480px){.leaderboard-row{grid-template-columns:32px minmax(0,1fr) auto;padding:10px 8px;gap:7px}.leaderboard-player-value{font-size:.82rem}.leaderboard-category-btn{flex:1;padding:9px 6px;font-size:.82rem}}
+
+        #season-event-game-tab,#season-event-shop-tab { flex:1; }
+        #season-event-main .btn-action:disabled { opacity:.55; cursor:not-allowed; }
+        #season-event-shop-items .shop-item { box-sizing:border-box; width:100%; }
+        @media(max-width:480px){#season-game-arena{height:260px!important;min-height:220px!important}#season-event-main .card-box{padding:12px}}
 </style>
 </head>
 <body>
@@ -2371,6 +2403,8 @@
     <header>
         <h1>Profil Ruang Mabar</h1>
         <div class="header-btn-group">
+            <button class="tab-btn leaderboard-icon-tab" onclick="switchTab('leaderboard')" aria-label="Papan Peringkat" title="Papan Peringkat">🏆</button>
+            <button class="tab-btn information-icon-tab" onclick="switchTab('information')" aria-label="Informasi" title="Informasi">✉️</button>
             <button class="btn-admin" onclick="openModal('adminModal')">⚙️ Admin</button>
         </div>
     </header>
@@ -2380,10 +2414,10 @@
             <button class="tab-btn active" onclick="switchTab('profil')">👥 Profil</button>
             <button class="tab-btn" onclick="switchTab('shop')">🛒 Shop</button>
             <button class="tab-btn" onclick="switchTab('pinjaman')">💰 Pinjaman</button>
-            <button class="tab-btn" onclick="switchTab('event')">🎉 Event</button>
             <button class="tab-btn" onclick="switchTab('personal')">⚙️ Personalisasi</button>
             <button class="tab-btn" onclick="switchTab('arcade')">🕹 Arcade</button>
             <button class="tab-btn" onclick="switchTab('quest')">🎯 Quest</button>
+            <button class="tab-btn" onclick="switchTab('event')">🎉 Event</button>
             <button class="tab-btn" onclick="switchTab('chat')">💬 Chat</button>
         </div>
 
@@ -2427,10 +2461,45 @@
             </div>
         </div>
 
-        <!-- TAB EVENT -->
+        <!-- TAB EVENT: mini-game dan shop event season -->
         <div id="tab-event" class="tab-content">
+            <div id="season-event-empty" class="empty-notice">Belum ada event yang tersedia. Nantikan update selanjutnya ya!</div>
+            <div id="season-event-ended" class="empty-notice" style="display:none;">Event telah berakhir</div>
+            <div id="season-event-main" style="display:none;">
+                <div class="card-box" style="margin-bottom:14px;border-color:#8b5cf6;background:linear-gradient(135deg,#f5f3ff,#eef2ff);">
+                    <h3 id="season-event-title" style="color:#5b21b6;margin-bottom:5px;">🎉 Event Season</h3>
+                    <p id="season-event-countdown" style="font-size:.84rem;color:#475569;margin:0;"></p>
+                    <p style="font-size:.86rem;color:#334155;margin:8px 0 0;">Kumpulkan Coin dari permainan, lalu tukarkan dengan hadiah permanen di Shop Event.</p>
+                </div>
+                <div style="display:flex;gap:8px;margin-bottom:14px;">
+                    <button type="button" class="leaderboard-category-btn active" id="season-event-game-tab" onclick="switchSeasonEventView('game')">🎯 Permainan</button>
+                    <button type="button" class="leaderboard-category-btn" id="season-event-shop-tab" onclick="switchSeasonEventView('shop')">🛍️ Shop</button>
+                </div>
+                <section id="season-event-game-view" class="card-box" style="margin-bottom:14px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                        <div><h3 style="margin:0;color:#0f172a;">🎯 Tangkap Target</h3><p style="font-size:.82rem;color:#64748b;margin:4px 0 0;">Klik target yang berpindah secara acak selama 60 detik.</p></div>
+                        <div style="font-weight:800;color:#6d28d9;">Poin: <span id="season-game-score">0</span> · 🪙 Coin: <span id="season-game-coins">0</span></div>
+                    </div>
+                    <div id="season-game-arena" style="position:relative;height:300px;max-height:55vh;min-height:220px;overflow:hidden;border:2px solid #c4b5fd;border-radius:14px;background:radial-gradient(circle at 20% 20%,#ede9fe,#f8fafc 58%,#e0e7ff);">
+                        <button id="season-game-target" type="button" aria-label="Target" onclick="hitSeasonEventTarget()" style="display:none;position:absolute;width:48px;height:48px;border:0;border-radius:50%;background:linear-gradient(135deg,#f97316,#ec4899);box-shadow:0 4px 14px #c026d355,inset 0 2px 4px #fff8;color:#fff;font-size:1.45rem;cursor:pointer;touch-action:manipulation;">🎯</button>
+                        <div id="season-game-overlay" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#475569;font-weight:700;">Tekan “Mulai Permainan” untuk mulai mengumpulkan Coin.</div>
+                    </div>
+                    <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:12px;">
+                        <span style="font-size:.86rem;color:#475569;">Waktu: <strong id="season-game-time">60</strong> detik · 1 poin = 1 Coin</span>
+                        <button type="button" class="btn-action" id="season-game-start" onclick="startSeasonEventGame()">▶️ Mulai Permainan</button>
+                    </div>
+                </section>
+                <section id="season-event-shop-view" style="display:none;">
+                    <div class="card-box" style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;"><strong>🪙 Coin Kamu</strong><strong id="season-shop-coins" style="font-size:1.15rem;color:#7c3aed;">0</strong></div>
+                    <div id="season-event-shop-items" class="shop-list"></div>
+                </section>
+            </div>
+        </div>
+
+        <!-- TAB INFORMASI: menampung konten Event yang sudah ada -->
+        <div id="tab-information" class="tab-content">
             <div id="event-container">
-                <div class="empty-notice">Admin belum ngadain event, tunggu kabar selanjutnya!</div>
+                <div class="empty-notice">Belum ada pengumuman. Nantikan kabar selanjutnya ya!</div>
             </div>
         </div>
 
@@ -2593,6 +2662,25 @@
                 <div id="empty-chat" class="empty-notice" style="display: none; margin-bottom: 12px;">Belum ada pesan chat. Jadilah yang pertama mengirim pesan!</div>
                 
                 <div id="chat-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            </div>
+        </div>
+
+        <!-- TAB PAPAN PERINGKAT -->
+        <div id="tab-leaderboard" class="tab-content">
+            <div class="card-box leaderboard-shell">
+                <div class="leaderboard-heading">
+                    <div><h2>🏆 Papan Peringkat</h2><p id="leaderboard-week-label">Memuat periode peringkat...</p></div>
+                    <div class="leaderboard-refresh-mark" title="Peringkat diperbarui setiap awal minggu">↻</div>
+                </div>
+                <div class="leaderboard-category-tabs">
+                    <button class="leaderboard-category-btn active" data-leaderboard-category="diamond" onclick="selectLeaderboardCategory('diamond')">💎 Diamond</button>
+                    <button class="leaderboard-category-btn" data-leaderboard-category="star" onclick="selectLeaderboardCategory('star')">⭐ Star</button>
+                    <button class="leaderboard-category-btn" data-leaderboard-category="level" onclick="selectLeaderboardCategory('level')">📊 Level</button>
+                </div>
+                <div id="leaderboard-claim-panel" class="leaderboard-claim-panel"></div>
+                <div id="leaderboard-status" class="empty-notice">Memuat papan peringkat...</div>
+                <div id="leaderboard-list" class="leaderboard-list"></div>
+                <p class="leaderboard-footnote">Hadiah untuk peringkat 1–100 berupa Diamond dan harus diklaim pada hari Minggu pukul 00.00–23.59. Peringkat diambil dari data awal minggu.</p>
             </div>
         </div>
     </div>
@@ -2833,8 +2921,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label>🏅 Rank Tertinggi:</label>
-                        <input type="text" id="adminMemberRankTertinggiSeasonLalu" placeholder="Rank tertinggi yang pernah dicapai">
+                        <label>🏅 Rank Tertinggi (menyesuaikan Bintang Tertinggi):</label>
+                        <input type="text" id="adminMemberRankTertinggiSeasonLalu" placeholder="Otomatis dari bintang tertinggi" readonly>
                     </div>
 
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -2858,7 +2946,7 @@
 
                     <div class="form-group">
                         <label>⭐ Bintang Tertinggi:</label>
-                        <input type="number" id="adminMemberBintangTertinggiSeasonLalu" value="0" min="0">
+                        <input type="number" id="adminMemberBintangTertinggiSeasonLalu" value="0" min="0" oninput="updateAdminHighestRankFromStars()">
                     </div>
 
                     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -2928,16 +3016,23 @@
 
                     <hr style="margin: 20px 0; border: none; border-top: 1px solid #cbd5e1;">
 
-                    <h4 style="margin-bottom: 8px; color: #0f172a;">🎉 Buat / Kelola Event</h4>
+                    <h4 style="margin-bottom: 8px; color: #0f172a;">📢 Edit / Buat Pengumuman</h4>
                     <div class="form-group">
-                        <label>Judul Event:</label>
-                        <input type="text" id="adminEventJudul" placeholder="Contoh: Turnamen Mabar Minggu Ini">
+                        <label>Judul Pengumuman:</label>
+                        <input type="text" id="adminEventJudul" placeholder="Contoh: Informasi update terbaru">
                     </div>
                     <div class="form-group">
-                        <label>Pengumuman Event:</label>
-                        <textarea id="adminEventText" rows="3" placeholder="Tuliskan detail event di sini..."></textarea>
+                        <label>Isi Pengumuman:</label>
+                        <textarea id="adminEventText" rows="3" placeholder="Tuliskan isi pengumuman di sini..."></textarea>
                     </div>
-                    <button class="btn-action" style="margin-bottom: 14px;" onclick="adminSaveEvent()">🚀 Publikasikan Event</button>
+                    <button class="btn-action" style="margin-bottom: 14px;" onclick="adminSaveEvent()">📢 Publikasikan Pengumuman</button>
+
+                    <div style="background:#f5f3ff;border:1px solid #c4b5fd;border-radius:12px;padding:13px;margin:0 0 16px;">
+                        <h4 style="color:#5b21b6;margin-bottom:6px;">🎉 Sistem Event Season</h4>
+                        <p style="font-size:.82rem;color:#4c1d95;margin-bottom:10px;">Event berlangsung 14 hari sejak diaktifkan. Setelah berakhir, kategori Event terkunci sampai sistem event dihapus.</p>
+                        <button type="button" class="btn-action" onclick="adminStartSeasonEvent()" style="background:#7c3aed;margin-bottom:8px;">🚀 Aktifkan Event 14 Hari</button>
+                        <button type="button" class="btn-action" onclick="adminDeleteSeasonEvent()" style="background:#dc2626;">🗑️ Hapus Sistem Event</button>
+                    </div>
 
                     <hr style="margin: 20px 0; border: none; border-top: 1px solid #cbd5e1;">
 
@@ -3011,7 +3106,7 @@
                         <h4 style="margin-bottom:12px;color:#c2410c;">🗑️ Zona Hapus — Semua Data</h4>
                         <p style="font-size:.78rem;color:#9a3412;margin-bottom:14px;">Semua fitur penghapusan admin dikumpulkan di bagian paling bawah.</p>
                         <h5>🛒 Hapus Item Shop Resmi:</h5><div id="admin-shop-delete-list" style="margin-bottom:18px;"></div>
-                        <h5>🎉 Hapus Event:</h5><div id="admin-event-delete-list" style="margin-bottom:18px;"></div>
+                        <h5>📢 Hapus Pengumuman:</h5><div id="admin-event-delete-list" style="margin-bottom:18px;"></div>
                         <h5>🕹️ Hapus Tautan Arcade:</h5><div id="admin-arcade-delete-list" style="margin-bottom:18px;"></div>
                         <h5>👤 Hapus Member:</h5><div id="admin-member-delete-list" style="margin-bottom:18px;"></div>
                         <h5>💬 Hapus Chat:</h5><button type="button" onclick="adminClearAllChats()" style="background:#ef4444;color:white;padding:8px 12px;border:none;border-radius:6px;cursor:pointer;margin-bottom:10px;font-weight:600;">🗑️ Hapus Semua Chat</button><div id="admin-chat-delete-list" style="max-height:200px;overflow-y:auto;background:#fff;padding:8px;border-radius:6px;border:1px solid #e2e8f0;"></div>
@@ -3041,6 +3136,7 @@
         const membersRef = database.ref('members');
         const shopRef = database.ref('shop');
         const eventsRef = database.ref('events');
+        const seasonEventRef = database.ref('seasonEvent');
         const chatsRef = database.ref('chats');
         const marketplaceRef = database.ref('marketplace');
         const codesRef = database.ref('codes');
@@ -3049,6 +3145,12 @@
         const playerLoanOffersRef = database.ref('loanPlayerOffers');
         const playerLoanContractsRef = database.ref('loanPlayerContracts');
         const bankLoanContractsRef = database.ref('loanBankContracts');
+        const leaderboardRootRef = database.ref('leaderboards');
+        let activeLeaderboardCategory = 'diamond';
+        let cachedLeaderboardSnapshot = null;
+        let leaderboardSnapshotLoadPromise = null;
+        let highestStatsSyncInProgress = new Set();
+        let leaderboardIntervalStarted = false;
         let globalBankLoanContracts = {};
         let globalPlayerLoanContracts = {};
         let globalBankLoanOffers = {};
@@ -3058,6 +3160,13 @@
         let globalMembersData = {};
         let globalShopData = {};
         let globalEventsData = {};
+        let globalSeasonEventData = null;
+        let activeSeasonEventKey = null;
+        let seasonEventGameTimer = null;
+        let seasonEventGameRunning = false;
+        let seasonEventGameScore = 0;
+        let seasonEventGameRemaining = 60;
+        let seasonEventCountdownTimer = null;
         let globalChatsData = {};
         let globalMarketplaceData = {};
         let globalCodesData = {};
@@ -3406,6 +3515,180 @@
             }
         }
 
+        function getLeaderboardWeekKey(date = new Date()) {
+            const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            const daysSinceMonday = (d.getDay() + 6) % 7;
+            d.setDate(d.getDate() - daysSinceMonday);
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        function getLeaderboardWeekLabel(weekKey) {
+            const parts = String(weekKey || '').split('-').map(Number);
+            if (parts.length !== 3 || !parts.every(Number.isFinite)) return 'Periode mingguan';
+            const start = new Date(parts[0], parts[1]-1, parts[2]);
+            const end = new Date(start); end.setDate(end.getDate()+6);
+            const fmt = d => d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+            return `${fmt(start)} – ${fmt(end)}`;
+        }
+
+        function leaderboardValue(member, category) {
+            if (category === 'diamond') return Number(member.diamond || 0);
+            if (category === 'star') return Number(member.bintang || 0);
+            return Number(member.level || 1);
+        }
+
+        function makeLeaderboardCategory(category, members) {
+            return Object.entries(members || {}).map(([memberKey, member]) => ({
+                memberKey,
+                name: String(member.nama || member.username || memberKey),
+                value: leaderboardValue(member || {}, category)
+            })).sort((a,b) => b.value-a.value || a.name.localeCompare(b.name,'id')).map((entry,index) => ({...entry, rank:index+1}));
+        }
+
+        async function ensureLeaderboardSnapshot(forceRender = false) {
+            if (leaderboardSnapshotLoadPromise) return leaderboardSnapshotLoadPromise;
+            const weekKey = getLeaderboardWeekKey();
+            leaderboardSnapshotLoadPromise = (async () => {
+                const weekRef = leaderboardRootRef.child(`weeks/${weekKey}`);
+                let snap = await weekRef.once('value');
+                if (!snap.exists()) {
+                    const membersSnap = await membersRef.once('value');
+                    const members = membersSnap.val() || {};
+                    const snapshotData = {
+                        weekKey,
+                        capturedAt: Date.now(),
+                        categories: {
+                            diamond: makeLeaderboardCategory('diamond', members),
+                            star: makeLeaderboardCategory('star', members),
+                            level: makeLeaderboardCategory('level', members)
+                        }
+                    };
+                    // Snapshot disimpan sekali per minggu dan tidak berubah setelah dibuat.
+                    await weekRef.transaction(current => current || snapshotData);
+                    snap = await weekRef.once('value');
+                }
+                cachedLeaderboardSnapshot = snap.val() || null;
+                const weekLabel = document.getElementById('leaderboard-week-label');
+                if (weekLabel) weekLabel.textContent = `Periode: ${getLeaderboardWeekLabel(weekKey)}`;
+                renderLeaderboard();
+                return cachedLeaderboardSnapshot;
+            })().catch(error => {
+                console.error('Gagal memuat papan peringkat:', error);
+                const status = document.getElementById('leaderboard-status');
+                if (status) { status.style.display = 'block'; status.textContent = 'Papan peringkat gagal dimuat. Periksa koneksi lalu coba lagi.'; }
+                return null;
+            }).finally(() => { leaderboardSnapshotLoadPromise = null; });
+            return leaderboardSnapshotLoadPromise;
+        }
+
+        function selectLeaderboardCategory(category) {
+            if (!['diamond','star','level'].includes(category)) return;
+            activeLeaderboardCategory = category;
+            document.querySelectorAll('.leaderboard-category-btn').forEach(button => button.classList.toggle('active', button.dataset.leaderboardCategory === category));
+            renderLeaderboard();
+        }
+
+        function leaderboardRewardForRank(rank) {
+            if (rank === 1) return 300;
+            if (rank >= 2 && rank <= 5) return 200;
+            if (rank >= 6 && rank <= 100) return 100;
+            return 0;
+        }
+
+        function renderLeaderboard() {
+            const status = document.getElementById('leaderboard-status');
+            const list = document.getElementById('leaderboard-list');
+            const claimPanel = document.getElementById('leaderboard-claim-panel');
+            if (!status || !list || !claimPanel) return;
+            const weekKey = cachedLeaderboardSnapshot && cachedLeaderboardSnapshot.weekKey || getLeaderboardWeekKey();
+            const entries = cachedLeaderboardSnapshot && cachedLeaderboardSnapshot.categories && cachedLeaderboardSnapshot.categories[activeLeaderboardCategory] || [];
+            const selfKey = activeLoggedInMemberKey;
+            const ownEntry = selfKey ? entries.find(entry => entry.memberKey === selfKey) : null;
+            const reward = ownEntry ? leaderboardRewardForRank(Number(ownEntry.rank)) : 0;
+            const today = new Date();
+            const isSunday = today.getDay() === 0;
+            const claimed = !!(selfKey && globalMembersData[selfKey] && globalMembersData[selfKey].leaderboardRewardClaims && globalMembersData[selfKey].leaderboardRewardClaims[weekKey] && globalMembersData[selfKey].leaderboardRewardClaims[weekKey][activeLeaderboardCategory]);
+            let claimText = '';
+            if (!selfKey) claimText = 'Login melalui Personalisasi untuk melihat posisi akunmu dan mengklaim hadiah.';
+            else if (!ownEntry || reward <= 0) claimText = 'Akun kamu belum masuk 100 besar pada kategori ini, jadi tidak ada hadiah untuk diklaim.';
+            else if (claimed) claimText = `Peringkat kamu #${ownEntry.rank}. Hadiah ${reward} 💎 sudah diklaim untuk kategori ini minggu ini.`;
+            else if (!isSunday) claimText = `Peringkat kamu #${ownEntry.rank}. Hadiah ${reward} 💎 bisa diklaim hari Minggu pukul 00.00–23.59.`;
+            else claimText = `Peringkat kamu #${ownEntry.rank}! Kamu berhak klaim ${reward} 💎 untuk kategori ${activeLeaderboardCategory === 'star' ? 'Star' : activeLeaderboardCategory === 'diamond' ? 'Diamond' : 'Level'}.`;
+            claimPanel.innerHTML = `<div>${escapeHTML(claimText)}</div>${selfKey && ownEntry && reward > 0 && !claimed && isSunday ? `<button class="btn-action" onclick="claimLeaderboardReward('${activeLeaderboardCategory}')">🎁 Klaim ${reward} Diamond</button>` : ''}`;
+            if (!entries.length) {
+                status.style.display = 'block'; status.textContent = 'Belum ada data untuk papan peringkat.'; list.innerHTML = ''; return;
+            }
+            status.style.display = 'none';
+            const symbol = activeLeaderboardCategory === 'diamond' ? '💎' : activeLeaderboardCategory === 'star' ? '⭐' : '📊';
+            list.innerHTML = entries.slice(0,100).map(entry => {
+                const self = entry.memberKey === selfKey;
+                const prize = leaderboardRewardForRank(Number(entry.rank));
+                const rankMark = entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`;
+                return `<div class="leaderboard-row${self ? ' is-self' : ''}"><div class="leaderboard-rank-number${entry.rank===1?' top-one':''}">${rankMark}</div><div><div class="leaderboard-player-name">${escapeHTML(entry.name)}${self ? ' (Kamu)' : ''}</div><div class="leaderboard-player-sub">${prize ? `Hadiah: ${prize} 💎` : 'Belum masuk peringkat hadiah'}</div></div><div class="leaderboard-player-value">${symbol} ${Number(entry.value || 0).toLocaleString('id-ID')}</div></div>`;
+            }).join('');
+        }
+
+        async function claimLeaderboardReward(category) {
+            const key = activeLoggedInMemberKey;
+            if (!key) return showResultPopup('Login dulu untuk klaim hadiah papan peringkat.');
+            if (new Date().getDay() !== 0) return showResultPopup('Hadiah hanya bisa diklaim hari Minggu pukul 00.00–23.59.');
+            await ensureLeaderboardSnapshot();
+            const weekKey = cachedLeaderboardSnapshot && cachedLeaderboardSnapshot.weekKey || getLeaderboardWeekKey();
+            const entries = cachedLeaderboardSnapshot && cachedLeaderboardSnapshot.categories && cachedLeaderboardSnapshot.categories[category] || [];
+            const entry = entries.find(item => item.memberKey === key);
+            const reward = entry ? leaderboardRewardForRank(Number(entry.rank)) : 0;
+            if (!reward) return showResultPopup('Akun kamu tidak mendapat hadiah pada kategori ini.');
+            try {
+                const memberRef = membersRef.child(key);
+                const result = await memberRef.transaction(member => {
+                    if (!member) return;
+                    member.leaderboardRewardClaims = member.leaderboardRewardClaims || {};
+                    member.leaderboardRewardClaims[weekKey] = member.leaderboardRewardClaims[weekKey] || {};
+                    if (member.leaderboardRewardClaims[weekKey][category]) return;
+                    member.diamond = Number(member.diamond || 0) + reward;
+                    member.leaderboardRewardClaims[weekKey][category] = { claimedAt: Date.now(), rank: Number(entry.rank), reward };
+                    return member;
+                }, undefined, false);
+                if (result.committed) showResultPopup(`Berhasil klaim ${reward} 💎 dari papan peringkat ${category === 'star' ? 'Star' : category === 'diamond' ? 'Diamond' : 'Level'}!`);
+                else showResultPopup('Hadiah kategori ini sudah pernah diklaim atau akun tidak ditemukan.');
+            } catch (error) {
+                console.error(error);
+                showResultPopup('Gagal klaim hadiah. Coba lagi.');
+            }
+            renderLeaderboard();
+        }
+
+        function rankTierValue(rank) {
+            const normalized = String(rank || '').trim().toLowerCase();
+            const tiers = { warrior:1, elite:2, master:3, grandmaster:4, epic:5, legend:6, mythic:7, immortal:8, 'demon king':9 };
+            return Object.prototype.hasOwnProperty.call(tiers, normalized) ? tiers[normalized] : 0;
+        }
+
+        function syncMemberHighestStats(memberKey, member) {
+            if (!member || highestStatsSyncInProgress.has(memberKey)) return;
+            const currentStars = Number(member.bintang || 0);
+            const oldHighestStars = Number(member.bintangSeasonLalu ?? member.seasonLaluBintang ?? member.starsSeasonLalu ?? 0);
+            const highestStars = Math.max(currentStars, oldHighestStars);
+            const expectedHighestRank = getRankFromBintang(highestStars, 'Warrior');
+            const oldHighestRank = String(member.rankTertinggiSeasonLalu || member.rankSeasonLalu || member.seasonLaluRank || '').trim();
+            const starsShouldUpdate = currentStars > oldHighestStars;
+            const rankShouldUpdate = oldHighestRank !== expectedHighestRank;
+            if (!rankShouldUpdate && !starsShouldUpdate) return;
+            highestStatsSyncInProgress.add(memberKey);
+            membersRef.child(memberKey).transaction(current => {
+                if (!current) return;
+                const curStars = Number(current.bintang || 0);
+                const highStars = Number(current.bintangSeasonLalu ?? current.seasonLaluBintang ?? current.starsSeasonLalu ?? 0);
+                const bestStars = Math.max(curStars, highStars);
+                current.bintangSeasonLalu = bestStars;
+                current.rankTertinggiSeasonLalu = getRankFromBintang(bestStars, 'Warrior');
+                return current;
+            }, error => {
+                if (error) console.error('Gagal memperbarui statistik tertinggi:', error);
+                highestStatsSyncInProgress.delete(memberKey);
+            }, false);
+        }
+
         function switchTab(tabName, pushHistory = true) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -3415,6 +3698,7 @@
             
             const targetTab = document.getElementById(`tab-${tabName}`);
             if (targetTab) targetTab.classList.add('active');
+            if (tabName === 'leaderboard') ensureLeaderboardSnapshot();
 
             if (pushHistory) {
                 history.pushState({ tab: tabName, modal: null }, '');
@@ -3851,6 +4135,13 @@
             });
         }
 
+        function updateAdminHighestRankFromStars() {
+            const starsInput = document.getElementById('adminMemberBintangTertinggiSeasonLalu');
+            const rankInput = document.getElementById('adminMemberRankTertinggiSeasonLalu');
+            if (!starsInput || !rankInput) return;
+            rankInput.value = getRankFromBintang(Number(starsInput.value || 0), 'Warrior');
+        }
+
         function adminLoadMemberToForm() {
             const key = document.getElementById('adminSelectMember').value;
             if (!key || !globalMembersData[key]) {
@@ -3867,8 +4158,8 @@
             const m = globalMembersData[key];
             document.getElementById('adminMemberPin').value = m.pin || '';
             document.getElementById('adminMemberRank').value = m.rank || '';
-            document.getElementById('adminMemberRankTertinggiSeasonLalu').value = m.rankTertinggiSeasonLalu || m.rankSeasonLalu || m.seasonLaluRank || '';
             document.getElementById('adminMemberBintangTertinggiSeasonLalu').value = Number(m.bintangSeasonLalu ?? m.seasonLaluBintang ?? m.starsSeasonLalu ?? 0);
+            updateAdminHighestRankFromStars();
             document.getElementById('adminMemberBintang').value = m.bintang || 0;
             document.getElementById('adminMemberDiamond').value = m.diamond || 0;
             document.getElementById('adminMemberLevel').value = m.level || 1;
@@ -3883,8 +4174,9 @@
             }
             const updates = {};
             updates[`members/${key}/rank`] = document.getElementById('adminMemberRank').value.trim();
-            updates[`members/${key}/rankTertinggiSeasonLalu`] = document.getElementById('adminMemberRankTertinggiSeasonLalu').value.trim();
-            updates[`members/${key}/bintangSeasonLalu`] = Number(document.getElementById('adminMemberBintangTertinggiSeasonLalu').value || 0);
+            const highestStarsToSave = Math.max(0, Number(document.getElementById('adminMemberBintangTertinggiSeasonLalu').value || 0));
+            updates[`members/${key}/rankTertinggiSeasonLalu`] = getRankFromBintang(highestStarsToSave, 'Warrior');
+            updates[`members/${key}/bintangSeasonLalu`] = highestStarsToSave;
             updates[`members/${key}/bintang`] = Number(document.getElementById('adminMemberBintang').value || 0);
             updates[`members/${key}/diamond`] = Number(document.getElementById('adminMemberDiamond').value || 0);
             updates[`members/${key}/level`] = Number(document.getElementById('adminMemberLevel').value || 1);
@@ -4132,6 +4424,14 @@
                 {id:'star250', icon:'🥈', title:'Bintang 250', desc:'Capai total 250 star pada akunmu.', reward:'500 diamond', done:Number(member.bintang||0)>=250, diamond:500},
                 {id:'star500', icon:'🥇', title:'Bintang 500', desc:'Capai total 500 star pada akunmu.', reward:'1.000 diamond', done:Number(member.bintang||0)>=500, diamond:1000}
             ];
+            const eventActive = !!(globalSeasonEventData && Number(globalSeasonEventData.startAt) <= Date.now() && Date.now() < Number(globalSeasonEventData.endsAt));
+            const eventLoginToday = !!(q.loginDates && q.loginDates[date]);
+            // Hitung hari event berdasarkan tanggal WIB agar hari pertama tetap tersedia meski event diaktifkan bukan pukul 00.00.
+            const eventStartDate = eventActive ? questWibDate(Number(globalSeasonEventData.startAt)) : '';
+            const eventDay = eventActive ? Math.floor((Date.parse(date + 'T00:00:00Z') - Date.parse(eventStartDate + 'T00:00:00Z')) / 86400000) + 1 : 0;
+            if (eventActive && eventDay >= 1 && eventDay <= 14) {
+                special.push({id:'playTicketDaily', icon:'🎟️', title:'Login Harian Event', desc:`Login pada hari ke-${eventDay} Event Season untuk mendapatkan 1 Play Tiket. Wajib login setiap hari selama 14 hari; maksimal 14 tiket.`, reward:'1 Play Tiket', done:eventLoginToday, ticketReward:1, dailyTicket:true});
+            }
             return {daily, weekly, special, date, week};
         }
         function renderQuestCard(type, quest, claimed, period) {
@@ -4153,10 +4453,10 @@
             required.style.display = 'none';
             const member = globalMembersData[activeLoggedInMemberKey], defs = questDefinitions(member);
             const d = questDailyFor(member, defs.date), w = questWeeklyFor(member, defs.week), q = questDataFor(member);
-            const dailyClaims = d.claimed || {}, weeklyClaims = w.claimed || {}, specialClaims = q.specialClaimed || {};
+            const dailyClaims = d.claimed || {}, weeklyClaims = w.claimed || {}, specialClaims = q.specialClaimed || {}, ticketClaims = q.playTicketClaims || {};
             document.getElementById('quest-panel-daily').innerHTML = `<div class="quest-top-note">🌞 Reset setiap hari pukul 00.00 WIB. Progres hari ini: ${defs.daily.filter(x=>x.done && x.id!=='all').length}/4 misi utama selesai.</div>${defs.daily.map(x=>renderQuestCard('daily',x,!!dailyClaims[x.id],defs.date)).join('')}`;
             document.getElementById('quest-panel-weekly').innerHTML = `<div class="quest-top-note">📅 Periode minggu ini: ${defs.week} sampai ${questWeekEnd(defs.week)} (batas akhir sebelum tanggal tersebut), WIB.</div>${defs.weekly.map(x=>renderQuestCard('weekly',x,!!weeklyClaims[x.id],defs.week)).join('')}`;
-            document.getElementById('quest-panel-special').innerHTML = `<div class="quest-top-note">🏆 Misi khusus hanya bisa diklaim satu kali per pencapaian akun.</div>${defs.special.map(x=>renderQuestCard('special',x,!!specialClaims[x.id],'lifetime')).join('')}`;
+            document.getElementById('quest-panel-special').innerHTML = `<div class="quest-top-note">🏆 Misi pencapaian dan misi login harian Event Season.</div>${defs.special.map(x=>renderQuestCard('special',x, x.dailyTicket ? !!ticketClaims[defs.date] : !!specialClaims[x.id], x.dailyTicket ? defs.date : 'lifetime')).join('')}`;
         }
         function switchQuestTab(name, button) {
             document.querySelectorAll('.quest-subtab').forEach(b=>b.classList.remove('active'));
@@ -4184,18 +4484,26 @@
                     const fakeMember={...member,questData:q}; quest=questDefinitions(fakeMember).weekly.find(x=>x.id===id);
                     if (period !== questWeekStart()) return;
                 } else if (type === 'special') {
-                    q.specialClaimed=q.specialClaimed||{}; claimedObj=q.specialClaimed;
                     quest=questDefinitions(member).special.find(x=>x.id===id);
+                    if (id === 'playTicketDaily') {
+                        if (period !== questWibDate() || !quest || !quest.done) return;
+                        q.playTicketClaims=q.playTicketClaims||{}; claimedObj=q.playTicketClaims;
+                    } else {
+                        q.specialClaimed=q.specialClaimed||{}; claimedObj=q.specialClaimed;
+                    }
                 }
-                if (!quest || !quest.done || claimedObj[id]) return;
-                claimedObj[id]=true;
+                const claimKey = type === 'special' && id === 'playTicketDaily' ? period : id;
+                if (!quest || !quest.done || claimedObj[claimKey]) return;
+                claimedObj[claimKey]=true;
                 member.diamond=Number(member.diamond||0)+Number(quest.diamond||0);
                 if (quest.star) member.bintang=Number(member.bintang||0)+Number(quest.star);
+                if (quest.ticketReward) member.playTickets = Number(member.playTickets||0) + Number(quest.ticketReward);
                 return member;
             }, (error, committed) => {
                 if (error) alert('Gagal mengklaim hadiah. Coba lagi.');
-                else if (committed) alert('🎉 Hadiah Quest berhasil diklaim!');
+                else if (committed) alert(id === 'playTicketDaily' ? '🎟️ Kamu mendapatkan 1 Play Tiket!' : '🎉 Hadiah Quest berhasil diklaim!');
                 else alert('Misi belum selesai atau hadiah sudah pernah diklaim.');
+                if (committed && globalMembersData[key]) database.ref(`members/${key}`).once('value').then(snap => { if (snap.exists()) { globalMembersData[key] = snap.val(); updateMemberPersonalView(globalMembersData[key]); renderQuestUI(); } });
                 renderQuestUI();
             }, false);
         }
@@ -4229,7 +4537,9 @@
                 if (m.isVip && m.vipExpiresAt && Number(m.vipExpiresAt) <= Date.now()) {
                     globalMembersData[k].isVip = false;
                 }
+                syncMemberHighestStats(k, m);
             });
+            if (document.getElementById('tab-leaderboard')?.classList.contains('active')) renderLeaderboard();
 
             const selectSelf = document.getElementById('selectMemberSelf');
             const currentSelectedSelf = selectSelf.value;
@@ -4244,6 +4554,19 @@
             });
 
             filterAndRenderMembers();
+
+            if (!cachedLeaderboardSnapshot || cachedLeaderboardSnapshot.weekKey !== getLeaderboardWeekKey()) ensureLeaderboardSnapshot();
+            if (!leaderboardIntervalStarted) {
+                leaderboardIntervalStarted = true;
+                setInterval(() => {
+                    const currentWeekKey = getLeaderboardWeekKey();
+                    if (!cachedLeaderboardSnapshot || cachedLeaderboardSnapshot.weekKey !== currentWeekKey) {
+                        leaderboardSnapshotLoadPromise = null;
+                        ensureLeaderboardSnapshot(true);
+                    }
+                    if (document.getElementById('tab-leaderboard')?.classList.contains('active')) renderLeaderboard();
+                }, 60000);
+            }
 
             const savedMemberKey = localStorage.getItem('ruangMabarLoggedInMemberKey');
             if (savedMemberKey && globalMembersData[savedMemberKey]) {
@@ -4301,7 +4624,7 @@
             if (!container) return;
 
             if (!snapshot.exists()) {
-                container.innerHTML = '<div class="empty-notice">Admin belum ngadain event, tunggu kabar selanjutnya!</div>';
+                container.innerHTML = '<div class="empty-notice">Belum ada pengumuman. Nantikan kabar selanjutnya ya!</div>';
                 globalEventsData = {};
                 if (isAdminLoggedIn) populateAdminEventList();
                 return;
@@ -4316,7 +4639,7 @@
                 return bTime - aTime;
             });
             if (keys.length === 0) {
-                container.innerHTML = '<div class="empty-notice">Admin belum ngadain event, tunggu kabar selanjutnya!</div>';
+                container.innerHTML = '<div class="empty-notice">Belum ada pengumuman. Nantikan kabar selanjutnya ya!</div>';
             } else {
                 keys.forEach(key => {
                     const item = globalEventsData[key];
@@ -4324,7 +4647,7 @@
                     card.className = 'card-box';
                     card.style.cssText = 'border-color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); margin-bottom: 12px;';
                     card.innerHTML = `
-                        <h3 style="color: #d97706; margin-bottom: 8px;">🎉 ${escapeHTML(item.judul || 'Event Ruang Mabar')}</h3>
+                        <h3 style="color: #d97706; margin-bottom: 8px;">📢 ${escapeHTML(item.judul || 'Pengumuman Ruang Mabar')}</h3>
                         <p style="font-size: 0.95rem; color: #1e293b; white-space: pre-line;">${escapeHTML(item.content || '')}</p>
                     `;
                     container.appendChild(card);
@@ -4332,6 +4655,11 @@
             }
 
             if (isAdminLoggedIn) populateAdminEventList();
+        });
+
+        seasonEventRef.on('value', (snapshot) => {
+            globalSeasonEventData = snapshot.exists() ? snapshot.val() : null;
+            renderSeasonEvent();
         });
 
         chatsRef.on('value', (snapshot) => {
@@ -4744,7 +5072,7 @@
                     <div class="stat-item">⚡ Boost: ${member.boost || 1}x</div>
                     <div class="stat-item" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">📊 Level: ${member.level || 1}${getProfileBadgesHTML(member) ? ` ${getProfileBadgesHTML(member)}` : ''}</div>
                     <div class="stat-item">🎮 Game: ${escapeHTML(member.gameKesukaan || '-')}</div>
-                    <div class="stat-item">🏅 Rank Tertinggi: ${escapeHTML(member.rankTertinggiSeasonLalu || member.rankSeasonLalu || member.seasonLaluRank || '-')}</div>
+                    <div class="stat-item">🏅 Rank Tertinggi: ${escapeHTML(getRankFromBintang(Number(member.bintangSeasonLalu ?? member.seasonLaluBintang ?? member.starsSeasonLalu ?? 0), 'Warrior'))}</div>
                     <div class="stat-item">⭐ Bintang Tertinggi: ${escapeHTML(String(member.bintangSeasonLalu ?? member.seasonLaluBintang ?? member.starsSeasonLalu ?? 0))}</div>
                 </div>
 
@@ -4886,6 +5214,10 @@
             const ownedContainer = document.getElementById('owned-items-list');
             if (ownedContainer) {
                 let html = '';
+                const playTicketCount = Math.max(0, Number(member.playTickets || 0));
+                if (playTicketCount > 0) {
+                    html += `<div style="font-weight:700;color:#0f172a;margin-top:4px;margin-bottom:2px;">• Item</div><div style="padding-left:8px;color:#334155;">- "Play Tiket" (${playTicketCount}x)</div>`;
+                }
 
                 // Hiasan Nama
                 const hiasanNamaCounts = getItemCounts(getItemArray(member.unlockedHiasan).filter(id => isItemAvailable(member, id)));
@@ -5588,7 +5920,7 @@
         // ARCADE & LUCKY WHEEL
         const wheelPrizes = [
             { id: "lava_shiny", name: "Hiasan Lava Shiny", label: "Lava Shiny", chance: 2, color: "#F4434F", type: "hiasan_nama" },
-            { id: "phoenix_ember", name: "Hiasan Phoenix Ember", label: "Phoenix Api", chance: 1, color: "#F2C400", type: "hiasan_profil" },
+            { id: "play_ticket_1", name: "1 Play Tiket", label: "Play Tiket", chance: 1.5, color: "#F2C400", type: "play_ticket", val: 1 },
             { id: "detail_celestial", name: "Hiasan Arus Celestial", label: "Celestial", chance: 0.5, color: "#26B9E8", type: "hiasan_detail_profil" },
             { id: "neon_matrix", name: "Hiasan Neon Matrix", label: "???", chance: 0.1, color: "#A94CEB", type: "hiasan_profil" },
             { id: "dm_200", name: "-200 Diamond", label: "-200 Diamond", chance: 1, color: "#6858F5", type: "diamond", val: -200 },
@@ -5742,6 +6074,13 @@
                 const rewardUpdates = {};
                 if (prize.type === 'diamond') {
                     newDiamond += Number(prize.val || 0);
+                } else if (prize.type === 'play_ticket' || prize.type === 'item' && prize.id === 'play_ticket') {
+                    const ticketRef = database.ref(`members/${memberKey}/playTickets`);
+                    const ticketResult = await ticketRef.transaction(current => Number(current || 0) + Number(prize.val || prize.count || 1));
+                    if (ticketResult.committed && globalMembersData[memberKey]) {
+                        globalMembersData[memberKey].playTickets = Number(ticketResult.snapshot.val() || 0);
+                        updateMemberPersonalView(globalMembersData[memberKey]);
+                    }
                 } else if (prize.type === 'star') {
                     const starRef = database.ref(`members/${memberKey}/bintang`);
                     const beforeSnap = await starRef.once('value');
@@ -5948,9 +6287,9 @@
         function adminSaveEvent() {
             const judul = document.getElementById('adminEventJudul').value.trim();
             const content = document.getElementById('adminEventText').value.trim();
-            if (!judul) { alert("Judul event tidak boleh kosong!"); return; }
+            if (!judul) { alert("Judul pengumuman tidak boleh kosong!"); return; }
 
-            alert("✅ Event berhasil dipublikasikan!");
+            alert("✅ Pengumuman berhasil dipublikasikan!");
             document.getElementById('adminEventJudul').value = '';
             document.getElementById('adminEventText').value = '';
             eventsRef.push({ judul: judul, content: content, createdAt: Date.now() });
@@ -6125,6 +6464,203 @@
                 row.innerHTML = `<span><strong>${escapeHTML(item.nama)}</strong></span><button class="btn-del-mini" onclick="shopRef.child('${key}').remove()">🗑️ Hapus</button>`;
                 list.appendChild(row);
             });
+        }
+
+        const seasonEventRewards = [
+            { id: 'rainbow_shiny', name: 'Pelangi Prisma Shiny', type: 'hiasan_nama', itemType: 'Hiasan Nama', price: 1000, icon: '🌈', description: 'Hiasan nama shiny permanen.' },
+            { id: 'phoenix_ember', name: 'Phoenix Ember', type: 'hiasan_profil', itemType: 'Hiasan Profil', price: 2000, icon: '🔥', description: 'Hiasan profil permanen.' },
+            { id: 'detail_solar', name: 'Solar Flare', type: 'hiasan_detail_profil', itemType: 'Hiasan Detail Profil', price: 3000, icon: '☀️', description: 'Hiasan detail profil permanen.' }
+        ];
+
+        function switchSeasonEventView(view) {
+            const game = view === 'game';
+            document.getElementById('season-event-game-view').style.display = game ? 'block' : 'none';
+            document.getElementById('season-event-shop-view').style.display = game ? 'none' : 'block';
+            document.getElementById('season-event-game-tab').classList.toggle('active', game);
+            document.getElementById('season-event-shop-tab').classList.toggle('active', !game);
+            if (!game) refreshSeasonEventCoins();
+        }
+
+        function renderSeasonEvent() {
+            const empty = document.getElementById('season-event-empty');
+            const ended = document.getElementById('season-event-ended');
+            const main = document.getElementById('season-event-main');
+            if (!empty || !ended || !main) return;
+            if (seasonEventCountdownTimer) { clearInterval(seasonEventCountdownTimer); seasonEventCountdownTimer = null; }
+            if (!globalSeasonEventData || !globalSeasonEventData.startAt || !globalSeasonEventData.endsAt) {
+                empty.style.display = 'block'; ended.style.display = 'none'; main.style.display = 'none'; activeSeasonEventKey = null;
+                empty.textContent = 'Belum ada event yang tersedia. Nantikan update selanjutnya ya!';
+                return;
+            }
+            activeSeasonEventKey = globalSeasonEventData.id || 'season';
+            const updateStatus = () => {
+                const now = Date.now();
+                const expired = now >= Number(globalSeasonEventData.endsAt);
+                empty.style.display = 'none'; ended.style.display = expired ? 'block' : 'none'; main.style.display = expired ? 'none' : 'block';
+                if (expired) { stopSeasonEventGame(false); return; }
+                const remain = Math.max(0, Number(globalSeasonEventData.endsAt) - now);
+                const d = Math.floor(remain / 86400000), h = Math.floor((remain % 86400000) / 3600000), m = Math.floor((remain % 3600000) / 60000);
+                const title = document.getElementById('season-event-title');
+                const countdown = document.getElementById('season-event-countdown');
+                if (title) title.textContent = '🎉 ' + (globalSeasonEventData.title || 'Event Season');
+                if (countdown) countdown.textContent = `Event berakhir dalam ${d} hari ${h} jam ${m} menit.`;
+            };
+            updateStatus();
+            seasonEventCountdownTimer = setInterval(updateStatus, 30000);
+            renderSeasonEventShop();
+            refreshSeasonEventCoins();
+        }
+
+        function renderSeasonEventShop() {
+            const list = document.getElementById('season-event-shop-items');
+            if (!list) return;
+            list.innerHTML = '';
+            seasonEventRewards.forEach(reward => {
+                const card = document.createElement('div');
+                card.className = 'shop-item card-box';
+                card.style.cssText = 'margin-bottom:12px;border:1px solid #ddd6fe;background:linear-gradient(135deg,#fff,#f5f3ff);';
+                card.innerHTML = `<div style="display:flex;align-items:center;gap:12px;"><div style="font-size:2rem;">${reward.icon}</div><div style="flex:1;min-width:0;"><h3 style="font-size:1rem;color:#312e81;margin:0 0 4px;">${escapeHTML(reward.name)}</h3><p style="font-size:.8rem;color:#64748b;margin:0 0 6px;">${escapeHTML(reward.description)}</p><strong style="color:#7c3aed;">🪙 ${reward.price.toLocaleString('id-ID')} Coin</strong></div></div><button type="button" class="btn-action" style="margin-top:12px;background:#7c3aed;width:100%;" onclick="redeemSeasonEventReward('${reward.id}')">Tukarkan</button>`;
+                list.appendChild(card);
+            });
+        }
+
+        async function refreshSeasonEventCoins() {
+            const gameCoins = document.getElementById('season-game-coins');
+            const shopCoins = document.getElementById('season-shop-coins');
+            if (!activeLoggedInMemberKey || !activeSeasonEventKey) {
+                if (gameCoins) gameCoins.textContent = 'Login dulu';
+                if (shopCoins) shopCoins.textContent = 'Login dulu';
+                return 0;
+            }
+            try {
+                const snap = await seasonEventRef.child('coinBalances').child(activeLoggedInMemberKey).once('value');
+                const amount = Number(snap.val() || 0);
+                if (gameCoins) gameCoins.textContent = amount.toLocaleString('id-ID');
+                if (shopCoins) shopCoins.textContent = amount.toLocaleString('id-ID');
+                return amount;
+            } catch (e) { console.error('Gagal memuat Coin Event:', e); return 0; }
+        }
+
+        function moveSeasonEventTarget() {
+            const arena = document.getElementById('season-game-arena');
+            const target = document.getElementById('season-game-target');
+            if (!arena || !target) return;
+            const maxX = Math.max(0, arena.clientWidth - target.offsetWidth);
+            const maxY = Math.max(0, arena.clientHeight - target.offsetHeight);
+            target.style.left = Math.floor(Math.random() * (maxX + 1)) + 'px';
+            target.style.top = Math.floor(Math.random() * (maxY + 1)) + 'px';
+        }
+
+        async function startSeasonEventGame() {
+            if (!activeLoggedInMemberKey) { alert('Login member dulu di Personalisasi untuk bermain dan menyimpan Coin.'); switchTab('personal'); return; }
+            if (!globalSeasonEventData || Date.now() < Number(globalSeasonEventData.startAt || 0) || Date.now() >= Number(globalSeasonEventData.endsAt)) { renderSeasonEvent(); return; }
+            if (seasonEventGameRunning) return;
+            const memberKey = activeLoggedInMemberKey;
+            const ticketResult = await database.ref(`members/${memberKey}/playTickets`).transaction(current => {
+                const count = Number(current || 0);
+                if (count < 1) return;
+                return count - 1;
+            });
+            if (!ticketResult.committed) { alert('Play Tiket belum cukup! Selesaikan Quest Khusus login harian atau dapatkan dari Lucky Wheel.'); return; }
+            if (globalMembersData[memberKey]) globalMembersData[memberKey].playTickets = Number(ticketResult.snapshot.val() || 0);
+            updateMemberPersonalView(globalMembersData[memberKey] || {});
+            seasonEventGameRunning = true; seasonEventGameScore = 0; seasonEventGameRemaining = 60;
+            const score = document.getElementById('season-game-score');
+            const time = document.getElementById('season-game-time');
+            const overlay = document.getElementById('season-game-overlay');
+            const target = document.getElementById('season-game-target');
+            const button = document.getElementById('season-game-start');
+            if (score) score.textContent = '0'; if (time) time.textContent = '60';
+            if (overlay) overlay.style.display = 'none'; if (target) target.style.display = 'block'; if (button) button.disabled = true;
+            moveSeasonEventTarget();
+            if (seasonEventGameTimer) clearInterval(seasonEventGameTimer);
+            seasonEventGameTimer = setInterval(() => {
+                seasonEventGameRemaining--;
+                if (time) time.textContent = String(Math.max(0, seasonEventGameRemaining));
+                if (seasonEventGameRemaining <= 0) stopSeasonEventGame(true);
+            }, 1000);
+        }
+
+        function hitSeasonEventTarget() {
+            if (!seasonEventGameRunning) return;
+            seasonEventGameScore++;
+            const score = document.getElementById('season-game-score');
+            if (score) score.textContent = String(seasonEventGameScore);
+            moveSeasonEventTarget();
+        }
+
+        async function stopSeasonEventGame(saveScore) {
+            if (seasonEventGameTimer) { clearInterval(seasonEventGameTimer); seasonEventGameTimer = null; }
+            const wasRunning = seasonEventGameRunning;
+            seasonEventGameRunning = false;
+            const target = document.getElementById('season-game-target');
+            const overlay = document.getElementById('season-game-overlay');
+            const button = document.getElementById('season-game-start');
+            if (target) target.style.display = 'none';
+            if (button) button.disabled = false;
+            if (overlay) { overlay.style.display = 'flex'; overlay.textContent = saveScore ? `Waktu habis! Kamu mendapat ${seasonEventGameScore} poin.` : 'Event telah berakhir.'; }
+            if (!saveScore || !wasRunning || !seasonEventGameScore || !activeLoggedInMemberKey || !activeSeasonEventKey) { if (saveScore) await refreshSeasonEventCoins(); return; }
+            if (!globalSeasonEventData || Date.now() >= Number(globalSeasonEventData.endsAt)) { renderSeasonEvent(); return; }
+            const balanceRef = seasonEventRef.child('coinBalances').child(activeLoggedInMemberKey);
+            try {
+                await balanceRef.transaction(current => Number(current || 0) + seasonEventGameScore);
+                await refreshSeasonEventCoins();
+                alert(`Permainan selesai! ${seasonEventGameScore} poin dikonversi menjadi ${seasonEventGameScore} Coin.`);
+            } catch (e) { console.error('Gagal menyimpan Coin Event:', e); alert('Coin belum berhasil disimpan. Coba periksa koneksi lalu hubungi admin.'); }
+        }
+
+        async function redeemSeasonEventReward(rewardId) {
+            if (!activeLoggedInMemberKey) { alert('Login member dulu di Personalisasi sebelum menukar hadiah.'); switchTab('personal'); return; }
+            if (!globalSeasonEventData || Date.now() >= Number(globalSeasonEventData.endsAt)) { renderSeasonEvent(); alert('Event telah berakhir.'); return; }
+            const reward = seasonEventRewards.find(item => item.id === rewardId);
+            if (!reward) return;
+            const member = globalMembersData[activeLoggedInMemberKey];
+            if (!member) { alert('Data member belum siap. Coba lagi.'); return; }
+            const field = reward.type === 'hiasan_nama' ? 'unlockedHiasan' : reward.type === 'hiasan_profil' ? 'unlockedHiasanProfil' : 'unlockedHiasanDetailProfil';
+            const owned = getItemArray(member[field]);
+            if (owned.includes(reward.id)) { alert('Kamu sudah memiliki item ini. Item event hanya bisa ditukarkan satu kali.'); return; }
+            const balanceRef = seasonEventRef.child('coinBalances').child(activeLoggedInMemberKey);
+            try {
+                const snap = await balanceRef.once('value');
+                const balance = Number(snap.val() || 0);
+                if (balance < reward.price) { alert('Coin belum cukup!'); return; }
+                const updates = {};
+                if (reward.type !== 'hiasan_detail_profil') {
+                    addItemToInventory(updates, activeLoggedInMemberKey, member, { itemId: reward.id, itemName: reward.name, itemType: reward.itemType, count: 1 });
+                }
+                if (reward.type === 'hiasan_detail_profil') {
+                    const details = getItemArray(member.unlockedHiasanDetailProfil);
+                    if (!details.includes(reward.id)) details.push(reward.id);
+                    updates[`members/${activeLoggedInMemberKey}/unlockedHiasanDetailProfil`] = details;
+                }
+                updates[`members/${activeLoggedInMemberKey}/itemExpiries/${reward.id}`] = null;
+                const balanceAfter = balance - reward.price;
+                updates[`seasonEvent/coinBalances/${activeLoggedInMemberKey}`] = balanceAfter;
+                await database.ref().update(updates);
+                if (globalMembersData[activeLoggedInMemberKey]) {
+                    globalMembersData[activeLoggedInMemberKey][field] = [...owned, reward.id];
+                    globalMembersData[activeLoggedInMemberKey].itemExpiries = globalMembersData[activeLoggedInMemberKey].itemExpiries || {};
+                    delete globalMembersData[activeLoggedInMemberKey].itemExpiries[reward.id];
+                }
+                await refreshSeasonEventCoins();
+                alert(`Berhasil menukarkan ${reward.name} secara permanen!`);
+            } catch (e) { console.error('Penukaran hadiah Event gagal:', e); alert('Penukaran gagal disimpan. Coba lagi.'); }
+        }
+
+        async function adminStartSeasonEvent() {
+            if (!isAdminLoggedIn) { alert('Login admin terlebih dahulu.'); return; }
+            const snap = await seasonEventRef.once('value');
+            if (snap.exists()) { alert('Sistem event masih tersimpan. Hapus sistem event lama terlebih dahulu jika ingin memulai event baru.'); return; }
+            const startAt = Date.now();
+            await seasonEventRef.set({ id: 'season_' + startAt, title: 'Event Season Baru', startAt, endsAt: startAt + 14 * 24 * 60 * 60 * 1000, coinBalances: {} });
+            alert('Event Season berhasil diaktifkan selama 14 hari!');
+        }
+
+        async function adminDeleteSeasonEvent() {
+            if (!isAdminLoggedIn) { alert('Login admin terlebih dahulu.'); return; }
+            if (!confirm('Hapus seluruh sistem Event Season beserta saldo Coin event semua member?')) return;
+            await seasonEventRef.remove();
+            alert('Sistem Event Season telah dihapus.');
         }
 
         function populateAdminEventList() {
