@@ -3723,7 +3723,7 @@
 
         async function switchTab(tabName, pushHistory = true) {
             // Pengguna yang belum login hanya boleh membuka Profil dan Personalisasi.
-            if (tabName !== 'profil' && tabName !== 'personalisasi' && !activeLoggedInMemberKey) {
+            if (tabName !== 'profil' && tabName !== 'personal' && tabName !== 'personalisasi' && !activeLoggedInMemberKey) {
                 showResultPopup('Login dulu untuk mengakses kategori ini.');
                 return;
             }
@@ -5999,7 +5999,7 @@
             { id: "play_ticket_1", name: "1 Play Tiket", label: "Play Tiket", chance: 1.5, color: "#F2C400", type: "play_ticket", val: 1 },
             { id: "sakura _bersemi", name: "Hiasan Sakura Bersemi", label: "Sakura Pink", chance: 1, color: "#26B9E8", type: "hiasan_profil" },
             { id: "neon_matrix", name: "Hiasan Neon Matrix", label: "???", chance: 0.5, color: "#A94CEB", type: "hiasan_profil" },
-            { id: "dm_200", name: "-200 Diamond", label: "-200 Diamond", chance: 1, color: "#6858F5", type: "diamond", val: -200 },
+            { id: "dm_300", name: "-300 Diamond", label: "-300 Diamond", chance: 1, color: "#6858F5", type: "diamond", val: -300 },
             { id: "dm_100", name: "Hadiah 100 Diamond", label: "+100 Diamond", chance: 5, color: "#8950F5", type: "diamond", val: 100 },
             { id: "dm_250", name: "Hadiah 250 Diamond", label: "+250 Diamond", chance: 3, color: "#19C85A", type: "diamond", val: 250 },
             { id: "dm_500", name: "Hadiah 500 Diamond", label: "+500 Diamond", chance: 1, color: "#FF990A", type: "diamond", val: 500 },
