@@ -309,6 +309,32 @@
             color: white;
             border-color: #2563eb;
         }
+        .member-card .btn-profile-gallery, .card-box .btn-profile-gallery {
+            position: absolute !important;
+            top: 8px !important;
+            right: 44px !important;
+            left: auto !important;
+            bottom: auto !important;
+            z-index: 20 !important;
+            width: 30px !important;
+            height: 30px !important;
+            min-width: 30px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 50% !important;
+            background: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+            cursor: pointer !important;
+            font-size: .9rem !important;
+            line-height: 1 !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,.1) !important;
+            transition: .2s;
+            transform: none !important;
+        }
+        .member-card .btn-profile-gallery:hover, .card-box .btn-profile-gallery:hover { background:#2563eb !important; color:#fff !important; border-color:#2563eb !important; }
 
         .member-header-row {
             display: flex;
@@ -2571,6 +2597,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label>🖼️ Galeri / Pajangan Player (maksimal 10 item):</label>
+                        <select id="editSelfGalleryItems" multiple size="6" onchange="limitGallerySelection(this)" style="min-height:120px;"></select>
+                        <small style="display:block;color:#64748b;margin-top:4px;">Pilih sampai 10 item yang ingin ditampilkan di galeri profilmu.</small>
+                    </div>
+
+                    <div class="form-group">
                         <label>Nama Member:</label>
                         <input type="text" id="editSelfNama" placeholder="Nama Baru">
                     </div>
@@ -2806,6 +2838,17 @@
                 <button class="btn-close" onclick="closeModal('profileDetailModal')">&times;</button>
             </div>
             <div class="modal-body" id="profileDetailContent"></div>
+        </div>
+    </div>
+
+    <!-- MODAL GALERI / PAJANGAN PLAYER -->
+    <div id="playerGalleryModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="modal-header">
+                <h2>🖼️ Galeri / Pajangan Player</h2>
+                <button class="btn-close" onclick="closeModal('playerGalleryModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="playerGalleryContent"></div>
         </div>
     </div>
 
@@ -4952,6 +4995,7 @@
                 card.dataset.memberKey = key;
                 card.innerHTML = `
                     <button type="button" class="btn-profile-detail" title="Lihat Detail Profil" aria-label="Lihat Detail Profil">ℹ</button>
+                    <button type="button" class="btn-profile-gallery" title="Galeri / Pajangan Player" aria-label="Galeri / Pajangan Player">🖼️</button>
                     <div class="member-header-row">
                         <span class="${nameClass}">${escapeHTML(item.nama || 'Tanpa Nama')}</span>
                         ${gelarHTML}
@@ -5187,6 +5231,60 @@
             }
         }
 
+        function getGalleryInventory(member) {
+            if (!member) return [];
+            const result = [];
+            const addCategory = (prefix, field, nameMap) => {
+                const counts = getItemCounts(getItemArray(member[field]).filter(id => isItemAvailable(member, id)));
+                Object.keys(counts).forEach(id => result.push({ key: `${prefix}:${id}`, name: nameMap[id] || id, count: counts[id] }));
+            };
+            addCategory('nama', 'unlockedHiasan', hiasanNamaMap);
+            addCategory('profil', 'unlockedHiasanProfil', hiasanProfilMap);
+            addCategory('detail', 'unlockedHiasanDetailProfil', hiasanDetailProfilMap);
+            addCategory('gelar', 'unlockedTitles', {});
+            const ticketCount = Math.max(0, Number(member.playTickets || 0));
+            if (ticketCount > 0) result.push({ key: 'item:play_ticket', name: 'Play Tiket', count: ticketCount });
+            addCategory('lencana', 'unlockedBadges', { immortal: 'Immortal', demon_king: 'Demon King', first_season: 'First Season' });
+            if (member.isVip || hasActiveVipPlus(member)) result.push({ key: 'status:vip', name: hasActiveVipPlus(member) ? 'VIP Plus Member Status' : 'VIP Member Status', count: 1 });
+            return result;
+        }
+
+        function refreshGalleryOptionChecks(select) {
+            if (!select) return;
+            Array.from(select.options).forEach(option => {
+                const baseText = (option.dataset.baseLabel || option.textContent).replace(/^✓\s*/, '');
+                option.dataset.baseLabel = baseText;
+                option.textContent = `${option.selected ? '✓ ' : '　'}${baseText}`;
+            });
+        }
+
+        function limitGallerySelection(select) {
+            const selected = Array.from(select.options).filter(option => option.selected);
+            if (selected.length > 10) {
+                selected.slice(10).forEach(option => option.selected = false);
+                showResultPopup('Galeri hanya bisa menampilkan maksimal 10 item.');
+            }
+            refreshGalleryOptionChecks(select);
+        }
+
+        function openPlayerGallery(key) {
+            const member = globalMembersData[key];
+            const content = document.getElementById('playerGalleryContent');
+            if (!member || !content) return;
+            const inventory = getGalleryInventory(member);
+            const selected = Array.isArray(member.galleryItems) ? member.galleryItems : [];
+            const selectedItems = selected.map(k => inventory.find(item => item.key === k)).filter(Boolean);
+            content.innerHTML = selectedItems.length ? selectedItems.map(item => {
+                const itemId = item.key.split(':').pop();
+                const shinyClass = getItemDurationShinyClass(itemId);
+                const emoji = getItemDurationEmoji(itemId);
+                return `<div style="font-size:.85rem;font-weight:700;margin-top:4px;display:flex;align-items:center;gap:4px;"><span class="${shinyClass}">${emoji} ${escapeHTML(item.name)} (${item.count}x)</span></div>`;
+            }).join('') : '<div style="font-size:.88rem;color:#64748b;text-align:center;padding:12px;">Belum ada item yang dipajang.</div>';
+            const modal = document.getElementById('playerGalleryModal');
+            modal.style.display = 'flex';
+            modal.style.zIndex = '10001';
+        }
+
         function updateMemberPersonalView(member) {
             if (!member) return;
             activeLoggedInMemberKey = activeLoggedInMemberKey || document.getElementById('selectMemberSelf').value;
@@ -5229,6 +5327,22 @@
                 });
                 const selectedBadge = Array.isArray(member.lencanaDitampilkan) ? (member.lencanaDitampilkan[0] || '') : (member.lencanaDitampilkan ?? (Array.isArray(member.lencanaProfil) ? (member.lencanaProfil[0] || '') : (member.lencanaProfil || (member.lencanaImmortal ? 'immortal' : ''))));
                 badgeSelect.value = [...badgeSelect.options].some(opt => opt.value === selectedBadge) ? selectedBadge : '';
+            }
+
+            const gallerySelect = document.getElementById('editSelfGalleryItems');
+            if (gallerySelect) {
+                const galleryInventory = getGalleryInventory(member);
+                const selectedGalleryItems = Array.isArray(member.galleryItems) ? member.galleryItems : [];
+                gallerySelect.innerHTML = '';
+                galleryInventory.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.key;
+                    opt.dataset.baseLabel = `${item.name} (${item.count}x)`;
+                    opt.textContent = `${item.name} (${item.count}x)`;
+                    opt.selected = selectedGalleryItems.includes(item.key);
+                    gallerySelect.appendChild(opt);
+                });
+                refreshGalleryOptionChecks(gallerySelect);
             }
 
             const gelarSelect = document.getElementById('editSelfGelarSelect');
@@ -5415,6 +5529,8 @@
             const newPin = document.getElementById('editSelfPin').value.trim();
             const badgeSelect = document.getElementById('editSelfBadgeSelect');
             const selectedBadge = badgeSelect ? badgeSelect.value : '';
+            const gallerySelect = document.getElementById('editSelfGalleryItems');
+            const selectedGalleryItems = gallerySelect ? Array.from(gallerySelect.selectedOptions).slice(0, 10).map(option => option.value) : [];
 
             const currentMember = globalMembersData[activeLoggedInMemberKey];
             if (newHiasanDetailProfil === 'vip_plus_gold' && !hasActiveVipPlus(currentMember)) {
@@ -5440,6 +5556,7 @@
 
             const updates = {};
             updates[`members/${activeLoggedInMemberKey}/lencanaDitampilkan`] = selectedBadge;
+            updates[`members/${activeLoggedInMemberKey}/galleryItems`] = selectedGalleryItems;
             updates[`members/${activeLoggedInMemberKey}/nama`] = newNama;
             updates[`members/${activeLoggedInMemberKey}/bio`] = newBio;
             updates[`members/${activeLoggedInMemberKey}/gameKesukaan`] = newGame;
@@ -5997,7 +6114,7 @@
         const wheelPrizes = [
             { id: "mint_shiny", name: "Hiasan Mint Glacier", label: "Mint Glacier", chance: 2, color: "#F4434F", type: "hiasan_nama" },
             { id: "play_ticket_1", name: "1 Play Tiket", label: "Play Tiket", chance: 1.5, color: "#F2C400", type: "play_ticket", val: 1 },
-            { id: "sakura _bersemi", name: "Hiasan Sakura Bersemi", label: "Sakura Pink", chance: 1, color: "#26B9E8", type: "hiasan_profil" },
+            { id: "sakura_bersemi", name: "Hiasan Sakura Bersemi", label: "Sakura Pink", chance: 1, color: "#26B9E8", type: "hiasan_profil" },
             { id: "neon_matrix", name: "Hiasan Neon Matrix", label: "???", chance: 0.5, color: "#A94CEB", type: "hiasan_profil" },
             { id: "dm_300", name: "-300 Diamond", label: "-300 Diamond", chance: 1, color: "#6858F5", type: "diamond", val: -300 },
             { id: "dm_100", name: "Hadiah 100 Diamond", label: "+100 Diamond", chance: 5, color: "#8950F5", type: "diamond", val: 100 },
@@ -6417,14 +6534,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             toggleAdminRewardInput();
             document.addEventListener('click', event => {
-                const button = event.target.closest && event.target.closest('.btn-profile-detail');
+                const detailButton = event.target.closest && event.target.closest('.btn-profile-detail');
+                const galleryButton = event.target.closest && event.target.closest('.btn-profile-gallery');
+                const button = detailButton || galleryButton;
                 if (!button) return;
                 const card = button.closest('.member-card');
                 const key = card && card.dataset.memberKey;
                 if (!key) return;
                 event.preventDefault();
                 event.stopPropagation();
-                openProfileDetailModal(key);
+                if (galleryButton) openPlayerGallery(key);
+                else openProfileDetailModal(key);
             });
         });
 
