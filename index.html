@@ -2514,10 +2514,8 @@
                 
                 <div id="member-login-box">
                     <div class="form-group">
-                        <label>Pilih Nama Kamu:</label>
-                        <select id="selectMemberSelf">
-                            <option value="">-- Pilih Nama Kamu --</option>
-                        </select>
+                        <label>Nama Pengguna:</label>
+                        <input type="text" id="selectMemberSelf" placeholder="Masukkan nama akun kamu" autocomplete="username">
                     </div>
                     <div class="form-group">
                         <label>Sandi / PIN:</label>
@@ -2529,6 +2527,7 @@
                         </div>
                     </div>
                     <button class="btn-action" onclick="loginMember()">🔓 Masuk</button>
+                    <p style="margin-top:12px;text-align:center;font-size:.85rem;color:#64748b;">Pengguna baru dan belum memiliki akun? <a href="#" onclick="event.preventDefault();openModal('createAccountModal')" style="color:#2563eb;font-weight:700;">Buat akun</a></p>
                 </div>
 
                 <div id="member-edit-box" style="display: none;">
@@ -2670,7 +2669,7 @@
             <div class="card-box leaderboard-shell">
                 <div class="leaderboard-heading">
                     <div><h2>🏆 Papan Peringkat</h2><p id="leaderboard-week-label">Memuat periode peringkat...</p></div>
-                    <div class="leaderboard-refresh-mark" title="Peringkat diperbarui setiap awal minggu">↻</div>
+                    <button class="leaderboard-refresh-mark" title="Perbarui peringkat" onclick="renderLeaderboard()">↻</button>
                 </div>
                 <div class="leaderboard-category-tabs">
                     <button class="leaderboard-category-btn active" data-leaderboard-category="diamond" onclick="selectLeaderboardCategory('diamond')">💎 Diamond</button>
@@ -2716,6 +2715,18 @@
     </div>
 
     <!-- MODAL PONDASI PINJAMAN -->
+    <div id="createAccountModal" class="modal-overlay" style="z-index:1200;">
+        <div class="modal-content" style="max-width:430px;">
+            <div class="modal-header"><h2>📝 Buat Akun Ruang Mabar</h2><button class="btn-close" onclick="closeModal('createAccountModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label>Nama Pengguna</label><input id="newAccountName" type="text" maxlength="24" autocomplete="username" placeholder="Buat nama pengguna"></div>
+                <div class="form-group"><label>Password / PIN</label><input id="newAccountPin" type="password" minlength="4" maxlength="32" autocomplete="new-password" placeholder="Minimal 4 karakter"></div>
+                <div class="form-group"><label>Ulangi Password / PIN</label><input id="newAccountPinConfirm" type="password" maxlength="32" autocomplete="new-password" placeholder="Ulangi password"></div>
+                <button class="btn-action" onclick="createMemberAccount()">Buat Akun</button>
+            </div>
+        </div>
+    </div>
+
     <div id="loansModal" class="modal-overlay loans-modal-overlay">
         <div class="modal-content loans-modal-content">
             <div class="modal-header">
@@ -3423,7 +3434,28 @@
             }
         });
 
-        function openModal(modalId) {
+        async function openModal(modalId) {
+            if (modalId === 'marketplaceModal') {
+                const memberKey = activeLoggedInMemberKey;
+                if (!memberKey) {
+                    showResultPopup('Login dulu untuk mengakses Marketplace.');
+                    return;
+                }
+                let member = memberKey && globalMembersData[memberKey];
+                if (memberKey) {
+                    try {
+                        const latestSnapshot = await membersRef.child(memberKey).once('value');
+                        if (latestSnapshot.exists()) {
+                            member = latestSnapshot.val();
+                            globalMembersData[memberKey] = member;
+                        }
+                    } catch (e) { console.error('Gagal memeriksa level terbaru:', e); }
+                }
+                if (!member || !memberKey || Number(member.level != null ? member.level : 1) < 5) {
+                    showResultPopup('Level kamu tidak memenuhi syarat. Syarat minimal adalah level 5.');
+                    return;
+                }
+            }
             document.getElementById(modalId).style.display = 'flex';
             if (modalId === 'loansModal') refreshLoanOffers();
             history.pushState({ modal: modalId, tab: getCurrentActiveTab() }, '');
@@ -3601,7 +3633,7 @@
             const claimPanel = document.getElementById('leaderboard-claim-panel');
             if (!status || !list || !claimPanel) return;
             const weekKey = cachedLeaderboardSnapshot && cachedLeaderboardSnapshot.weekKey || getLeaderboardWeekKey();
-            const entries = cachedLeaderboardSnapshot && cachedLeaderboardSnapshot.categories && cachedLeaderboardSnapshot.categories[activeLeaderboardCategory] || [];
+            const entries = makeLeaderboardCategory(activeLeaderboardCategory, globalMembersData || {});
             const selfKey = activeLoggedInMemberKey;
             const ownEntry = selfKey ? entries.find(entry => entry.memberKey === selfKey) : null;
             const reward = ownEntry ? leaderboardRewardForRank(Number(ownEntry.rank)) : 0;
@@ -3689,7 +3721,33 @@
             }, false);
         }
 
-        function switchTab(tabName, pushHistory = true) {
+        async function switchTab(tabName, pushHistory = true) {
+            // Pengguna yang belum login hanya boleh membuka Profil dan Personalisasi.
+            if (tabName !== 'profil' && tabName !== 'personalisasi' && !activeLoggedInMemberKey) {
+                showResultPopup('Login dulu untuk mengakses kategori ini.');
+                return;
+            }
+            const levelRequirements = { pinjaman: 10, quest: 3, event: 3, arcade: 3, chat: 3, shop: 2 };
+            const requiredLevel = levelRequirements[tabName];
+            if (requiredLevel) {
+                const memberKey = activeLoggedInMemberKey;
+                let member = memberKey && globalMembersData[memberKey];
+                // Ambil level terbaru dari Firebase agar pemeriksaan tidak memakai data lama.
+                if (memberKey) {
+                    try {
+                        const latestSnapshot = await membersRef.child(memberKey).once('value');
+                        if (latestSnapshot.exists()) {
+                            member = latestSnapshot.val();
+                            globalMembersData[memberKey] = member;
+                        }
+                    } catch (e) { console.error('Gagal memeriksa level terbaru:', e); }
+                }
+                const currentLevel = Number(member && member.level != null ? member.level : 1);
+                if (!member || !memberKey || currentLevel < requiredLevel) {
+                    showResultPopup(`Level kamu tidak memenuhi syarat. Syarat minimal adalah level ${requiredLevel}.`);
+                    return;
+                }
+            }
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
@@ -4542,16 +4600,9 @@
             if (document.getElementById('tab-leaderboard')?.classList.contains('active')) renderLeaderboard();
 
             const selectSelf = document.getElementById('selectMemberSelf');
-            const currentSelectedSelf = selectSelf.value;
-            selectSelf.innerHTML = '<option value="">-- Pilih Nama Kamu --</option>';
-
-            Object.keys(globalMembersData).forEach((key) => {
-                const item = globalMembersData[key];
-                const opt1 = document.createElement('option');
-                opt1.value = key; opt1.innerText = item.nama;
-                if (key === currentSelectedSelf) opt1.selected = true;
-                selectSelf.appendChild(opt1);
-            });
+            if (activeLoggedInMemberKey && globalMembersData[activeLoggedInMemberKey]) {
+                selectSelf.value = globalMembersData[activeLoggedInMemberKey].nama || globalMembersData[activeLoggedInMemberKey].username || '';
+            }
 
             filterAndRenderMembers();
 
@@ -4573,7 +4624,7 @@
                 activeLoggedInMemberKey = savedMemberKey;
                 const savedMember = globalMembersData[savedMemberKey];
                 const savedSelect = document.getElementById('selectMemberSelf');
-                if (savedSelect) savedSelect.value = savedMemberKey;
+                if (savedSelect) savedSelect.value = savedMember.nama || savedMember.username || '';
                 document.getElementById('member-login-box').style.display = 'none';
                 document.getElementById('member-edit-box').style.display = 'block';
                 document.getElementById('member-personal-profile-preview').style.display = 'block';
@@ -5280,11 +5331,36 @@
             }
         }
 
-        function loginMember() {
-            const memberKey = document.getElementById('selectMemberSelf').value;
-            const pin = document.getElementById('inputMemberPin').value.trim();
+        async function createMemberAccount() {
+            const name = document.getElementById('newAccountName').value.trim();
+            const pin = document.getElementById('newAccountPin').value;
+            const confirmPin = document.getElementById('newAccountPinConfirm').value;
+            if (!name || !pin) return showResultPopup('Nama pengguna dan password wajib diisi.');
+            if (name.length < 3) return showResultPopup('Nama pengguna minimal 3 karakter.');
+            if (pin.length < 4) return showResultPopup('Password / PIN minimal 4 karakter.');
+            if (pin !== confirmPin) return showResultPopup('Konfirmasi password tidak cocok.');
+            if (Object.values(globalMembersData || {}).some(m => String(m.nama || m.username || '').trim().toLowerCase() === name.toLowerCase())) return showResultPopup('Nama pengguna sudah digunakan.');
+            try {
+                const ref = membersRef.push();
+                const account = { nama: name, username: name, pin: pin, level: 1, diamond: 0, bintang: 0, gelar: '-', bio: '', createdAt: Date.now() };
+                await ref.set(account);
+                document.getElementById('selectMemberSelf').value = name;
+                document.getElementById('inputMemberPin').value = pin;
+                document.getElementById('newAccountName').value = '';
+                document.getElementById('newAccountPin').value = '';
+                document.getElementById('newAccountPinConfirm').value = '';
+                closeModal('createAccountModal');
+                showResultPopup('Akun berhasil dibuat. Silakan masuk.');
+            } catch (e) { showResultPopup('Gagal membuat akun. Coba lagi.'); }
+        }
 
-            if (!memberKey) { alert("Pilih nama kamu terlebih dahulu!"); return; }
+        function loginMember() {
+            const enteredName = document.getElementById('selectMemberSelf').value.trim();
+            const pin = document.getElementById('inputMemberPin').value.trim();
+            const memberKey = Object.keys(globalMembersData).find(key => String(globalMembersData[key].nama || globalMembersData[key].username || '').trim().toLowerCase() === enteredName.toLowerCase());
+
+            if (!enteredName) { alert("Masukkan nama pengguna terlebih dahulu!"); return; }
+            if (!memberKey) { alert("Akun tidak ditemukan. Silakan buat akun terlebih dahulu."); return; }
             if (!pin) { alert("Masukkan Sandi / PIN!"); return; }
 
             const m = globalMembersData[memberKey];
@@ -5919,10 +5995,10 @@
 
         // ARCADE & LUCKY WHEEL
         const wheelPrizes = [
-            { id: "lava_shiny", name: "Hiasan Lava Shiny", label: "Lava Shiny", chance: 2, color: "#F4434F", type: "hiasan_nama" },
+            { id: "mint_shiny", name: "Hiasan Mint Glacier", label: "Mint Glacier", chance: 2, color: "#F4434F", type: "hiasan_nama" },
             { id: "play_ticket_1", name: "1 Play Tiket", label: "Play Tiket", chance: 1.5, color: "#F2C400", type: "play_ticket", val: 1 },
-            { id: "detail_celestial", name: "Hiasan Arus Celestial", label: "Celestial", chance: 0.5, color: "#26B9E8", type: "hiasan_detail_profil" },
-            { id: "neon_matrix", name: "Hiasan Neon Matrix", label: "???", chance: 0.1, color: "#A94CEB", type: "hiasan_profil" },
+            { id: "sakura _bersemi", name: "Hiasan Sakura Bersemi", label: "Sakura Pink", chance: 1, color: "#26B9E8", type: "hiasan_profil" },
+            { id: "neon_matrix", name: "Hiasan Neon Matrix", label: "???", chance: 0.5, color: "#A94CEB", type: "hiasan_profil" },
             { id: "dm_200", name: "-200 Diamond", label: "-200 Diamond", chance: 1, color: "#6858F5", type: "diamond", val: -200 },
             { id: "dm_100", name: "Hadiah 100 Diamond", label: "+100 Diamond", chance: 5, color: "#8950F5", type: "diamond", val: 100 },
             { id: "dm_250", name: "Hadiah 250 Diamond", label: "+250 Diamond", chance: 3, color: "#19C85A", type: "diamond", val: 250 },
