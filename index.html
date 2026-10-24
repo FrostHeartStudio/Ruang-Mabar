@@ -2137,6 +2137,29 @@
             100% { background-position:120% 120%; }
         }
 
+
+        .personal-subtabs{display:flex;gap:10px;margin:0 0 16px;padding:8px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:14px;}
+        .personal-subtab{flex:1;min-width:0;min-height:46px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:#334155;font-size:1.35rem;cursor:pointer;transition:background .15s,border-color .15s,transform .15s;}
+        .personal-subtab.active{background:#dbeafe;border-color:#3b82f6;color:#1d4ed8;box-shadow:0 2px 8px #2563eb20;}
+        .personal-subtab:active{transform:scale(.97)}
+        .personal-panel{display:none;}
+        .personal-panel.active{display:block;}
+        .personal-panel-actions{display:none;margin-top:18px;padding-top:14px;border-top:1px solid #e2e8f0;}
+        .personal-panel-actions.active{display:block;}
+        .loan-inline-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;padding:4px 0 12px;border-bottom:1px solid #e2e8f0;}
+        .loan-inline-heading h2{margin:0;color:#0f172a;font-size:1.2rem;}
+        .loan-inline-heading .btn-close{position:static;flex:0 0 auto;}
+
+
+        /* Kotak Nama menjadi lapisan luar; efek Hiasan Nama dan teks tetap berada di atasnya. */
+        .member-name-box-frame{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;padding:4px 10px;border:1px solid;border-radius:9px;box-sizing:border-box;line-height:1.5;white-space:nowrap;z-index:1;}
+        .member-name-box-frame > .member-name{position:relative;z-index:2;display:inline-block;padding:0;margin:0;}
+        .member-name-box-frame.name-box-royal{border-color:#fbbf24;background:linear-gradient(135deg,#451a03,#92400e 52%,#f59e0b);box-shadow:0 0 8px rgba(245,158,11,.28);}
+        .member-name-box-frame.name-box-neon{border-color:#22d3ee;border-radius:5px;background:linear-gradient(135deg,#082f49,#164e63);box-shadow:0 0 9px rgba(34,211,238,.3);}
+        .member-name-box-frame.name-box-frost{border-color:#bae6fd;border-radius:12px;background:linear-gradient(135deg,#0c4a6e,#64748b);box-shadow:inset 0 0 8px rgba(224,242,254,.15);}
+        .member-name-box-frame.name-box-nature{border-color:#86efac;background:linear-gradient(135deg,#14532d,#166534 55%,#365314);}
+        .member-name-box-frame.name-box-cosmic{border-color:#c4b5fd;background:linear-gradient(135deg,#1e1b4b,#581c87,#312e81);box-shadow:0 0 8px rgba(167,139,250,.28);}
+
 </style>
 
 <style id="rm-neon-matrix-final-fix">
@@ -2439,11 +2462,11 @@
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab('profil')">👥 Profil</button>
             <button class="tab-btn" onclick="switchTab('shop')">🛒 Shop</button>
-            <button class="tab-btn" onclick="switchTab('pinjaman')">💰 Pinjaman</button>
+            <button class="tab-btn" onclick="switchTab('event')">🎉 Event</button>
             <button class="tab-btn" onclick="switchTab('personal')">⚙️ Personalisasi</button>
             <button class="tab-btn" onclick="switchTab('arcade')">🕹 Arcade</button>
             <button class="tab-btn" onclick="switchTab('quest')">🎯 Quest</button>
-            <button class="tab-btn" onclick="switchTab('event')">🎉 Event</button>
+            <button class="tab-btn" onclick="switchTab('pinjaman')">💰 Pinjaman</button>
             <button class="tab-btn" onclick="switchTab('chat')">💬 Chat</button>
         </div>
 
@@ -2460,7 +2483,8 @@
 
         <!-- TAB SHOP -->
         <div id="tab-shop" class="tab-content">
-            <div class="arcade-card" style="background: linear-gradient(135deg, #0f172a, #1e293b); border-color: #38bdf8; margin-bottom: 16px;" onclick="openModal('marketplaceModal')">
+            <div id="shop-main-content">
+            <div class="arcade-card" style="background: linear-gradient(135deg, #0f172a, #1e293b); border-color: #38bdf8; margin-bottom: 16px;" onclick="toggleShopMarketplace(true)">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <h3 style="font-size: 1.2rem; color: #38bdf8; margin-bottom: 4px;">🏪 Marketplace</h3>
@@ -2469,21 +2493,49 @@
                     <span style="font-size: 2rem;">🛍</span>
                 </div>
             </div>
+            <div id="shop-player-diamond" class="card-box" style="margin-bottom:16px;padding:12px 14px;font-weight:800;color:#b45309;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fbbf24;">💎 Diamond kamu: Login untuk melihat saldo.</div>
 
             <div id="loading-shop" class="empty-notice">Memuat item Shop...</div>
             <div id="empty-shop" class="empty-notice" style="display: none;">Belum ada item di Shop.</div>
             <div id="shop-list" class="shop-list"></div>
+            </div>
+            <div id="shop-marketplace-content" style="display:none;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;">
+                    <h2 style="margin:0;color:#0f172a;">🏪 Marketplace</h2>
+                    <button class="btn-close" style="position:static;flex-shrink:0;" onclick="toggleShopMarketplace(false)" aria-label="Kembali ke Shop">&times;</button>
+                </div>
+                <div class="arcade-card" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa;margin-bottom:14px;text-align:center;" onclick="openSellItemModal()">
+                    <h3 style="font-size:1.1rem;color:white;">➕ Jual Item Kamu</h3>
+                    <p style="font-size:.82rem;opacity:.9;">Minimal punya 2 item untuk bisa menjual dan tetap menyisakan 1.</p>
+                </div>
+                <div id="marketplace-player-diamond" class="card-box" style="margin-bottom:16px;padding:12px 14px;font-weight:800;color:#b45309;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fbbf24;">💎 Diamond kamu: Login untuk melihat saldo.</div>
+                <div id="marketplace-item-list" class="shop-list"></div>
+            </div>
         </div>
 
-        <!-- TAB PINJAMAN: tampil seperti kategori utama lain, bukan popup full-screen -->
+        <!-- TAB PINJAMAN: pilihan dan detail ditampilkan di dalam kategori -->
         <div id="tab-pinjaman" class="tab-content">
-            <div class="arcade-card" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa;margin-bottom:16px;text-align:center;" onclick="showLoanView('player'); openModal('loansModal')">
-                <h3 style="font-size:1.15rem;color:white;">🤝 Pinjaman Player</h3>
-                <p style="font-size:.85rem;opacity:.9;">Lihat dan atur penawaran pinjaman antar-player.</p>
+            <div id="loanCategoryView">
+                <div class="arcade-card" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa;margin-bottom:16px;text-align:center;" onclick="showLoanView('player')">
+                    <h3 style="font-size:1.15rem;color:white;">🤝 Pinjaman Player</h3>
+                    <p style="font-size:.85rem;opacity:.9;">Lihat dan atur penawaran pinjaman antar-player.</p>
+                </div>
+                <div class="arcade-card" style="background:linear-gradient(135deg,#0f172a,#334155);border-color:#94a3b8;margin-bottom:16px;text-align:center;" onclick="showLoanView('bank')">
+                    <h3 style="font-size:1.15rem;color:white;">🏦 Pinjaman Bank</h3>
+                    <p style="font-size:.85rem;opacity:.9;">Lihat pilihan pinjaman resmi yang disediakan admin.</p>
+                </div>
             </div>
-            <div class="arcade-card" style="background:linear-gradient(135deg,#0f172a,#334155);border-color:#94a3b8;margin-bottom:16px;text-align:center;" onclick="showLoanView('bank'); openModal('loansModal')">
-                <h3 style="font-size:1.15rem;color:white;">🏦 Pinjaman Bank</h3>
-                <p style="font-size:.85rem;opacity:.9;">Lihat pilihan pinjaman resmi yang disediakan admin.</p>
+            <div id="loanPlayerView" style="display:none;">
+                <div class="loan-inline-heading"><h2 id="loansModalTitle">🤝 Pinjaman Player</h2><button type="button" class="btn-close" onclick="showLoanView('categories')" aria-label="Kembali ke pilihan pinjaman">&times;</button></div>
+                <div class="arcade-card" style="background:linear-gradient(135deg,#0f172a,#1e293b);border-color:#38bdf8;margin-bottom:16px;cursor:pointer;" onclick="openPlayerLoanEditor()">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;"><h3 style="font-size:1.05rem;color:#38bdf8;margin:0;">✏️ Buat Penawaran Pinjaman</h3><span style="font-size:1.8rem;">📝</span></div>
+                </div>
+                <section class="loan-section-placeholder" style="margin-top:14px;"><h3>📋 Daftar Penawaran Player</h3><div id="playerLoanOffersList" class="loan-offers-list">Memuat penawaran...</div></section>
+            </div>
+            <div id="loanBankView" style="display:none;">
+                <div class="loan-inline-heading"><h2 id="loansBankTitle">🏦 Pinjaman Bank</h2><button type="button" class="btn-close" onclick="showLoanView('categories')" aria-label="Kembali ke pilihan pinjaman">&times;</button></div>
+                <section class="loan-section-placeholder"><h3>🏦 Pinjaman Bank / Resmi</h3><p>Daftar pilihan pinjaman resmi dengan nominal dan bunga persentase yang ditetapkan admin.</p><div id="officialLoanOffersList" class="loan-offers-list">Memuat daftar pinjaman resmi...</div></section>
+                <p style="margin-top:10px;font-size:.82rem;color:#64748b;">Satu akun hanya dapat memiliki satu pinjaman aktif. Cicilan hanya bisa dibayar oleh akun peminjam.</p>
             </div>
         </div>
 
@@ -2561,6 +2613,12 @@
                         ✅ Berhasil Login! Kamu bisa atur Gelar, Hiasan Nama, Hiasan Profil, Bio, dan Sandi kamu di bawah.
                     </div>
 
+                    <div class="personal-subtabs" role="tablist" aria-label="Menu Personalisasi">
+                        <button type="button" class="personal-subtab active" data-personal-panel="hiasan" aria-label="Hiasan" title="Hiasan" onclick="switchPersonalPanel('hiasan')">👕</button>
+                        <button type="button" class="personal-subtab" data-personal-panel="informasi" aria-label="Edit Informasi" title="Edit Informasi" onclick="switchPersonalPanel('informasi')">✏️</button>
+                        <button type="button" class="personal-subtab" data-personal-panel="inventory" aria-label="Inventory" title="Inventory" onclick="switchPersonalPanel('inventory')">📦</button>
+                    </div>
+                    <div id="personal-panel-hiasan" class="personal-panel active">
                     <div class="form-group">
                         <label>Pilih Gelar Dimiliki:</label>
                         <select id="editSelfGelarSelect"></select>
@@ -2570,6 +2628,18 @@
                         <label>✨ Pilih Hiasan Nama:</label>
                         <select id="editSelfHiasanNamaSelect">
                             <option value="default">Default</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🪟 Kotak Nama:</label>
+                        <select id="editSelfKotakNamaSelect">
+                            <option value="default">Default (Tanpa Kotak)</option>
+                            <option value="royal">Kotak Nama Royal</option>
+                            <option value="neon">Kotak Nama Neon</option>
+                            <option value="frost">Kotak Nama Frost</option>
+                            <option value="nature">Kotak Nama Nature</option>
+                            <option value="cosmic">Kotak Nama Cosmic</option>
                         </select>
                     </div>
 
@@ -2602,6 +2672,8 @@
                         <small style="display:block;color:#64748b;margin-top:4px;">Pilih sampai 10 item yang ingin ditampilkan di galeri profilmu.</small>
                     </div>
 
+                    </div>
+                    <div id="personal-panel-informasi" class="personal-panel">
                     <div class="form-group">
                         <label>Nama Member:</label>
                         <input type="text" id="editSelfNama" placeholder="Nama Baru">
@@ -2609,12 +2681,12 @@
 
                     <div class="form-group">
                         <label>Bio Kamu:</label>
-                        <textarea id="editSelfBio" rows="3" placeholder="Tulis bio baru kamu..."></textarea>
+                        <textarea id="editSelfBio" rows="3" maxlength="150" oninput="if(this.value.length>150)this.value=this.value.slice(0,150)" placeholder="Tulis bio baru kamu... (maks. 150 karakter)"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label>🎮 Game Kesukaan:</label>
-                        <input type="text" id="editSelfGameKesukaan" placeholder="Contoh: Mobile Legends, PUBG, Roblox">
+                        <input type="text" id="editSelfGameKesukaan" maxlength="25" oninput="if(this.value.length>25)this.value=this.value.slice(0,25)" placeholder="Contoh: Mobile Legends, PUBG, Roblox (maks. 25 karakter)">
                     </div>
 
                     <div class="form-group">
@@ -2627,15 +2699,16 @@
                         </div>
                     </div>
 
-                    <button class="btn-action" onclick="saveSelfProfile()">💾 Simpan Perubahan</button>
-                    <button class="btn-action btn-secondary" onclick="logoutMember()">🔒 Keluar / Logout</button>
-
-                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-
-                    <h4 style="margin-bottom: 10px; color: #0f172a;">📦 Inventory & Item Milik Kamu:</h4>
-                    <div id="owned-items-list" style="color: #64748b; font-size: 0.88rem; line-height: 1.6;">
-                        Belum memiliki item apapun.
                     </div>
+                    <div id="personal-panel-inventory" class="personal-panel">
+                        <h4 style="margin-bottom:10px;color:#0f172a;">📦 Inventory & Item Milik Kamu:</h4>
+                        <div id="owned-items-list" style="color:#64748b;font-size:.88rem;line-height:1.6;">Belum memiliki item apapun.</div>
+                    </div>
+                    <div id="personal-panel-actions" class="personal-panel-actions">
+                        <button class="btn-action" onclick="saveSelfProfile()">💾 Simpan Perubahan</button>
+                        <button class="btn-action btn-secondary" onclick="logoutMember()">🔒 Keluar / Logout</button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -2759,47 +2832,6 @@
         </div>
     </div>
 
-    <div id="loansModal" class="modal-overlay loans-modal-overlay">
-        <div class="modal-content loans-modal-content">
-            <div class="modal-header">
-                <h2 id="loansModalTitle">💰 Pinjaman</h2>
-                <button class="btn-close" onclick="closeModal('loansModal')">&times;</button>
-            </div>
-            <div class="modal-body loans-modal-body">
-                <div id="loanCategoryView">
-                    <div class="arcade-card" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa;margin-bottom:16px;text-align:center;" onclick="showLoanView('player')">
-                        <h3 style="font-size:1.15rem;color:white;">🤝 Pinjaman Player</h3>
-                        <p style="font-size:.85rem;opacity:.9;">Lihat dan atur penawaran pinjaman antar-player.</p>
-                    </div>
-                    <div class="arcade-card" style="background:linear-gradient(135deg,#0f172a,#334155);border-color:#94a3b8;margin-bottom:16px;text-align:center;" onclick="showLoanView('bank')">
-                        <h3 style="font-size:1.15rem;color:white;">🏦 Pinjaman Bank</h3>
-                        <p style="font-size:.85rem;opacity:.9;">Lihat pilihan pinjaman resmi yang disediakan admin.</p>
-                    </div>
-                </div>
-                <div id="loanPlayerView" style="display:none;">
-                    <div class="arcade-card" style="background:linear-gradient(135deg,#0f172a,#1e293b);border-color:#38bdf8;margin-bottom:16px;cursor:pointer;" onclick="openPlayerLoanEditor()">
-                        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-                            <h3 style="font-size:1.05rem;color:#38bdf8;margin:0;">✏️ Buat Penawaran Pinjaman</h3>
-                            <span style="font-size:1.8rem;">📝</span>
-                        </div>
-                    </div>
-                    <section class="loan-section-placeholder" style="margin-top:14px;">
-                        <h3>📋 Daftar Penawaran Player</h3>
-                        <div id="playerLoanOffersList" class="loan-offers-list">Memuat penawaran...</div>
-                    </section>
-                </div>
-                <div id="loanBankView" style="display:none;">
-                    <section class="loan-section-placeholder">
-                        <h3>🏦 Pinjaman Bank / Resmi</h3>
-                        <p>Daftar pilihan pinjaman resmi dengan nominal dan bunga persentase yang ditetapkan admin.</p>
-                        <div id="officialLoanOffersList" class="loan-offers-list">Memuat daftar pinjaman resmi...</div>
-                    </section>
-                    <p style="margin-top:10px;font-size:.82rem;color:#64748b;">Satu akun hanya dapat memiliki satu pinjaman aktif. Cicilan hanya bisa dibayar oleh akun peminjam.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL LUCKY WHEEL -->
              <div id="luckyWheelModal" class="modal-overlay">
         <div class="modal-content" style="max-width: 420px; text-align: center;">
@@ -2852,25 +2884,6 @@
         </div>
     </div>
 
-    <!-- MODAL MARKETPLACE -->
-    <div id="marketplaceModal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 550px;">
-            <div class="modal-header">
-                <h2>🏪 Ruang Marketplace</h2>
-                <button class="btn-close" onclick="closeModal('marketplaceModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="arcade-card" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); border-color: #60a5fa; margin-bottom: 16px; text-align: center;" onclick="openSellItemModal()">
-                    <h3 style="font-size: 1.15rem; color: white;">➕ Jual Hiasan Nama / Profil Kamu</h3>
-                    <p style="font-size: 0.8rem; opacity: 0.9;">Minimal punya 2 item untuk bisa dijual 1!</p>
-                </div>
-
-                <h4 style="margin-bottom: 10px; color: #0f172a;">Daftar Hiasan Dijual:</h4>
-                <div id="marketplace-item-list" class="shop-list"></div>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL JUAL ITEM -->
     <div id="sellItemModal" class="modal-overlay">
         <div class="modal-content" style="max-width: 420px;">
@@ -2897,6 +2910,41 @@
                     <small id="sellStockNotice" style="color: #64748b; font-size: 0.75rem;"></small>
                 </div>
                 <button class="btn-action" style="margin-top: 10px;" onclick="submitSellItemMarketplace()">Jual Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT MARKETPLACE -->
+    <div id="marketplaceEditModal" class="modal-overlay">
+        <div class="modal-content" style="max-width:420px;border-radius:18px;">
+            <div class="modal-header" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-bottom:1px solid #bfdbfe;">
+                <h2 style="color:#1e3a8a;">✏️ Edit Penjualan</h2>
+                <button class="btn-close" onclick="closeModal('marketplaceEditModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:.85rem;color:#64748b;margin-bottom:14px;">Ubah harga dan stok item yang kamu jual.</p>
+                <input type="hidden" id="marketplaceEditKey">
+                <div class="form-group"><label>Harga per item (💎 Diamond)</label><input type="number" id="marketplaceEditPrice" min="1" step="1"></div>
+                <div class="form-group"><label>Stok</label><input type="number" id="marketplaceEditStock" min="1" step="1"></div>
+                <button class="btn-action" onclick="saveMarketplaceEdit()" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT ARCADE -->
+    <div id="arcadeEditModal" class="modal-overlay">
+        <div class="modal-content" style="max-width:440px;border-radius:18px;">
+            <div class="modal-header" style="background:linear-gradient(135deg,#eef2ff,#e0e7ff);border-bottom:1px solid #c7d2fe;">
+                <h2 style="color:#3730a3;">🕹️ Edit Arcade</h2>
+                <button class="btn-close" onclick="closeModal('arcadeEditModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:.85rem;color:#64748b;margin-bottom:14px;">Perbarui informasi tautan Arcade.</p>
+                <input type="hidden" id="arcadeEditKey">
+                <div class="form-group"><label>Nama Arcade</label><input type="text" id="arcadeEditTitle" maxlength="80"></div>
+                <div class="form-group"><label>Deskripsi</label><textarea id="arcadeEditDescription" rows="3" maxlength="250"></textarea></div>
+                <div class="form-group"><label>URL Arcade</label><input type="url" id="arcadeEditLink" placeholder="https://contoh.com"></div>
+                <button class="btn-action" onclick="saveArcadeEdit()" style="background:linear-gradient(135deg,#4f46e5,#3730a3);">Simpan Perubahan</button>
             </div>
         </div>
     </div>
@@ -3021,6 +3069,7 @@
                             <option value="Hiasan Nama">Hiasan Nama</option>
                             <option value="Hiasan Profil">Hiasan Profil</option>
                             <option value="Hiasan Detail Profil">Hiasan Detail Profil</option>
+                            <option value="Kotak Nama">Kotak Nama</option>
                             <option value="VIP">VIP Status</option>
                             <option value="VIP Plus">VIP Plus Status</option>
                             <option value="Gelar">Gelar</option>
@@ -3104,6 +3153,7 @@
                                 <option value="hiasan_nama">Hiasan Nama</option>
                                 <option value="hiasan_profil">Hiasan Profil</option>
                                 <option value="hiasan_detail_profil">Hiasan Detail Profil</option>
+                                <option value="kotak_nama">Kotak Nama</option>
                                 <option value="lencana">Lencana Profil</option>
                                 <option value="gelar">Gelar</option>
                                 <option value="vip_plus">VIP Plus Status</option>
@@ -3478,29 +3528,7 @@
         });
 
         async function openModal(modalId) {
-            if (modalId === 'marketplaceModal') {
-                const memberKey = activeLoggedInMemberKey;
-                if (!memberKey) {
-                    showResultPopup('Login dulu untuk mengakses Marketplace.');
-                    return;
-                }
-                let member = memberKey && globalMembersData[memberKey];
-                if (memberKey) {
-                    try {
-                        const latestSnapshot = await membersRef.child(memberKey).once('value');
-                        if (latestSnapshot.exists()) {
-                            member = latestSnapshot.val();
-                            globalMembersData[memberKey] = member;
-                        }
-                    } catch (e) { console.error('Gagal memeriksa level terbaru:', e); }
-                }
-                if (!member || !memberKey || Number(member.level != null ? member.level : 1) < 5) {
-                    showResultPopup('Level kamu tidak memenuhi syarat. Syarat minimal adalah level 5.');
-                    return;
-                }
-            }
             document.getElementById(modalId).style.display = 'flex';
-            if (modalId === 'loansModal') refreshLoanOffers();
             history.pushState({ modal: modalId, tab: getCurrentActiveTab() }, '');
         }
 
@@ -3924,12 +3952,14 @@
             const categories = document.getElementById('loanCategoryView');
             const player = document.getElementById('loanPlayerView');
             const bank = document.getElementById('loanBankView');
-            const title = document.getElementById('loansModalTitle');
-            if (!categories || !player || !bank || !title) return;
+            const playerTitle = document.getElementById('loansModalTitle');
+            const bankTitle = document.getElementById('loansBankTitle');
+            if (!categories || !player || !bank) return;
             categories.style.display = view === 'categories' ? '' : 'none';
             player.style.display = view === 'player' ? '' : 'none';
             bank.style.display = view === 'bank' ? '' : 'none';
-            title.textContent = view === 'player' ? '🤝 Pinjaman Player' : view === 'bank' ? '🏦 Pinjaman Bank' : '💰 Pinjaman';
+            if (playerTitle) playerTitle.textContent = '🤝 Pinjaman Player';
+            if (bankTitle) bankTitle.textContent = '🏦 Pinjaman Bank';
             if (view === 'player' || view === 'bank') refreshLoanOffers();
         }
 
@@ -4189,6 +4219,7 @@
             const pass = document.getElementById('inputAdminAuthPass').value.trim();
             if (pass === "ABSENRUANGMABAR") {
                 isAdminLoggedIn = true;
+                renderArcadeLinks();
                 document.getElementById('admin-login-sec').style.display = 'none';
                 document.getElementById('admin-panel-sec').style.display = 'block';
                 populateAdminMemberList();
@@ -4360,6 +4391,12 @@
                 if (!unlockedDetail.includes(codeData.preset)) unlockedDetail.push(codeData.preset);
                 updates[`members/${activeLoggedInMemberKey}/unlockedHiasanDetailProfil`] = unlockedDetail;
                 stackItemDuration(updates, activeLoggedInMemberKey, member, codeData.preset, 7);
+            } else if (codeData.type === 'kotak_nama') {
+                const unlockedBoxes = getItemArray(member.unlockedKotakNama);
+                if (!unlockedBoxes.includes(codeData.preset)) unlockedBoxes.push(codeData.preset);
+                updates[`members/${activeLoggedInMemberKey}/unlockedKotakNama`] = unlockedBoxes;
+                updates[`members/${activeLoggedInMemberKey}/kotakNama`] = codeData.preset;
+                updates[`members/${activeLoggedInMemberKey}/itemExpiries/${codeData.preset}`] = null;
             } else if (codeData.type === 'lencana') {
                 const unlockedBadges = getItemArray(member.unlockedBadges);
                 if (!unlockedBadges.includes(codeData.preset)) unlockedBadges.push(codeData.preset);
@@ -4615,6 +4652,8 @@
             if (!snapshot.exists()) {
                 document.getElementById('empty-profil').style.display = 'block';
                 globalMembersData = {};
+                updateShopDiamondDisplay();
+                refreshMarketplaceDiamond();
                 filterAndRenderMembers();
                 return;
             }
@@ -4631,6 +4670,7 @@
                 lastKnownMemberStars[starMemberKey] = newStars;
             }
             globalMembersData = nextMembersData;
+            updateShopDiamondDisplay();
 
             Object.keys(globalMembersData).forEach(k => {
                 cleanupExpiredItemsForMember(k, globalMembersData[k]);
@@ -4672,6 +4712,8 @@
                 document.getElementById('member-edit-box').style.display = 'block';
                 document.getElementById('member-personal-profile-preview').style.display = 'block';
                 updateMemberPersonalView(savedMember);
+                switchPersonalPanel('hiasan');
+                updateShopDiamondDisplay();
                 setMemberOnlineStatus(savedMemberKey, true);
                 if (lastKnownMemberStars[savedMemberKey] === undefined) lastKnownMemberStars[savedMemberKey] = Number(savedMember.bintang || 0);
                 if (!questTimeTicker) {
@@ -4783,6 +4825,7 @@
         marketplaceRef.on('value', (snapshot) => {
             globalMarketplaceData = snapshot.exists() ? snapshot.val() : {};
             renderMarketplace();
+            refreshMarketplaceDiamond();
         });
 
         codesRef.on('value', (snapshot) => {
@@ -4997,7 +5040,7 @@
                     <button type="button" class="btn-profile-detail" title="Lihat Detail Profil" aria-label="Lihat Detail Profil">ℹ</button>
                     <button type="button" class="btn-profile-gallery" title="Galeri / Pajangan Player" aria-label="Galeri / Pajangan Player">🖼️</button>
                     <div class="member-header-row">
-                        <span class="${nameClass}">${escapeHTML(item.nama || 'Tanpa Nama')}</span>
+                        ${renderPlayerNameWithBox(item, nameClass, item.nama || 'Tanpa Nama')}
                         ${gelarHTML}
                     </div>
                     <div class="member-bio">${escapeHTML(item.bio || '-')}</div>
@@ -5052,6 +5095,14 @@
             renderProfileDetailModalContent(key);
             modal.style.display = 'flex';
             modal.style.zIndex = '10000';
+        }
+
+        function renderPlayerNameWithBox(member, nameClass, displayName, inlineStyle = '') {
+            const safeName = escapeHTML(displayName || 'Tanpa Nama');
+            const safeStyle = inlineStyle ? ` style="${inlineStyle}"` : '';
+            const box = member && ['royal','neon','frost','nature','cosmic'].includes(String(member.kotakNama || '')) ? String(member.kotakNama) : '';
+            const nameHTML = `<span class="${nameClass}"${safeStyle}>${safeName}</span>`;
+            return box ? `<span class="member-name-box-frame name-box-${box}">${nameHTML}</span>` : nameHTML;
         }
 
         // BUKA DETAIL PROFIL MODAL DENGAN MASA AKTIF SHINY DAN EMOJI VARIATIF
@@ -5154,7 +5205,7 @@
                 ${detailCardStart}
                 <div style="text-align: center; margin-bottom: 16px;">
                     <h3 style="font-size: 1.2rem; margin-bottom: 4px;">
-                        <span class="${nameClass}" style="font-size: 1.25rem;">${escapeHTML(member.nama || 'Anggota')}</span>
+                        ${renderPlayerNameWithBox(member, nameClass, member.nama || 'Anggota', 'font-size:1.25rem;')}
                     </h3>
                     <div>Gelar: ${gelarHTML}</div>
                     ${statusHTML}
@@ -5241,6 +5292,7 @@
             addCategory('nama', 'unlockedHiasan', hiasanNamaMap);
             addCategory('profil', 'unlockedHiasanProfil', hiasanProfilMap);
             addCategory('detail', 'unlockedHiasanDetailProfil', hiasanDetailProfilMap);
+            addCategory('kotak', 'unlockedKotakNama', { royal: 'Kotak Nama Royal', neon: 'Kotak Nama Neon', frost: 'Kotak Nama Frost', nature: 'Kotak Nama Nature', cosmic: 'Kotak Nama Cosmic' });
             addCategory('gelar', 'unlockedTitles', {});
             const ticketCount = Math.max(0, Number(member.playTickets || 0));
             if (ticketCount > 0) result.push({ key: 'item:play_ticket', name: 'Play Tiket', count: ticketCount });
@@ -5365,6 +5417,15 @@
                 hiasanNamaSelect.appendChild(opt);
             });
 
+            const kotakNamaSelect = document.getElementById('editSelfKotakNamaSelect');
+            if (kotakNamaSelect) {
+                const boxNames = { royal: 'Kotak Nama Royal', neon: 'Kotak Nama Neon', frost: 'Kotak Nama Frost', nature: 'Kotak Nama Nature', cosmic: 'Kotak Nama Cosmic' };
+                const ownedBoxes = [...new Set(getItemArray(member.unlockedKotakNama).filter(id => Object.prototype.hasOwnProperty.call(boxNames, id) && isItemAvailable(member, id)))];
+                const currentBox = ownedBoxes.includes(member.kotakNama) ? member.kotakNama : 'default';
+                kotakNamaSelect.innerHTML = '<option value="default">Default (Tanpa Kotak)</option>' + ownedBoxes.map(id => `<option value="${id}">${boxNames[id]}</option>`).join('');
+                kotakNamaSelect.value = currentBox;
+            }
+
             const hiasanProfilSelect = document.getElementById('editSelfHiasanProfilSelect');
             hiasanProfilSelect.innerHTML = '<option value="default">Default (Putih)</option>';
             const unlockedP = getItemArray(member.unlockedHiasanProfil).filter(id => isItemAvailable(member, id) && (id !== 'vip_plus_gold' || hasActiveVipPlus(member)));
@@ -5419,6 +5480,15 @@
                     });
                 }
 
+                // Kotak Nama
+                const kotakNamaMap = { royal: 'Kotak Nama Royal', neon: 'Kotak Nama Neon', frost: 'Kotak Nama Frost', nature: 'Kotak Nama Nature', cosmic: 'Kotak Nama Cosmic' };
+                const kotakNamaCounts = getItemCounts(getItemArray(member.unlockedKotakNama).filter(id => isItemAvailable(member, id)));
+                const kotakNamaKeys = Object.keys(kotakNamaCounts);
+                if (kotakNamaKeys.length > 0) {
+                    html += `<div style="font-weight:700;color:#0f172a;margin-top:8px;margin-bottom:2px;">• Kotak Nama</div>`;
+                    kotakNamaKeys.forEach(id => { html += `<div style="padding-left:8px;color:#334155;">- "${escapeHTML(kotakNamaMap[id] || id)}" (${kotakNamaCounts[id]}x)</div>`; });
+                }
+
                 // Gelar
                 const gelarCounts = getItemCounts(getItemArray(member.unlockedTitles));
                 const gelarKeys = Object.keys(gelarCounts);
@@ -5468,6 +5538,22 @@
             } catch (e) { showResultPopup('Gagal membuat akun. Coba lagi.'); }
         }
 
+        function switchPersonalPanel(panel) {
+            if (!['hiasan','informasi','inventory'].includes(panel)) return;
+            document.querySelectorAll('.personal-subtab').forEach(button => button.classList.toggle('active', button.dataset.personalPanel === panel));
+            document.querySelectorAll('.personal-panel').forEach(element => element.classList.toggle('active', element.id === `personal-panel-${panel}`));
+            const actions = document.getElementById('personal-panel-actions');
+            if (actions) actions.classList.toggle('active', panel !== 'inventory');
+        }
+
+        function updateShopDiamondDisplay() {
+            const display = document.getElementById('shop-player-diamond');
+            if (!display) return;
+            const key = activeLoggedInMemberKey;
+            const member = key && globalMembersData[key];
+            display.textContent = member ? `💎 Diamond kamu: ${Number(member.diamond || 0).toLocaleString('id-ID')}` : '💎 Diamond kamu: Login untuk melihat saldo.';
+        }
+
         function loginMember() {
             const enteredName = document.getElementById('selectMemberSelf').value.trim();
             const pin = document.getElementById('inputMemberPin').value.trim();
@@ -5495,6 +5581,8 @@
                 document.getElementById('member-edit-box').style.display = 'block';
                 document.getElementById('member-personal-profile-preview').style.display = 'block';
                 updateMemberPersonalView(m);
+                switchPersonalPanel('hiasan');
+                updateShopDiamondDisplay();
                 refreshMemberPersonalProfilePreview();
                 alert(`Selamat datang kembali, ${m.nama}!`);
             } else {
@@ -5507,6 +5595,7 @@
             if (questTimeTicker) { clearInterval(questTimeTicker); questTimeTicker = null; }
             localStorage.removeItem('ruangMabarLoggedInMemberKey');
             activeLoggedInMemberKey = null;
+            updateShopDiamondDisplay();
             document.getElementById('member-login-box').style.display = 'block';
             document.getElementById('member-edit-box').style.display = 'none';
             document.getElementById('member-personal-profile-preview').style.display = 'none';
@@ -5524,6 +5613,9 @@
             const newGame = document.getElementById('editSelfGameKesukaan').value.trim();
             const newGelar = document.getElementById('editSelfGelarSelect').value;
             const newHiasanNama = document.getElementById('editSelfHiasanNamaSelect').value.trim();
+            const newKotakNama = (document.getElementById('editSelfKotakNamaSelect') || {}).value || 'default';
+            const ownedKotakNama = getItemArray(globalMembersData[activeLoggedInMemberKey]?.unlockedKotakNama);
+            if (newKotakNama !== 'default' && (!ownedKotakNama.includes(newKotakNama) || !isItemAvailable(globalMembersData[activeLoggedInMemberKey], newKotakNama))) { showResultPopup('Kamu belum memiliki Kotak Nama tersebut.'); return; }
             const newHiasanProfil = document.getElementById('editSelfHiasanProfilSelect').value.trim();
             const newHiasanDetailProfil = document.getElementById('editSelfHiasanDetailProfilSelect').value.trim();
             const newPin = document.getElementById('editSelfPin').value.trim();
@@ -5539,6 +5631,8 @@
             }
 
             if (!newNama) { alert("Nama tidak boleh kosong!"); return; }
+            if (newBio.length > 150) { alert('Bio maksimal 150 karakter.'); return; }
+            if (newGame.length > 25) { alert('Game kesukaan maksimal 25 karakter.'); return; }
             if ((newHiasanNama !== 'default' && !isItemAvailable(currentMember, newHiasanNama)) ||
                 (newHiasanProfil !== 'default' && !isItemAvailable(currentMember, newHiasanProfil)) ||
                 (newGelar !== '-' && !isItemAvailable(currentMember, newGelar)) ||
@@ -5562,6 +5656,7 @@
             updates[`members/${activeLoggedInMemberKey}/gameKesukaan`] = newGame;
             updates[`members/${activeLoggedInMemberKey}/gelar`] = newGelar;
             updates[`members/${activeLoggedInMemberKey}/hiasanNama`] = newHiasanNama;
+            updates[`members/${activeLoggedInMemberKey}/kotakNama`] = newKotakNama;
             updates[`members/${activeLoggedInMemberKey}/hiasanProfil`] = newHiasanProfil;
             updates[`members/${activeLoggedInMemberKey}/hiasanDetailProfil`] = newHiasanDetailProfil;
 
@@ -5672,6 +5767,13 @@
                 updates[`members/${activeLoggedInMemberKey}/hiasanDetailProfil`] = item.preset;
                 if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, item.preset, addedDays);
                 else updates[`members/${activeLoggedInMemberKey}/itemExpiries/${item.preset}`] = null;
+            } else if (item.tipe === 'Kotak Nama') {
+                const unlockedBoxes = getItemArray(member.unlockedKotakNama);
+                unlockedBoxes.push(item.preset);
+                updates[`members/${activeLoggedInMemberKey}/unlockedKotakNama`] = unlockedBoxes;
+                updates[`members/${activeLoggedInMemberKey}/kotakNama`] = item.preset;
+                if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, item.preset, addedDays);
+                else updates[`members/${activeLoggedInMemberKey}/itemExpiries/${item.preset}`] = null;
             } else if (item.tipe === 'Gelar') {
                 let unlockedT = getItemArray(member.unlockedTitles);
                 unlockedT.push(item.gelarValue);
@@ -5726,43 +5828,69 @@
         }
 
         // RENDER MARKETPLACE
-           function renderMarketplace() {
+           async function toggleShopMarketplace(showMarketplace) {
+            const shopMain = document.getElementById('shop-main-content');
+            const marketMain = document.getElementById('shop-marketplace-content');
+            if (!shopMain || !marketMain) return;
+            if (showMarketplace) {
+                const memberKey = activeLoggedInMemberKey;
+                if (!memberKey) { showResultPopup('Login dulu untuk mengakses Marketplace.'); return; }
+                let member = globalMembersData[memberKey];
+                try {
+                    const latestSnapshot = await membersRef.child(memberKey).once('value');
+                    if (latestSnapshot.exists()) {
+                        member = latestSnapshot.val();
+                        globalMembersData[memberKey] = member;
+                    }
+                } catch (e) { console.error('Gagal memeriksa level terbaru:', e); }
+                if (!member || Number(member.level != null ? member.level : 1) < 5) {
+                    showResultPopup('Level kamu tidak memenuhi syarat. Syarat minimal adalah level 5.');
+                    return;
+                }
+            }
+            shopMain.style.display = showMarketplace ? 'none' : 'block';
+            marketMain.style.display = showMarketplace ? 'block' : 'none';
+            if (showMarketplace) {
+                renderMarketplace();
+                refreshMarketplaceDiamond();
+            }
+        }
+
+        function refreshMarketplaceDiamond() {
+            const el = document.getElementById('marketplace-player-diamond');
+            if (!el) return;
+            const member = activeLoggedInMemberKey && globalMembersData[activeLoggedInMemberKey];
+            el.textContent = member ? `💎 Diamond kamu saat ini: ${Number(member.diamond || 0).toLocaleString('id-ID')}` : '💎 Diamond kamu: Login untuk melihat saldo.';
+        }
+
+        function renderMarketplace() {
             const list = document.getElementById('marketplace-item-list');
             if (!list) return;
             list.innerHTML = '';
-
-            const keys = Object.keys(globalMarketplaceData).sort((a, b) => {
-                const aTime = Number(globalMarketplaceData[a].createdAt || 0);
-                const bTime = Number(globalMarketplaceData[b].createdAt || 0);
-                return bTime - aTime;
-            });
-            if (keys.length === 0) {
-                list.innerHTML = '<div class="empty-notice" style="padding: 16px;">Belum ada hiasan yang dijual di marketplace.</div>';
+            const keys = Object.keys(globalMarketplaceData || {}).sort((a, b) => Number(globalMarketplaceData[b]?.createdAt || 0) - Number(globalMarketplaceData[a]?.createdAt || 0));
+            if (!keys.length) {
+                list.innerHTML = '<div class="empty-notice" style="padding:16px;">Belum ada item yang dijual di marketplace.</div>';
                 return;
             }
-
             keys.forEach(key => {
-                const item = globalMarketplaceData[key];
-                const itemName = hiasanNamaMap[item.itemId] || hiasanProfilMap[item.itemId] || hiasanDetailProfilMap[item.itemId] || item.itemId;
-
+                const item = globalMarketplaceData[key] || {};
+                const itemName = hiasanNamaMap[item.itemId] || hiasanProfilMap[item.itemId] || hiasanDetailProfilMap[item.itemId] || item.itemId || 'Item';
+                const isSeller = !!activeLoggedInMemberKey && item.sellerKey === activeLoggedInMemberKey;
                 const card = document.createElement('div');
                 card.className = 'shop-item-card';
-                const isSeller = activeLoggedInMemberKey && item.sellerKey === activeLoggedInMemberKey;
-                card.style.position = 'relative';
+                card.style.cssText = 'position:relative;display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:14px;border-radius:14px;';
                 card.innerHTML = `
-                    ${isSeller ? `<button title="Edit Harga" aria-label="Edit Harga" style="position:absolute; top:10px; right:10px; width:34px; height:34px; border:1px solid #cbd5e1; border-radius:10px; background:#f8fafc; color:#334155; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center;" onclick="editMarketplacePrice('${key}')">✏️</button>` : ''}
-                    <div>
+                    ${isSeller ? `<button title="Edit penjualan" aria-label="Edit penjualan" style="position:absolute;top:9px;right:9px;width:34px;height:34px;border:1px solid #cbd5e1;border-radius:10px;background:#f8fafc;color:#334155;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="editMarketplacePrice('${key}')">✏️</button>` : ''}
+                    <div style="padding-right:${isSeller ? '42px' : '0'};">
                         <div class="shop-title">${escapeHTML(itemName)}</div>
-                        <div class="shop-type-tag">Tipe: ${escapeHTML(item.tipe)} • Penjual: ${escapeHTML(item.sellerName || 'Member')}</div>
+                        <div class="shop-type-tag">Tipe: ${escapeHTML(item.tipe || 'Item')}</div>
+                        <div style="font-size:.82rem;color:#64748b;margin-top:4px;">Penjual: <strong>${escapeHTML(item.sellerName || 'Member')}</strong></div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <div>
-                            <div class="shop-price">💎 ${item.harga || 0}</div>
-                            <div class="shop-stock">Stok: ${item.stok || 0}</div>
-                        </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr auto;align-items:center;gap:10px;width:100%;margin-top:2px;padding-top:10px;border-top:1px solid #e2e8f0;">
+                        <div class="shop-price">💎 ${Number(item.harga || 0).toLocaleString('id-ID')}</div>
+                        <div class="shop-stock">Stok: ${Math.max(0,Number(item.stok || 0))}</div>
                         <button class="btn-buy" onclick="buyMarketplaceItem('${key}')">Beli</button>
-                    </div>
-                `;
+                    </div>`;
                 list.appendChild(card);
             });
         }
@@ -5770,7 +5898,7 @@
         function openSellItemModal() {
             if (!activeLoggedInMemberKey) {
                 alert("Silakan login terlebih dahulu di tab Personalisasi sebelum menjual item!");
-                closeModal('marketplaceModal');
+                toggleShopMarketplace(false);
                 switchTab('personal');
                 return;
             }
@@ -5797,7 +5925,6 @@
                 });
             });
 
-            closeModal('marketplaceModal');
             openModal('sellItemModal');
             updateSellItemMaxStock();
         }
@@ -5892,23 +6019,56 @@
         }
 
                 function editMarketplacePrice(marketKey) {
-            if (!activeLoggedInMemberKey) return;
+            if (!activeLoggedInMemberKey) { showResultPopup('Login dulu untuk mengedit penjualan.'); return; }
             const item = globalMarketplaceData[marketKey];
             if (!item) return;
-            if (item.sellerKey !== activeLoggedInMemberKey) {
-                alert(" Hanya penjual item ini yang dapat mengedit harga.");
-                return;
-            }
+            if (item.sellerKey !== activeLoggedInMemberKey) { showResultPopup('Hanya penjual item ini yang dapat mengedit.'); return; }
+            document.getElementById('marketplaceEditKey').value = marketKey;
+            document.getElementById('marketplaceEditPrice').value = Math.max(1, Number(item.harga || 1));
+            document.getElementById('marketplaceEditStock').value = Math.max(1, Number(item.stok || 1));
+            openModal('marketplaceEditModal');
+        }
 
-            const currentPrice = Number(item.harga || 0);
-            const newPrice = Number(prompt("Masukkan harga baru (Diamond):", currentPrice));
-            if (!Number.isFinite(newPrice) || newPrice <= 0) {
-                alert(" Harga harus berupa angka minimal 1 Diamond!");
-                return;
+        async function saveMarketplaceEdit() {
+            const key = document.getElementById('marketplaceEditKey').value;
+            const item = globalMarketplaceData[key];
+            if (!item || !activeLoggedInMemberKey || item.sellerKey !== activeLoggedInMemberKey) {
+                showResultPopup('Hanya penjual item ini yang dapat mengedit.'); return;
             }
-
-            alert("✅ Harga Marketplace berhasil diperbarui!");
-            marketplaceRef.child(marketKey).update({ harga: newPrice });
+            const harga = Math.floor(Number(document.getElementById('marketplaceEditPrice').value || 0));
+            const stok = Math.floor(Number(document.getElementById('marketplaceEditStock').value || 0));
+            if (!Number.isFinite(harga) || harga < 1) { showResultPopup('Harga minimal 1 Diamond.'); return; }
+            if (!Number.isFinite(stok) || stok < 1) { showResultPopup('Stok minimal 1 item.'); return; }
+            const oldStock = Math.max(0, Math.floor(Number(item.stok || 0)));
+            const delta = stok - oldStock;
+            const memberKey = activeLoggedInMemberKey;
+            const member = globalMembersData[memberKey] || {};
+            const field = item.tipe === 'Hiasan Nama' ? 'unlockedHiasan' : item.tipe === 'Hiasan Profil' ? 'unlockedHiasanProfil' : 'unlockedHiasanDetailProfil';
+            const updates = { [`marketplace/${key}/harga`]: harga, [`marketplace/${key}/stok`]: stok };
+            if (delta > 0) {
+                const unlocked = getItemArray(member[field]);
+                const availableCount = unlocked.filter(id => id === item.itemId && isItemAvailable(member, id)).length;
+                if (availableCount - delta < 1) {
+                    showResultPopup(`Item tidak cukup untuk menambah stok. Kamu memiliki ${availableCount} item tersisa dan harus menyisakan minimal 1.`);
+                    return;
+                }
+                let toRemove = delta;
+                const nextUnlocked = unlocked.filter(id => {
+                    if (id !== item.itemId || toRemove <= 0) return true;
+                    toRemove--;
+                    return false;
+                });
+                updates[`members/${memberKey}/${field}`] = nextUnlocked;
+            } else if (delta < 0) {
+                const unlocked = getItemArray(member[field]);
+                for (let i = 0; i < Math.abs(delta); i++) unlocked.push(item.itemId);
+                updates[`members/${memberKey}/${field}`] = unlocked;
+            }
+            try {
+                await database.ref().update(updates);
+                closeModal('marketplaceEditModal');
+                showResultPopup('Penjualan berhasil diperbarui!');
+            } catch (e) { showResultPopup('Gagal memperbarui penjualan. Coba lagi.'); }
         }
 
         function buyMarketplaceItem(marketKey) {
@@ -6034,7 +6194,7 @@
 
                 chatCard.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
-                        <span class="${nameClass}" style="font-size: 1.05rem;">${escapeHTML(senderName)}</span>
+                        ${renderPlayerNameWithBox(chat, nameClass, senderName, 'font-size:1.05rem;')}
                         ${gelarHTML}
                     </div>
                     <div class="chat-message-text" style="font-size: 0.95rem; word-break: break-word; margin-bottom: 18px;">
@@ -6101,6 +6261,7 @@
                 sender: member.nama || 'Member',
                 gelar: member.gelar || '-',
                 hiasanNama: member.hiasanNama || 'default',
+                kotakNama: member.kotakNama || 'default',
                 hiasanProfil: member.hiasanProfil || 'default',
                 text: text,
                 timestamp: Date.now()
@@ -6112,9 +6273,9 @@
 
         // ARCADE & LUCKY WHEEL
         const wheelPrizes = [
-            { id: "mint_shiny", name: "Hiasan Mint Glacier", label: "Mint Glacier", chance: 2, color: "#F4434F", type: "hiasan_nama" },
+            { id: "ocean_shiny", name: "Hiasan Ocean Abbys", label: "Ocean Shiny", chance: 2, color: "#F4434F", type: "hiasan_nama" },
             { id: "play_ticket_1", name: "1 Play Tiket", label: "Play Tiket", chance: 1.5, color: "#F2C400", type: "play_ticket", val: 1 },
-            { id: "sakura_bersemi", name: "Hiasan Sakura Bersemi", label: "Sakura Pink", chance: 1, color: "#26B9E8", type: "hiasan_profil" },
+            { id: "aurora_cerah", name: "Hiasan Langit Malam", label: "Langit Malam", chance: 1, color: "#26B9E8", type: "hiasan_profil" },
             { id: "neon_matrix", name: "Hiasan Neon Matrix", label: "???", chance: 0.5, color: "#A94CEB", type: "hiasan_profil" },
             { id: "dm_300", name: "-300 Diamond", label: "-300 Diamond", chance: 1, color: "#6858F5", type: "diamond", val: -300 },
             { id: "dm_100", name: "Hadiah 100 Diamond", label: "+100 Diamond", chance: 5, color: "#8950F5", type: "diamond", val: 100 },
@@ -6410,6 +6571,15 @@
                     opt.value = o.val; opt.textContent = o.label;
                     presetSelect.appendChild(opt);
                 });
+            } else if (tipe === 'Kotak Nama') {
+                gelarContainer.style.display = 'none';
+                [
+                    { val: 'royal', label: 'Kotak Nama Royal' },
+                    { val: 'neon', label: 'Kotak Nama Neon' },
+                    { val: 'frost', label: 'Kotak Nama Frost' },
+                    { val: 'nature', label: 'Kotak Nama Nature' },
+                    { val: 'cosmic', label: 'Kotak Nama Cosmic' }
+                ].forEach(o => { const opt = document.createElement('option'); opt.value = o.val; opt.textContent = o.label; presetSelect.appendChild(opt); });
             } else if (tipe === 'Hiasan Detail Profil') {
                 gelarContainer.style.display = 'none';
                 const opts = [
@@ -6501,6 +6671,7 @@
                 hiasan_nama: hiasanNamaMap,
                 hiasan_profil: hiasanProfilMap,
                 hiasan_detail_profil: hiasanDetailProfilMap,
+                kotak_nama: { royal: 'Kotak Nama Royal', neon: 'Kotak Nama Neon', frost: 'Kotak Nama Frost', nature: 'Kotak Nama Nature', cosmic: 'Kotak Nama Cosmic' },
                 lencana: {
                     immortal: 'Immortal',
                     demon_king: 'Demon King',
@@ -6511,10 +6682,11 @@
                 hiasan_nama: 'Pilih Hiasan Nama:',
                 hiasan_profil: 'Pilih Hiasan Profil:',
                 hiasan_detail_profil: 'Pilih Hiasan Detail Profil:',
+                kotak_nama: 'Pilih Kotak Nama:',
                 lencana: 'Pilih Lencana:'
             };
             const needsPreset = Object.prototype.hasOwnProperty.call(optionSets, type);
-            valueContainer.style.display = ['gelar', 'vip_plus', 'hiasan_nama', 'hiasan_profil', 'hiasan_detail_profil', 'lencana'].includes(type) ? 'none' : 'block';
+            valueContainer.style.display = ['gelar', 'vip_plus', 'hiasan_nama', 'hiasan_profil', 'hiasan_detail_profil', 'kotak_nama', 'lencana'].includes(type) ? 'none' : 'block';
             presetContainer.style.display = needsPreset ? 'block' : 'none';
             if (needsPreset) {
                 presetLabel.textContent = labels[type];
@@ -6626,12 +6798,14 @@
                 const card = document.createElement('div');
                 card.className = 'arcade-card';
                 card.style.marginTop = '12px';
+                card.style.position = 'relative';
                 card.setAttribute('role', 'link');
                 card.setAttribute('tabindex', '0');
                 card.innerHTML = `
-                    <h3 style="font-size:1.05rem; margin-bottom:5px;">${escapeHTML(item.judul || 'Arcade')}</h3>
-                    ${item.deskripsi ? `<p style="font-size:.8rem; opacity:.9; margin-bottom:8px;">${escapeHTML(item.deskripsi)}</p>` : ''}
-                    <span style="display:inline-block; text-decoration:underline; font-size:.88rem;">Buka website ↗</span>
+                    ${isAdminLoggedIn ? `<button type="button" title="Edit Arcade" aria-label="Edit Arcade" style="position:absolute;top:9px;right:9px;width:34px;height:34px;border:1px solid rgba(255,255,255,.35);border-radius:10px;background:rgba(255,255,255,.12);color:white;cursor:pointer;z-index:2;" onclick="event.stopPropagation();openArcadeEdit('${key}')">✏️</button>` : ''}
+                    <div style="padding-right:${isAdminLoggedIn ? '42px' : '0'};"><h4 style="font-size:.98rem;margin-bottom:4px;">${escapeHTML(item.judul || 'Arcade')}</h4>
+                    ${item.deskripsi ? `<p style="font-size:.78rem;opacity:.86;line-height:1.45;margin-bottom:8px;">${escapeHTML(item.deskripsi)}</p>` : ''}
+                    <span style="display:inline-block;text-decoration:underline;font-size:.88rem;">Buka website ↗</span></div>
                 `;
                 card.addEventListener('click', () => openArcadeSite(item.judul || 'Arcade', item.link || ''));
                 card.addEventListener('keydown', (event) => {
@@ -6642,6 +6816,33 @@
                 });
                 list.appendChild(card);
             });
+        }
+
+        function openArcadeEdit(key) {
+            if (!isAdminLoggedIn) { showResultPopup('Hanya admin yang dapat mengedit tautan Arcade.'); return; }
+            const item = globalArcadeData[key];
+            if (!item) return;
+            document.getElementById('arcadeEditKey').value = key;
+            document.getElementById('arcadeEditTitle').value = item.judul || '';
+            document.getElementById('arcadeEditDescription').value = item.deskripsi || '';
+            document.getElementById('arcadeEditLink').value = item.link || '';
+            openModal('arcadeEditModal');
+        }
+
+        async function saveArcadeEdit() {
+            if (!isAdminLoggedIn) { showResultPopup('Hanya admin yang dapat mengedit tautan Arcade.'); return; }
+            const key = document.getElementById('arcadeEditKey').value;
+            const judul = document.getElementById('arcadeEditTitle').value.trim();
+            const deskripsi = document.getElementById('arcadeEditDescription').value.trim();
+            const link = document.getElementById('arcadeEditLink').value.trim();
+            if (!globalArcadeData[key]) return;
+            if (!judul) { showResultPopup('Nama Arcade tidak boleh kosong.'); return; }
+            if (!/^https?:\/\//i.test(link)) { showResultPopup('URL Arcade harus diawali http:// atau https://.'); return; }
+            try {
+                await arcadeRef.child(key).update({ judul, deskripsi, link });
+                closeModal('arcadeEditModal');
+                showResultPopup('Informasi Arcade berhasil diperbarui!');
+            } catch (e) { showResultPopup('Gagal memperbarui Arcade. Coba lagi.'); }
         }
 
         function adminDeleteArcade(key) {
