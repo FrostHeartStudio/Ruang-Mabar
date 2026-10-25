@@ -859,6 +859,7 @@
 
         .shop-list { display: flex; flex-direction: column; gap: 12px; }
         .shop-item-card {
+            position: relative;
             display: flex; justify-content: space-between; align-items: center;
             background: white; padding: 16px; border-radius: 12px;
             border: 1px solid #3b82f6;
@@ -866,10 +867,11 @@
             flex-wrap: wrap;
             gap: 10px;
         }
+        .shop-new-badge { position:absolute; top:7px; right:8px; z-index:2; background:#2563eb; color:#fff; font-size:.68rem; font-weight:800; letter-spacing:.3px; line-height:1; padding:5px 8px; border-radius:7px; box-shadow:0 2px 6px rgba(37,99,235,.24); }
         .shop-title { font-weight: 700; font-size: 0.98rem; color: #0f172a; }
         .shop-price { font-weight: 600; color: #2563eb; font-size: 0.9rem; }
         .shop-type-tag { font-size: 0.78rem; color: #64748b; font-weight: 600; margin-top: 2px; }
-        .shop-stock { font-size: 0.8rem; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 12px; }
+        .shop-stock { display:inline-block; width:fit-content; max-width:100%; box-sizing:border-box; white-space:nowrap; font-size: 0.8rem; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 12px; }
 
         .btn-buy {
             background: #16a34a; color: white; border: none; padding: 8px 14px;
@@ -1059,11 +1061,13 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
-        #wheelCanvas {
+        #wheelCanvas, #superWheelCanvas {
             width: 280px;
             height: 280px;
             border-radius: 50%;
             border: 6px solid #312e81;
+            box-sizing: border-box;
+            display: block;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             transition: transform 2.5s cubic-bezier(0.15, 0.85, 0.35, 1.0);
         }
@@ -2152,13 +2156,14 @@
 
 
         /* Kotak Nama menjadi lapisan luar; efek Hiasan Nama dan teks tetap berada di atasnya. */
-        .member-name-box-frame{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;padding:4px 10px;border:1px solid;border-radius:9px;box-sizing:border-box;line-height:1.5;white-space:nowrap;z-index:1;}
+        .member-name-box-frame{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;padding:3px 5px;border:1px solid;border-radius:6px;box-sizing:border-box;line-height:1.15;white-space:nowrap;z-index:1;}
         .member-name-box-frame > .member-name{position:relative;z-index:2;display:inline-block;padding:0;margin:0;}
-        .member-name-box-frame.name-box-royal{border-color:#fbbf24;background:linear-gradient(135deg,#451a03,#92400e 52%,#f59e0b);box-shadow:0 0 8px rgba(245,158,11,.28);}
-        .member-name-box-frame.name-box-neon{border-color:#22d3ee;border-radius:5px;background:linear-gradient(135deg,#082f49,#164e63);box-shadow:0 0 9px rgba(34,211,238,.3);}
-        .member-name-box-frame.name-box-frost{border-color:#bae6fd;border-radius:12px;background:linear-gradient(135deg,#0c4a6e,#64748b);box-shadow:inset 0 0 8px rgba(224,242,254,.15);}
-        .member-name-box-frame.name-box-nature{border-color:#86efac;background:linear-gradient(135deg,#14532d,#166534 55%,#365314);}
-        .member-name-box-frame.name-box-cosmic{border-color:#c4b5fd;background:linear-gradient(135deg,#1e1b4b,#581c87,#312e81);box-shadow:0 0 8px rgba(167,139,250,.28);}
+        .member-name-box-frame.name-box-royal{border-color:#fbbf24;background:linear-gradient(135deg,rgba(69,26,3,.28),rgba(146,64,14,.32) 52%,rgba(245,158,11,.25));box-shadow:0 0 6px rgba(245,158,11,.22);}
+        .member-name-box-frame.name-box-neon{border-color:#22d3ee;border-radius:4px;background:linear-gradient(135deg,rgba(8,47,73,.28),rgba(22,78,99,.3));box-shadow:0 0 6px rgba(34,211,238,.22);}
+        .member-name-box-frame.name-box-frost{border-color:#bae6fd;border-radius:8px;background:linear-gradient(135deg,rgba(12,74,110,.26),rgba(100,116,139,.3));box-shadow:inset 0 0 6px rgba(224,242,254,.12);}
+        .member-name-box-frame.name-box-nature{border-color:#86efac;background:linear-gradient(135deg,rgba(20,83,45,.27),rgba(22,101,52,.3) 55%,rgba(54,83,20,.26));}
+        .member-name-box-frame.name-box-cosmic{border-color:#c4b5fd;background:linear-gradient(135deg,rgba(30,27,75,.28),rgba(88,28,135,.3),rgba(49,46,129,.28));box-shadow:0 0 6px rgba(167,139,250,.22);}
+        @keyframes rmNewNameBoxShiny{0%{transform:translateX(-75%)}100%{transform:translateX(75%)}}
 
 </style>
 
@@ -2493,8 +2498,8 @@
                     <span style="font-size: 2rem;">🛍</span>
                 </div>
             </div>
-            <div id="shop-player-diamond" class="card-box" style="margin-bottom:16px;padding:12px 14px;font-weight:800;color:#b45309;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fbbf24;">💎 Diamond kamu: Login untuk melihat saldo.</div>
-
+            <div id="shop-player-diamond" class="card-box" style="margin-bottom:12px;padding:12px 14px;font-weight:800;color:#b45309;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fbbf24;">💎 Diamond kamu: Login untuk melihat saldo.</div>
+            <div style="margin:0 0 12px;"><input id="shop-search" type="search" placeholder="🔎 Cari barang di Shop Resmi..." oninput="renderShop()" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #cbd5e1;border-radius:10px;font-size:.92rem;background:#fff;color:#0f172a;"></div>
             <div id="loading-shop" class="empty-notice">Memuat item Shop...</div>
             <div id="empty-shop" class="empty-notice" style="display: none;">Belum ada item di Shop.</div>
             <div id="shop-list" class="shop-list"></div>
@@ -2504,11 +2509,12 @@
                     <h2 style="margin:0;color:#0f172a;">🏪 Marketplace</h2>
                     <button class="btn-close" style="position:static;flex-shrink:0;" onclick="toggleShopMarketplace(false)" aria-label="Kembali ke Shop">&times;</button>
                 </div>
+                <div id="marketplace-player-diamond" class="card-box" style="margin-bottom:12px;padding:12px 14px;font-weight:800;color:#b45309;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fbbf24;">💎 Diamond kamu: Login untuk melihat saldo.</div>
+                <div style="margin:0 0 12px;"><input id="marketplace-search" type="search" placeholder="🔎 Cari barang yang tersedia..." oninput="renderMarketplace()" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #cbd5e1;border-radius:10px;font-size:.92rem;background:#fff;color:#0f172a;"></div>
                 <div class="arcade-card" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa;margin-bottom:14px;text-align:center;" onclick="openSellItemModal()">
                     <h3 style="font-size:1.1rem;color:white;">➕ Jual Item Kamu</h3>
                     <p style="font-size:.82rem;opacity:.9;">Minimal punya 2 item untuk bisa menjual dan tetap menyisakan 1.</p>
                 </div>
-                <div id="marketplace-player-diamond" class="card-box" style="margin-bottom:16px;padding:12px 14px;font-weight:800;color:#b45309;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fbbf24;">💎 Diamond kamu: Login untuk melihat saldo.</div>
                 <div id="marketplace-item-list" class="shop-list"></div>
             </div>
         </div>
@@ -2676,7 +2682,7 @@
                     <div id="personal-panel-informasi" class="personal-panel">
                     <div class="form-group">
                         <label>Nama Member:</label>
-                        <input type="text" id="editSelfNama" placeholder="Nama Baru">
+                        <input type="text" id="editSelfNama" maxlength="15" placeholder="Nama Baru (maks. 15 karakter)">
                     </div>
 
                     <div class="form-group">
@@ -2736,9 +2742,9 @@
                 <h3 style="color:#0f172a; margin-bottom:5px;">🕹️ Arcade</h3>
                 <p style="font-size:.82rem; color:#64748b;">Tempat menjelajah game dan website milik Ruang Mabar.</p>
 
-                <div class="arcade-card" style="margin-top:14px; text-align:center;" onclick="openLuckyWheelModal()">
-                    <h3 style="font-size:1.15rem; margin-bottom:5px;">🎡 Lucky Wheel</h3>
-                    <p style="font-size:.8rem; opacity:.9;">Putar kapan saja untuk mendapatkan hadiah. Biaya 50 💎 per putaran.</p>
+                <div class="arcade-card" style="margin-top:14px; text-align:center;" onclick="openLuckyRoyalePage()">
+                    <h3 style="font-size:1.15rem; margin-bottom:5px;">👑 Lucky Royale</h3>
+                    <p style="font-size:.8rem; opacity:.9;">Pilih Lucky Wheel atau Super Wheel untuk mendapatkan hadiah.</p>
                 </div>
 
                 <div id="arcade-link-list" class="arcade-link-list"></div>
@@ -2832,6 +2838,17 @@
         </div>
     </div>
 
+    <!-- HALAMAN LUCKY ROYALE -->
+    <div id="luckyRoyalePage" class="modal-overlay">
+        <div class="modal-content" style="max-width:460px;">
+            <div class="modal-header"><h2>👑 Lucky Royale</h2><button class="btn-close" onclick="closeModal('luckyRoyalePage')">&times;</button></div>
+            <div class="modal-body">
+                <div class="arcade-card" style="text-align:center;margin-bottom:12px;" onclick="openLuckyWheelModal()"><h3>🎡 Lucky Wheel</h3><p style="font-size:.82rem;">Biaya 50 Diamond per putaran</p></div>
+                <div class="arcade-card" style="text-align:center;" onclick="openSuperWheelModal()"><h3>🌌 Super Wheel</h3><p style="font-size:.82rem;">Gunakan Super Tiket untuk mendapatkan hadiah spesial</p></div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL LUCKY WHEEL -->
              <div id="luckyWheelModal" class="modal-overlay">
         <div class="modal-content" style="max-width: 420px; text-align: center;">
@@ -2855,9 +2872,22 @@
 
                 <div id="spinResultMessage" style="min-height: 38px; margin: 10px 0; font-weight: 700; font-size: 0.95rem;"></div>
 
-                <button id="btnSpinWheel" class="btn-action" style="width: 100%; font-size: 1rem;" onclick="spinWheel()">
-                    🎰 Spin Sekarang (50 💎)
-                </button>
+                <button id="btnSpinWheel" class="btn-action" style="width: 100%; font-size: 1rem;" onclick="spinWheel()">🎰 Spin Sekarang (50 💎)</button>
+                <button id="btnAutoSpinWheel" class="btn-action" style="width:100%;font-size:1rem;margin-top:8px;background:#2563eb;" onclick="toggleAutoSpinWheel()">🔁 Spin Otomatis</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SUPER WHEEL -->
+    <div id="superWheelModal" class="modal-overlay">
+        <div class="modal-content" style="max-width:420px;text-align:center;">
+            <div class="modal-header"><h2>🌌 Super Wheel</h2><button class="btn-close" onclick="closeModal('superWheelModal')">&times;</button></div>
+            <div class="modal-body" style="display:flex;flex-direction:column;align-items:center;">
+                <div id="superWheelUserTickets" style="background:#ede9fe;color:#5b21b6;padding:6px 14px;border-radius:20px;font-weight:700;font-size:.9rem;margin-bottom:8px;">🎟️ Super Tiket Kamu: 0</div>
+                <p style="font-size:.85rem;color:#64748b;margin-bottom:10px;">Biaya Spin: <strong style="color:#7c3aed;">1 Super Tiket</strong></p>
+                <div class="wheel-container"><div class="wheel-pointer"></div><canvas id="superWheelCanvas" width="280" height="280"></canvas></div>
+                <div id="superSpinResultMessage" style="min-height:38px;margin:10px 0;font-weight:700;font-size:.95rem;"></div>
+                <button id="btnSpinSuperWheel" class="btn-action" style="width:100%;font-size:1rem;" onclick="spinSuperWheel()">🎰 Spin Sekarang (1 🎟️)</button>
             </div>
         </div>
     </div>
@@ -3074,12 +3104,17 @@
                             <option value="VIP Plus">VIP Plus Status</option>
                             <option value="Gelar">Gelar</option>
                             <option value="Item">Item Biasa</option>
+                            <option value="Tiket">Tiket</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label>Pilihan Item / Efek Khusus:</label>
                         <select id="adminShopPreset"></select>
+                    </div>
+                    <div class="form-group" id="adminShopTicketCountContainer" style="display:none;">
+                        <label>Jumlah tiket yang diterima per pembelian:</label>
+                        <input type="number" id="adminShopTicketCount" min="1" value="1" placeholder="Contoh: 1">
                     </div>
                     <div class="form-group" id="adminShopGelarContainer" style="display:none;">
                         <label>🏷️ Gelar yang akan diberikan:</label>
@@ -5631,6 +5666,7 @@
             }
 
             if (!newNama) { alert("Nama tidak boleh kosong!"); return; }
+            if (newNama.length > 15) { alert('Nama maksimal 15 karakter.'); return; }
             if (newBio.length > 150) { alert('Bio maksimal 150 karakter.'); return; }
             if (newGame.length > 25) { alert('Game kesukaan maksimal 25 karakter.'); return; }
             if ((newHiasanNama !== 'default' && !isItemAvailable(currentMember, newHiasanNama)) ||
@@ -5674,6 +5710,7 @@
             const shopList = document.getElementById('shop-list');
             if (!shopList) return;
             shopList.innerHTML = '';
+            const searchText = (document.getElementById('shop-search')?.value || '').trim().toLocaleLowerCase('id-ID');
 
             Object.keys(globalShopData).sort((a, b) => {
                 const aTime = Number(globalShopData[a].createdAt || 0);
@@ -5681,6 +5718,8 @@
                 return bTime - aTime;
             }).forEach(key => {
                 const item = globalShopData[key];
+                const searchable = `${item.nama || ''} ${item.tipe || ''} ${item.preset || ''} ${item.gelarValue || ''}`.toLocaleLowerCase('id-ID');
+                if (searchText && !searchable.includes(searchText)) return;
                 const masaBerlakuText = item.masaBerlakuTipe === 'custom' ? `⏳ ${item.masaBerlakuHari || 0} Hari` : '♾️ Permanen';
                 const benefitText = item.tipe === 'VIP' ? ' • Gelar VIP Member • Boost 2x • Hiasan Nama VIP (Gold Shiny)' : (item.tipe === 'VIP Plus' ? ' • Gelar VIP Plus Member • Boost 3x • Hiasan Nama & Profil VIP Plus Gold Shiny' : '');
 
@@ -5688,10 +5727,12 @@
                 card.className = 'shop-item-card';
                 card.style.flexDirection = 'column';
                 card.style.alignItems = 'stretch';
+                const isNewShopItem = Number(item.createdAt || 0) > 0 && (Date.now() - Number(item.createdAt)) < (2 * 24 * 60 * 60 * 1000);
                 card.innerHTML = `
+                    ${isNewShopItem ? '<span class="shop-new-badge">BARU</span>' : ''}
                     <div>
                         <div class="shop-title">${escapeHTML(item.nama)}</div>
-                        <div class="shop-type-tag">Tipe: ${escapeHTML(item.tipe)}${escapeHTML(benefitText)}</div>
+                        <div class="shop-type-tag">Tipe: ${escapeHTML(item.tipe === 'Tiket' ? ((item.preset === 'super_ticket' ? 'Super Tiket' : 'Play Tiket') + ' ×' + Math.max(1, Number(item.ticketCount || 1))) : item.tipe)}${escapeHTML(benefitText)}</div>
                         <div style="font-size: 0.8rem; color: #64748b; margin-top: 2px;">Masa Berlaku: <strong>${escapeHTML(masaBerlakuText)}</strong></div>
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr auto; align-items:center; gap:10px; width:100%; margin-top:8px; padding-top:10px; border-top:1px solid #e2e8f0;">
@@ -5702,6 +5743,7 @@
                 `;
                 shopList.appendChild(card);
             });
+            if (searchText && !shopList.children.length) shopList.innerHTML = '<div class="empty-notice" style="padding:16px;">Barang tidak ditemukan.</div>';
         }
 
         function buyShopItem(shopKey) {
@@ -5781,6 +5823,13 @@
                 updates[`members/${activeLoggedInMemberKey}/gelar`] = item.gelarValue;
                 if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, item.gelarValue, addedDays);
                 else updates[`members/${activeLoggedInMemberKey}/itemExpiries/${item.gelarValue}`] = null;
+            } else if (item.tipe === 'Tiket') {
+                const ticketCount = Math.max(1, Number(item.ticketCount || 1));
+                if (item.preset === 'super_ticket') {
+                    updates[`members/${activeLoggedInMemberKey}/superTickets`] = Number(member.superTickets || 0) + ticketCount;
+                } else {
+                    updates[`members/${activeLoggedInMemberKey}/playTickets`] = Number(member.playTickets || 0) + ticketCount;
+                }
             } else if (item.tipe === 'VIP Plus') {
                 updates[`members/${activeLoggedInMemberKey}/isVip`] = true;
                 updates[`members/${activeLoggedInMemberKey}/isVipPlus`] = true;
@@ -5824,7 +5873,17 @@
             }
 
             alert(`🎉 Berhasil membeli ${item.nama}!`);
-            database.ref().update(updates).then(() => recordQuestShopPurchase()).catch(() => alert('Pembelian gagal disimpan. Coba lagi.'));
+            database.ref().update(updates).then(() => {
+                member.diamond = currentDiamond - price;
+                if (item.tipe === 'Tiket') {
+                    const count = Math.max(1, Number(item.ticketCount || 1));
+                    if (item.preset === 'super_ticket') { member.superTickets = Number(member.superTickets || 0) + count; if (typeof updateSuperTicketLabel === 'function') updateSuperTicketLabel(); }
+                    else { member.playTickets = Number(member.playTickets || 0) + count; if (typeof updateMemberPersonalView === 'function') updateMemberPersonalView(member); }
+                }
+                recordQuestShopPurchase();
+                updateShopDiamondDisplay();
+                refreshMarketplaceDiamond();
+            }).catch(() => alert('Pembelian gagal disimpan. Coba lagi.'));
         }
 
         // RENDER MARKETPLACE
@@ -5867,6 +5926,7 @@
             const list = document.getElementById('marketplace-item-list');
             if (!list) return;
             list.innerHTML = '';
+            const searchText = (document.getElementById('marketplace-search')?.value || '').trim().toLocaleLowerCase('id-ID');
             const keys = Object.keys(globalMarketplaceData || {}).sort((a, b) => Number(globalMarketplaceData[b]?.createdAt || 0) - Number(globalMarketplaceData[a]?.createdAt || 0));
             if (!keys.length) {
                 list.innerHTML = '<div class="empty-notice" style="padding:16px;">Belum ada item yang dijual di marketplace.</div>';
@@ -5875,6 +5935,8 @@
             keys.forEach(key => {
                 const item = globalMarketplaceData[key] || {};
                 const itemName = hiasanNamaMap[item.itemId] || hiasanProfilMap[item.itemId] || hiasanDetailProfilMap[item.itemId] || item.itemId || 'Item';
+                const searchable = `${itemName} ${item.tipe || ''} ${item.sellerName || ''}`.toLocaleLowerCase('id-ID');
+                if (searchText && !searchable.includes(searchText)) return;
                 const isSeller = !!activeLoggedInMemberKey && item.sellerKey === activeLoggedInMemberKey;
                 const card = document.createElement('div');
                 card.className = 'shop-item-card';
@@ -5888,11 +5950,12 @@
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr auto;align-items:center;gap:10px;width:100%;margin-top:2px;padding-top:10px;border-top:1px solid #e2e8f0;">
                         <div class="shop-price">💎 ${Number(item.harga || 0).toLocaleString('id-ID')}</div>
-                        <div class="shop-stock">Stok: ${Math.max(0,Number(item.stok || 0))}</div>
+                        <div class="shop-stock" style="justify-self:start;width:max-content;max-width:100%;box-sizing:border-box;white-space:nowrap;">Stok: ${Math.max(0,Number(item.stok || 0))}</div>
                         <button class="btn-buy" onclick="buyMarketplaceItem('${key}')">Beli</button>
                     </div>`;
                 list.appendChild(card);
             });
+            if (searchText && !list.children.length) list.innerHTML = '<div class="empty-notice" style="padding:16px;">Barang tidak ditemukan.</div>';
         }
 
         function openSellItemModal() {
@@ -6275,6 +6338,7 @@
         const wheelPrizes = [
             { id: "ocean_shiny", name: "Hiasan Ocean Abbys", label: "Ocean Shiny", chance: 2, color: "#F4434F", type: "hiasan_nama" },
             { id: "play_ticket_1", name: "1 Play Tiket", label: "Play Tiket", chance: 1.5, color: "#F2C400", type: "play_ticket", val: 1 },
+            { id: "super_ticket_1", name: "1 Super Tiket", label: "Super Tiket", chance: 2, color: "#7C3AED", type: "super_ticket", val: 1 },
             { id: "aurora_cerah", name: "Hiasan Langit Malam", label: "Langit Malam", chance: 1, color: "#26B9E8", type: "hiasan_profil" },
             { id: "neon_matrix", name: "Hiasan Neon Matrix", label: "???", chance: 0.5, color: "#A94CEB", type: "hiasan_profil" },
             { id: "dm_300", name: "-300 Diamond", label: "-300 Diamond", chance: 1, color: "#6858F5", type: "diamond", val: -300 },
@@ -6287,6 +6351,16 @@
             { id: "star_5", name: "+5 Star", label: "+5 Star", chance: 5, color: "#EAB900", type: "star", val: 5 },
             { id: "star_2", name: "Kamu kalah -2 Star", label: "-2 Star", chance: 10, color: "#0DBA83", type: "star", val: -2 },
             { id: "star_1", name: "Kamu Kalah -1 Star", label: "-1 Star", chance: 15, color: "#08B5CB", type: "star", val: -1}
+        ];
+
+        const superWheelPrizes = [
+            { id: 'neon_matrix', name: 'Neon Matrix', label: 'Neon Matrix', chance: 5, color: '#22c55e', type: 'hiasan_profil' },
+            { id: 'super_diamond_2000', name: '2000 Diamond', label: '2000 Diamond', chance: 0.5, color: '#38bdf8', type: 'diamond', val: 2000 },
+            { id: 'super_dm_500', name: '-500 Diamond', label: '-500 Diamond', chance: 2, color: '#6858F5', type: 'diamond', val: -500 },
+            { id: 'super_star_25', name: '+25 Star', label: '+25 Star', chance:1, color: '#f59e0b', type: 'star', val: 25},
+            { id: 'star_20', name: '-20 Star', label: '-20 Star', chance: 2, color: '#EAB900', type: 'star', val: -20 },
+            { id: 'rainbow_shiny', name: 'Hiasan Nama Prisma Shiny', label: 'Hiasan Pelangi', chance: 1, color: '#c084fc', type: 'hiasan_nama' },
+            { id: 'debu_kosmik', name: 'Debu Kosmik', label: 'Debu Kosmik', chance: 10, color: '#6366f1', type: 'item' }
         ];
 
         let isSpinning = false;
@@ -6428,6 +6502,10 @@
                 const rewardUpdates = {};
                 if (prize.type === 'diamond') {
                     newDiamond += Number(prize.val || 0);
+                } else if (prize.type === 'super_ticket') {
+                    const superTicketRef = database.ref(`members/${memberKey}/superTickets`);
+                    const superTicketResult = await superTicketRef.transaction(current => Number(current || 0) + Number(prize.val || 1));
+                    if (superTicketResult.committed && globalMembersData[memberKey]) { globalMembersData[memberKey].superTickets = Number(superTicketResult.snapshot.val() || 0); updateSuperTicketLabel(); }
                 } else if (prize.type === 'play_ticket' || prize.type === 'item' && prize.id === 'play_ticket') {
                     const ticketRef = database.ref(`members/${memberKey}/playTickets`);
                     const ticketResult = await ticketRef.transaction(current => Number(current || 0) + Number(prize.val || prize.count || 1));
@@ -6508,11 +6586,60 @@
             }
         }
 
+        // LUCKY ROYALE / SUPER WHEEL
+        function openLuckyRoyalePage() { document.getElementById('luckyRoyalePage').style.display='flex'; }
+        let autoSpinRequested = false;
+        let autoSpinRunning = false;
+        function toggleAutoSpinWheel() {
+            const btn=document.getElementById('btnAutoSpinWheel');
+            if (autoSpinRunning) { autoSpinRequested=true; btn.style.background='#dc2626'; btn.textContent='Berhenti memutar'; return; }
+            autoSpinRequested=false; autoSpinRunning=true; btn.style.background='#dc2626'; btn.textContent='Berhenti memutar';
+            (async()=>{ try { while(!autoSpinRequested) { await spinWheel(); if(autoSpinRequested) break; if(!activeLoggedInMemberKey) break; const m=globalMembersData[activeLoggedInMemberKey]; if(!m || Number(m.diamond||0)<50) break; } } finally { autoSpinRunning=false; autoSpinRequested=false; btn.style.background='#2563eb'; btn.textContent='🔁 Spin Otomatis'; } })();
+        }
+        let isSuperSpinning=false, superWheelRotation=0;
+        function drawSuperWheel(){ const c=document.getElementById('superWheelCanvas'); if(!c)return; const x=c.getContext('2d'), n=superWheelPrizes.length, arc=2*Math.PI/n; x.clearRect(0,0,280,280); superWheelPrizes.forEach((p,i)=>{const a=i*arc;x.beginPath();x.fillStyle=p.color;x.moveTo(140,140);x.arc(140,140,140,a,a+arc);x.closePath();x.fill();x.save();x.translate(140,140);x.rotate(a+arc/2);x.textAlign='right';x.fillStyle='#fff';x.font='bold 10px Poppins,sans-serif';x.fillText(p.label,130,4);x.restore();}); }
+        function openSuperWheelModal(){ document.getElementById('superWheelModal').style.display='flex'; updateSuperTicketLabel(); drawSuperWheel(); }
+        function updateSuperTicketLabel(){const el=document.getElementById('superWheelUserTickets');const m=activeLoggedInMemberKey&&globalMembersData[activeLoggedInMemberKey];el.textContent=m?`🎟️ Super Tiket Kamu: ${Number(m.superTickets||0)}`:'🎟️ Login untuk bermain';}
+        async function spinSuperWheel(){
+            if(isSuperSpinning)return;
+            if(!activeLoggedInMemberKey){alert('Login terlebih dahulu di tab Personalisasi untuk bermain!');switchTab('personal');return;}
+            const key=activeLoggedInMemberKey, member=globalMembersData[key];
+            if(!member||Number(member.superTickets||0)<1){alert('Super Tiket kamu tidak cukup untuk Spin!');return;}
+            const btn=document.getElementById('btnSpinSuperWheel'),msg=document.getElementById('superSpinResultMessage'); isSuperSpinning=true;btn.disabled=true;btn.style.background='#9ca3af';msg.textContent='🌀 Memutar Super Wheel...';
+            let lock=false;const token=`${Date.now()}_${Math.random().toString(36).slice(2)}`;
+            try{
+                const ticketRef=database.ref(`members/${key}/superTickets`);const snap=await ticketRef.once('value');const tickets=Number(snap.val()||0);if(tickets<1)throw new Error('Super Tiket kamu tidak cukup untuk Spin!');
+                const lr=await database.ref(`members/${key}/superWheelSpinLock`).transaction(cur=>{if(cur&&Date.now()-Number(cur.lockedAt||0)<15000)return;return {lockedAt:Date.now(),token};});if(!lr.committed||!lr.snapshot.val()||lr.snapshot.val().token!==token)throw new Error('Spin sedang diproses. Tunggu sebentar ya.');lock=true;
+                let r=Math.random()*superWheelPrizes.reduce((a,p)=>a+p.chance,0),idx=0;for(let i=0;i<superWheelPrizes.length;i++){if(r<superWheelPrizes[i].chance){idx=i;break;}r-=superWheelPrizes[i].chance;}const prize=superWheelPrizes[idx];const arc=360/superWheelPrizes.length;let off=(270-(idx*arc+arc/2))%360;if(off<0)off+=360;superWheelRotation=Math.ceil(superWheelRotation/360)*360+1800+off;document.getElementById('superWheelCanvas').style.transform=`rotate(${superWheelRotation}deg)`;await new Promise(res=>setTimeout(res,3000));
+                const updates={};
+                if(prize.type==='diamond'){const d=Number(member.diamond||0)+prize.val;updates[`members/${key}/diamond`]=d;member.diamond=d;}
+                else if(prize.type==='star'){
+                    const starRef=database.ref(`members/${key}/bintang`);
+                    const beforeSnap=await starRef.once('value');
+                    const beforeStars=Number(beforeSnap.val()||0);
+                    wheelStarUpdatePending[key]=true;
+                    await starRef.set(beforeStars+Number(prize.val||0));
+                    const verifySnap=await starRef.once('value');
+                    const verifiedStars=Number(verifySnap.val()||0);
+                    member.bintang=verifiedStars;
+                    lastKnownMemberStars[key]=verifiedStars;
+                    if(verifiedStars>beforeStars) await recordQuestStars(verifiedStars-beforeStars);
+                }
+                else if(prize.type==='hiasan_profil'){addItemToInventory(updates,key,member,{itemId:prize.id,itemName:prize.name,itemType:'Hiasan Profil',count:1});}
+                else if(prize.type==='hiasan_nama'){const unlocked=getItemArray(member.unlockedHiasan);if(!unlocked.includes(prize.id))unlocked.push(prize.id);updates[`members/${key}/unlockedHiasan`]=unlocked;addItemToInventory(updates,key,member,{itemId:prize.id,itemName:prize.name,itemType:'Hiasan Nama',count:1});}
+                else {const inv=getItemArray(member.inventory);inv.push({id:prize.id,name:prize.name,type:'Item',count:1});updates[`members/${key}/inventory`]=inv;}
+                updates[`members/${key}/superTickets`]=tickets-1;await database.ref().update(updates);member.superTickets=tickets-1;globalMembersData[key]=member;updateSuperTicketLabel();if(typeof updateMemberPersonalView==='function')updateMemberPersonalView(member);msg.textContent=`🎉 Selamat! Kamu mendapatkan: ${prize.name}!`;
+            }catch(e){console.error('Super Wheel failed:',e);msg.textContent=e.message||'Hadiah belum berhasil disimpan. Silakan coba lagi.';}
+            finally{wheelStarUpdatePending[key]=false;if(lock)try{await database.ref(`members/${key}/superWheelSpinLock`).transaction(cur=>cur&&cur.token===token?null:cur);}catch(e){}isSuperSpinning=false;btn.disabled=false;btn.style.background='';}
+        }
+
         // ADMIN SETTINGS & PRESETS
         function updateShopPresetOptions() {
             const tipe = document.getElementById('adminShopTipe').value;
             const presetSelect = document.getElementById('adminShopPreset');
             const gelarContainer = document.getElementById('adminShopGelarContainer');
+            const ticketCountContainer = document.getElementById('adminShopTicketCountContainer');
+            if (ticketCountContainer) ticketCountContainer.style.display = tipe === 'Tiket' ? 'block' : 'none';
             presetSelect.innerHTML = '';
 
             if (tipe === 'Hiasan Nama') {
@@ -6599,6 +6726,21 @@
                     opt.value = o.val; opt.textContent = o.label;
                     presetSelect.appendChild(opt);
                 });
+            } else if (tipe === 'Kotak Nama') {
+                gelarContainer.style.display = 'none';
+                [
+                    { val: 'royal', label: 'Kotak Nama Royal' },
+                    { val: 'neon', label: 'Kotak Nama Neon' },
+                    { val: 'frost', label: 'Kotak Nama Frost' },
+                    { val: 'nature', label: 'Kotak Nama Nature' },
+                    { val: 'cosmic', label: 'Kotak Nama Cosmic' }
+                ].forEach(o => { const opt = document.createElement('option'); opt.value = o.val; opt.textContent = o.label; presetSelect.appendChild(opt); });
+            } else if (tipe === 'Tiket') {
+                gelarContainer.style.display = 'none';
+                [
+                    { val: 'play_ticket', label: 'Play Tiket' },
+                    { val: 'super_ticket', label: 'Super Tiket' }
+                ].forEach(o => { const opt = document.createElement('option'); opt.value = o.val; opt.textContent = o.label; presetSelect.appendChild(opt); });
             } else if (tipe === 'Gelar') {
                 gelarContainer.style.display = 'block';
             } else {
@@ -6624,6 +6766,7 @@
             const tipePembelian = document.getElementById('adminShopTipePembelian').value;
             const harga = Number(document.getElementById('adminShopHarga').value || 0);
             const stok = Number(document.getElementById('adminShopStok').value || 0);
+            const ticketCount = Math.max(1, Number(document.getElementById('adminShopTicketCount')?.value || 1));
 
             if (!nama) { alert("Nama item tidak boleh kosong!"); return; }
 
@@ -6631,6 +6774,7 @@
                 nama: nama,
                 tipe: tipe,
                 preset: preset,
+                ticketCount: tipe === 'Tiket' ? ticketCount : 0,
                 gelarValue: (tipe === 'Gelar') ? gelarInput : '',
                 masaBerlakuTipe: masaTipe,
                 masaBerlakuHari: masaHari,
