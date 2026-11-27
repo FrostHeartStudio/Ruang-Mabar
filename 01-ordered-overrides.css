@@ -1,0 +1,628 @@
+/* Additional styles and overrides. Preserve this order. */
+.member-card.decor-neon-matrix,.card-box.decor-neon-matrix{position:relative!important;overflow:hidden!important;isolation:isolate!important}
+.member-card.decor-neon-matrix::after,.card-box.decor-neon-matrix::after{content:""!important;position:absolute!important;inset:0!important;display:block!important;pointer-events:none!important;z-index:3!important;background-image:linear-gradient(to bottom,transparent 0%,rgba(220,252,231,0) 35%,rgba(220,252,231,.18) 43%,rgba(255,255,255,.92) 48%,rgba(134,239,172,.48) 51%,rgba(220,252,231,.08) 57%,transparent 64%)!important;background-repeat:no-repeat!important;background-size:100% 220%!important;background-position:0 -120%!important;animation:rmNeonFinalShine 2.8s linear infinite!important}
+.rm-neon-binary-layer{position:absolute!important;inset:0!important;overflow:hidden!important;pointer-events:none!important;z-index:0!important}
+.rm-neon-binary-digit{position:absolute!important;display:block!important;color:rgba(74,222,128,.65)!important;font:700 12px/1 monospace!important;text-shadow:0 0 5px rgba(34,197,94,.8)!important;transform:translate(-50%,-50%)!important;animation:rmNeonDigitGlow 1.2s steps(1,end) infinite!important}
+.member-card.decor-neon-matrix>*,.card-box.decor-neon-matrix>*{position:relative;z-index:2!important}
+@keyframes rmNeonFinalShine{0%{background-position:0 -120%}100%{background-position:0 120%}}
+@keyframes rmNeonDigitGlow{0%,49%{opacity:.5}50%,100%{opacity:1}}
+
+
+        /* LIMA HIASAN DETAIL PROFIL BARU: glow dan partikel bergerak */
+        .profile-detail-solar, .profile-detail-frost, .profile-detail-emerald,
+        .profile-detail-crimson, .profile-detail-celestial {
+            position:relative; overflow:hidden; isolation:isolate;
+            box-sizing:border-box; width:100%; min-height:100%; margin:0;
+            padding:18px 20px; border-radius:0;
+        }
+        .profile-detail-solar {
+            color:#fff7d6; background:radial-gradient(ellipse at 80% 15%,rgba(255,230,109,.52),transparent 35%),linear-gradient(135deg,#431407,#c2410c 48%,#7f1d1d);
+            border-top:3px solid #fde68a; border-bottom:3px solid #fb923c;
+            animation:newDetailSolarGlow 3.8s ease-in-out infinite;
+        }
+        .profile-detail-solar::before { content:''; position:absolute; inset:-20%; pointer-events:none; z-index:0; opacity:.75; background:radial-gradient(circle at 15% 25%,#fff7ae 0 1.5px,transparent 3px),radial-gradient(circle at 38% 72%,#fdba74 0 2px,transparent 4px),radial-gradient(circle at 68% 35%,#fff 0 1px,transparent 3px),radial-gradient(circle at 85% 80%,#fbbf24 0 2px,transparent 4px); background-size:130px 100px; animation:newDetailSolarParticles 7s linear infinite; }
+        .profile-detail-solar::after { content:'✦  ☼  ✦'; position:absolute; right:12px; top:8px; z-index:0; color:#fef3c7; letter-spacing:4px; text-shadow:0 0 8px #f59e0b,0 0 18px #fb923c; animation:newDetailSolarSpark 2.4s ease-in-out infinite; }
+        @keyframes newDetailSolarGlow { 0%,100%{box-shadow:inset 0 0 22px rgba(251,146,60,.22),0 0 10px rgba(249,115,22,.18)}50%{box-shadow:inset 0 0 34px rgba(253,230,138,.38),0 0 24px rgba(249,115,22,.48)} }
+        @keyframes newDetailSolarParticles { from{transform:translate(0,0)}to{transform:translate(-45px,-35px)} }
+        @keyframes newDetailSolarSpark { 0%,100%{opacity:.55;filter:brightness(1)}50%{opacity:1;filter:brightness(1.6)} }
+        .profile-detail-frost {
+            color:#effaff; background:radial-gradient(ellipse at 20% 15%,rgba(186,230,253,.38),transparent 38%),linear-gradient(135deg,#082f49,#155e75 50%,#1e3a8a);
+            border-top:3px solid #bae6fd; border-bottom:3px solid #67e8f9;
+            animation:newDetailFrostGlow 4.4s ease-in-out infinite;
+        }
+        .profile-detail-frost::before { content:''; position:absolute; inset:-15%; z-index:0; pointer-events:none; background:radial-gradient(circle at 12% 28%,#fff 0 1.5px,transparent 3px),radial-gradient(circle at 40% 62%,#bae6fd 0 2px,transparent 4px),radial-gradient(circle at 73% 21%,#e0f2fe 0 1.5px,transparent 3px),radial-gradient(circle at 86% 78%,#fff 0 1px,transparent 3px); background-size:115px 95px; animation:newDetailFrostParticles 8s linear infinite; }
+        .profile-detail-frost::after { content:'❄  ✧  ❄'; position:absolute; right:12px; top:8px; z-index:0; color:#e0f2fe; letter-spacing:4px; text-shadow:0 0 8px #7dd3fc,0 0 16px #38bdf8; animation:newDetailFrostSpark 3s ease-in-out infinite; }
+        @keyframes newDetailFrostGlow { 0%,100%{box-shadow:inset 0 0 22px rgba(125,211,252,.18),0 0 10px rgba(56,189,248,.18)}50%{box-shadow:inset 0 0 32px rgba(224,242,254,.35),0 0 24px rgba(56,189,248,.4)} }
+        @keyframes newDetailFrostParticles { from{transform:translate(0,-8px)}to{transform:translate(35px,35px)} }
+        @keyframes newDetailFrostSpark { 0%,100%{opacity:.6}50%{opacity:1;filter:brightness(1.5)} }
+        .profile-detail-emerald {
+            color:#dcfce7; background:radial-gradient(ellipse at 75% 20%,rgba(74,222,128,.3),transparent 38%),linear-gradient(135deg,#022c22,#065f46 52%,#064e3b);
+            border-top:3px solid #86efac; border-bottom:3px solid #10b981;
+            animation:newDetailEmeraldGlow 4s ease-in-out infinite;
+        }
+        .profile-detail-emerald::before { content:''; position:absolute; inset:-20%; z-index:0; pointer-events:none; background:radial-gradient(circle at 18% 26%,#bbf7d0 0 1.5px,transparent 3px),radial-gradient(circle at 46% 74%,#34d399 0 2px,transparent 4px),radial-gradient(circle at 72% 32%,#ecfdf5 0 1px,transparent 3px),radial-gradient(circle at 88% 82%,#6ee7b7 0 2px,transparent 4px); background-size:125px 105px; animation:newDetailEmeraldParticles 6.5s linear infinite; }
+        .profile-detail-emerald::after { content:'◆  ✧  ◆'; position:absolute; right:12px; top:8px; z-index:0; color:#d1fae5; letter-spacing:4px; text-shadow:0 0 8px #34d399,0 0 17px #10b981; animation:newDetailEmeraldSpark 2.8s ease-in-out infinite; }
+        @keyframes newDetailEmeraldGlow { 0%,100%{box-shadow:inset 0 0 22px rgba(52,211,153,.18),0 0 10px rgba(16,185,129,.15)}50%{box-shadow:inset 0 0 32px rgba(134,239,172,.32),0 0 24px rgba(16,185,129,.4)} }
+        @keyframes newDetailEmeraldParticles { from{transform:translate(-8px,0)}to{transform:translate(35px,-30px)} }
+        @keyframes newDetailEmeraldSpark { 0%,100%{opacity:.55}50%{opacity:1;filter:brightness(1.55)} }
+        .profile-detail-crimson {
+            color:#fff1f2; background:radial-gradient(ellipse at 80% 20%,rgba(251,113,133,.34),transparent 38%),linear-gradient(135deg,#450a0a,#881337 52%,#4c0519);
+            border-top:3px solid #fda4af; border-bottom:3px solid #e11d48;
+            animation:newDetailCrimsonGlow 4.1s ease-in-out infinite;
+        }
+        .profile-detail-crimson::before { content:''; position:absolute; inset:-20%; z-index:0; pointer-events:none; background:radial-gradient(circle at 14% 30%,#ffe4e6 0 1.5px,transparent 3px),radial-gradient(circle at 43% 68%,#fb7185 0 2px,transparent 4px),radial-gradient(circle at 70% 24%,#fff1f2 0 1px,transparent 3px),radial-gradient(circle at 87% 78%,#fda4af 0 2px,transparent 4px); background-size:120px 100px; animation:newDetailCrimsonParticles 7.4s linear infinite; }
+        .profile-detail-crimson::after { content:'✦  ◈  ✦'; position:absolute; right:12px; top:8px; z-index:0; color:#ffe4e6; letter-spacing:4px; text-shadow:0 0 8px #fb7185,0 0 18px #e11d48; animation:newDetailCrimsonSpark 3s ease-in-out infinite; }
+        @keyframes newDetailCrimsonGlow { 0%,100%{box-shadow:inset 0 0 22px rgba(244,63,94,.18),0 0 10px rgba(225,29,72,.18)}50%{box-shadow:inset 0 0 32px rgba(251,113,133,.34),0 0 24px rgba(225,29,72,.42)} }
+        @keyframes newDetailCrimsonParticles { from{transform:translate(0,5px)}to{transform:translate(-38px,-32px)} }
+        @keyframes newDetailCrimsonSpark { 0%,100%{opacity:.55}50%{opacity:1;filter:brightness(1.5)} }
+        .profile-detail-celestial {
+            color:#f5f3ff; background:radial-gradient(ellipse at 25% 20%,rgba(129,140,248,.35),transparent 40%),linear-gradient(135deg,#111827,#312e81 52%,#581c87);
+            border-top:3px solid #c4b5fd; border-bottom:3px solid #818cf8;
+            animation:newDetailCelestialGlow 4.6s ease-in-out infinite;
+        }
+        .profile-detail-celestial::before { content:''; position:absolute; inset:-18%; z-index:0; pointer-events:none; background:radial-gradient(circle at 12% 28%,#fff 0 1.5px,transparent 3px),radial-gradient(circle at 37% 72%,#c4b5fd 0 2px,transparent 4px),radial-gradient(circle at 66% 25%,#a5f3fc 0 1px,transparent 3px),radial-gradient(circle at 86% 80%,#e9d5ff 0 2px,transparent 4px); background-size:128px 104px; animation:newDetailCelestialParticles 8.2s linear infinite; }
+        .profile-detail-celestial::after { content:'✧  ✦  ✧'; position:absolute; right:12px; top:8px; z-index:0; color:#e9d5ff; letter-spacing:4px; text-shadow:0 0 8px #a78bfa,0 0 18px #818cf8; animation:newDetailCelestialSpark 3.2s ease-in-out infinite; }
+        @keyframes newDetailCelestialGlow { 0%,100%{box-shadow:inset 0 0 24px rgba(167,139,250,.18),0 0 10px rgba(129,140,248,.18)}50%{box-shadow:inset 0 0 34px rgba(196,181,253,.34),0 0 25px rgba(129,140,248,.42)} }
+        @keyframes newDetailCelestialParticles { from{transform:translate(-5px,8px)}to{transform:translate(35px,-35px)} }
+        @keyframes newDetailCelestialSpark { 0%,100%{opacity:.55}50%{opacity:1;filter:brightness(1.55)} }
+        .profile-detail-solar > *, .profile-detail-frost > *, .profile-detail-emerald > *,
+        .profile-detail-crimson > *, .profile-detail-celestial > * { position:relative; z-index:1; }
+        .profile-detail-solar .stat-item, .profile-detail-frost .stat-item,
+        .profile-detail-emerald .stat-item, .profile-detail-crimson .stat-item,
+        .profile-detail-celestial .stat-item { color:inherit !important; }
+        .profile-detail-solar .stats-grid, .profile-detail-frost .stats-grid,
+        .profile-detail-emerald .stats-grid, .profile-detail-crimson .stats-grid,
+        .profile-detail-celestial .stats-grid { background:rgba(2,6,23,.24) !important; border:1px solid rgba(255,255,255,.2); }
+        .duration-detail-solar,.duration-detail-frost,.duration-detail-emerald,
+        .duration-detail-crimson,.duration-detail-celestial { background-size:200% auto; color:transparent; -webkit-background-clip:text; background-clip:text; font-weight:800; animation:detailDurationShine 3s linear infinite; display:inline-block; }
+        .duration-detail-solar { background-image:linear-gradient(90deg,#c2410c,#fde68a,#fff7ed,#fb923c,#7c2d12); }
+        .duration-detail-frost { background-image:linear-gradient(90deg,#0369a1,#bae6fd,#fff,#67e8f9,#1e3a8a); }
+        .duration-detail-emerald { background-image:linear-gradient(90deg,#047857,#6ee7b7,#ecfdf5,#34d399,#064e3b); }
+        .duration-detail-crimson { background-image:linear-gradient(90deg,#9f1239,#fda4af,#fff1f2,#fb7185,#4c0519); }
+        .duration-detail-celestial { background-image:linear-gradient(90deg,#4338ca,#c4b5fd,#fff,#a5f3fc,#6d28d9); }
+
+
+
+        /* Perbaikan lima hiasan detail profil: memenuhi modal, panel menyatu dengan tema, dan partikel unik. */
+        .modal-body:has(.profile-detail-solar),
+        .modal-body:has(.profile-detail-frost),
+        .modal-body:has(.profile-detail-emerald),
+        .modal-body:has(.profile-detail-crimson),
+        .modal-body:has(.profile-detail-celestial) { padding:0 !important; }
+        .profile-detail-solar, .profile-detail-frost, .profile-detail-emerald,
+        .profile-detail-crimson, .profile-detail-celestial {
+            display:block !important; width:100% !important; min-width:100% !important;
+            min-height:100% !important; box-sizing:border-box !important; border-radius:0 !important;
+        }
+        .profile-detail-solar > div[style*="background: #f8fafc"],
+        .profile-detail-frost > div[style*="background: #f8fafc"],
+        .profile-detail-emerald > div[style*="background: #f8fafc"],
+        .profile-detail-crimson > div[style*="background: #f8fafc"],
+        .profile-detail-celestial > div[style*="background: #f8fafc"],
+        .profile-detail-solar > div[style*="background: #f8fafc"] *,
+        .profile-detail-frost > div[style*="background: #f8fafc"] *,
+        .profile-detail-emerald > div[style*="background: #f8fafc"] *,
+        .profile-detail-crimson > div[style*="background: #f8fafc"] *,
+        .profile-detail-celestial > div[style*="background: #f8fafc"] * {
+            background-color:transparent !important;
+            color:inherit !important; border-color:currentColor !important;
+        }
+        .profile-detail-solar .stats-grid, .profile-detail-frost .stats-grid,
+        .profile-detail-emerald .stats-grid, .profile-detail-crimson .stats-grid,
+        .profile-detail-celestial .stats-grid,
+        .profile-detail-solar .stat-item, .profile-detail-frost .stat-item,
+        .profile-detail-emerald .stat-item, .profile-detail-crimson .stat-item,
+        .profile-detail-celestial .stat-item {
+            background:rgba(0,0,0,.12) !important; color:inherit !important;
+            border-color:currentColor !important; box-shadow:inset 0 0 12px rgba(255,255,255,.035) !important;
+        }
+        .profile-detail-solar > div[style*="background: #f8fafc"] { border-color:rgba(253,230,138,.42) !important; }
+        .profile-detail-frost > div[style*="background: #f8fafc"] { border-color:rgba(186,230,253,.48) !important; }
+        .profile-detail-emerald > div[style*="background: #f8fafc"] { border-color:rgba(110,231,183,.45) !important; }
+        .profile-detail-crimson > div[style*="background: #f8fafc"] { border-color:rgba(253,164,175,.45) !important; }
+        .profile-detail-celestial > div[style*="background: #f8fafc"] { border-color:rgba(196,181,253,.48) !important; }
+        .profile-detail-solar > div[style*="background: #f8fafc"] > div,
+        .profile-detail-frost > div[style*="background: #f8fafc"] > div,
+        .profile-detail-emerald > div[style*="background: #f8fafc"] > div,
+        .profile-detail-crimson > div[style*="background: #f8fafc"] > div,
+        .profile-detail-celestial > div[style*="background: #f8fafc"] > div { color:inherit !important; }
+
+        /* Solar Flare: bara memanjang dan percikan kecil. */
+        .profile-detail-solar::before {
+            background:repeating-linear-gradient(118deg,transparent 0 19px,rgba(255,247,174,.72) 20px,rgba(251,146,60,.28) 22px,transparent 25px 47px),radial-gradient(circle at 18% 28%,#fff7ae 0 1.5px,transparent 3px),radial-gradient(circle at 74% 70%,#fdba74 0 2px,transparent 4px) !important;
+            background-size:180px 150px,130px 100px,130px 100px !important;
+        }
+        /* Kristal Beku: serpihan kristal bersudut. */
+        .profile-detail-frost::before {
+            background:linear-gradient(60deg,transparent 46%,rgba(224,242,254,.8) 48%,transparent 51%),linear-gradient(120deg,transparent 46%,rgba(125,211,252,.75) 48%,transparent 51%),linear-gradient(0deg,transparent 47%,rgba(255,255,255,.58) 49%,transparent 52%),radial-gradient(circle,#fff 0 1px,transparent 2.5px) !important;
+            background-size:34px 42px,34px 42px,34px 42px,83px 71px !important;
+            animation:newDetailFrostParticles 8s linear infinite, frostShardTwinkle 2.8s ease-in-out infinite alternate !important;
+        }
+        @keyframes frostShardTwinkle { from{opacity:.45}to{opacity:.95} }
+        /* Jantung Emerald: partikel berbentuk berlian. */
+        .profile-detail-emerald::before {
+            background:linear-gradient(45deg,transparent 43%,rgba(167,243,208,.95) 48%,transparent 53%),linear-gradient(-45deg,transparent 43%,rgba(52,211,153,.85) 48%,transparent 53%),radial-gradient(circle at 70% 20%,#d1fae5 0 1px,transparent 3px) !important;
+            background-size:19px 19px,19px 19px,91px 77px !important;
+            animation:newDetailEmeraldParticles 6.5s linear infinite !important;
+        }
+        /* Nebula Crimson: jejak energi merah berupa garis miring. */
+        .profile-detail-crimson::before {
+            background:repeating-linear-gradient(135deg,transparent 0 13px,rgba(254,202,202,.8) 14px,rgba(244,63,94,.32) 16px,transparent 18px 37px),radial-gradient(ellipse,rgba(251,113,133,.9) 0 1px,transparent 4px) !important;
+            background-size:145px 120px,72px 64px !important;
+            animation:newDetailCrimsonParticles 5.5s linear infinite !important;
+        }
+        /* Arus Celestial: bintang berkilau empat arah dan titik kosmik. */
+        .profile-detail-celestial::before {
+            background:linear-gradient(0deg,transparent 42%,rgba(224,231,255,.9) 48%,transparent 54%),linear-gradient(90deg,transparent 42%,rgba(196,181,253,.9) 48%,transparent 54%),radial-gradient(circle,#67e8f9 0 1px,transparent 3px) !important;
+            background-size:15px 15px,15px 15px,79px 67px !important;
+            animation:newDetailCelestialParticles 7s linear infinite, celestialStarTwinkle 2.2s ease-in-out infinite alternate !important;
+        }
+        @keyframes celestialStarTwinkle { from{opacity:.35}to{opacity:1} }
+
+/* Panel isi Detail Profil: semi-transparan, tetap terbaca, dan mengikuti warna hiasan. */
+.profile-detail-solar .stats-grid,
+.profile-detail-solar > div[style*="background: #f8fafc"],
+.profile-detail-solar > div[style*="background:#f8fafc"] { background:rgba(69,26,3,.58)!important; border:1px solid rgba(253,230,138,.48)!important; }
+.profile-detail-frost .stats-grid,
+.profile-detail-frost > div[style*="background: #f8fafc"],
+.profile-detail-frost > div[style*="background:#f8fafc"] { background:rgba(8,47,73,.58)!important; border:1px solid rgba(186,230,253,.48)!important; }
+.profile-detail-emerald .stats-grid,
+.profile-detail-emerald > div[style*="background: #f8fafc"],
+.profile-detail-emerald > div[style*="background:#f8fafc"] { background:rgba(2,44,34,.62)!important; border:1px solid rgba(134,239,172,.42)!important; }
+.profile-detail-crimson .stats-grid,
+.profile-detail-crimson > div[style*="background: #f8fafc"],
+.profile-detail-crimson > div[style*="background:#f8fafc"] { background:rgba(69,10,10,.60)!important; border:1px solid rgba(253,164,175,.44)!important; }
+.profile-detail-celestial .stats-grid,
+.profile-detail-celestial > div[style*="background: #f8fafc"],
+.profile-detail-celestial > div[style*="background:#f8fafc"] { background:rgba(17,24,39,.64)!important; border:1px solid rgba(196,181,253,.46)!important; }
+.profile-detail-solar > div[style*="background: #f8fafc"] *, .profile-detail-solar > div[style*="background:#f8fafc"] * { color:#ffedd5!important; }
+.profile-detail-frost > div[style*="background: #f8fafc"] *, .profile-detail-frost > div[style*="background:#f8fafc"] * { color:#e0f2fe!important; }
+.profile-detail-emerald > div[style*="background: #f8fafc"] *, .profile-detail-emerald > div[style*="background:#f8fafc"] * { color:#d1fae5!important; }
+.profile-detail-crimson > div[style*="background: #f8fafc"] *, .profile-detail-crimson > div[style*="background:#f8fafc"] * { color:#ffe4e6!important; }
+.profile-detail-celestial > div[style*="background: #f8fafc"] *, .profile-detail-celestial > div[style*="background:#f8fafc"] * { color:#ede9fe!important; }
+/* Jantung Emerald, Kristal Beku, Arus Celestial: particle dan kilau lebih lembut. */
+.profile-detail-frost::before, .profile-detail-emerald::before, .profile-detail-celestial::before { opacity:.32!important; background-size:180px 150px!important; animation-duration:14s!important; }
+.profile-detail-frost::after, .profile-detail-emerald::after, .profile-detail-celestial::after { opacity:.42!important; text-shadow:0 0 4px currentColor!important; animation-duration:5.5s!important; }
+.profile-detail-frost, .profile-detail-emerald, .profile-detail-celestial { animation-duration:7s!important; }
+@keyframes newDetailFrostSpark { 0%,100%{opacity:.35}50%{opacity:.55;filter:brightness(1.08)} }
+@keyframes newDetailEmeraldSpark { 0%,100%{opacity:.35}50%{opacity:.55;filter:brightness(1.08)} }
+@keyframes newDetailCelestialSpark { 0%,100%{opacity:.35}50%{opacity:.55;filter:brightness(1.08)} }
+
+/* Revisi khusus partikel Jantung Emerald, Kristal Beku, dan Arus Celestial.
+   Lebih bervariasi, bercahaya, bergerak perlahan; tidak mengubah ukuran kartu. */
+.profile-detail-frost::before,
+.profile-detail-emerald::before,
+.profile-detail-celestial::before {
+  inset:-8% !important;
+  opacity:.92 !important;
+  background-repeat:repeat !important;
+  mix-blend-mode:screen;
+  will-change:background-position,opacity;
+}
+.profile-detail-frost::before {
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.98) 0 1.4px,rgba(186,230,253,.65) 2px,transparent 4.5px),
+    radial-gradient(circle,rgba(224,242,254,.95) 0 1px,transparent 3.5px),
+    radial-gradient(circle,rgba(125,211,252,.9) 0 1.6px,transparent 4px),
+    radial-gradient(ellipse,rgba(186,230,253,.65) 0 1px,transparent 5px),
+    linear-gradient(60deg,transparent 48%,rgba(224,242,254,.48) 49%,rgba(255,255,255,.85) 50%,transparent 52%),
+    linear-gradient(120deg,transparent 48%,rgba(125,211,252,.38) 49%,rgba(224,242,254,.72) 50%,transparent 52%) !important;
+  background-size:71px 67px,113px 91px,157px 121px,193px 149px,47px 53px,61px 67px !important;
+  animation:rmFrostParticlesDrift 11s linear infinite,rmFrostParticleGlow 3.8s ease-in-out infinite alternate !important;
+  filter:drop-shadow(0 0 3px rgba(125,211,252,.75));
+}
+.profile-detail-emerald::before {
+  background-image:
+    radial-gradient(circle,rgba(236,253,245,.98) 0 1.3px,rgba(110,231,183,.8) 2px,transparent 4.5px),
+    radial-gradient(circle,rgba(52,211,153,.95) 0 1.6px,transparent 4px),
+    radial-gradient(circle,rgba(167,243,208,.95) 0 1px,transparent 3.5px),
+    radial-gradient(ellipse,rgba(16,185,129,.75) 0 1.5px,transparent 5px),
+    linear-gradient(45deg,transparent 47%,rgba(167,243,208,.7) 49%,rgba(236,253,245,.9) 50%,transparent 53%),
+    linear-gradient(-45deg,transparent 47%,rgba(52,211,153,.5) 49%,rgba(167,243,208,.8) 50%,transparent 53%) !important;
+  background-size:67px 73px,101px 89px,139px 113px,181px 137px,39px 43px,53px 59px !important;
+  animation:rmEmeraldParticlesDrift 9.5s linear infinite,rmEmeraldParticleGlow 3.6s ease-in-out infinite alternate !important;
+  filter:drop-shadow(0 0 3px rgba(52,211,153,.8));
+}
+.profile-detail-celestial::before {
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,1) 0 1.4px,rgba(196,181,253,.8) 2px,transparent 4.5px),
+    radial-gradient(circle,rgba(165,243,252,.95) 0 1px,transparent 3.5px),
+    radial-gradient(circle,rgba(233,213,255,.98) 0 1.6px,transparent 4px),
+    radial-gradient(ellipse,rgba(129,140,248,.78) 0 1px,transparent 5px),
+    linear-gradient(0deg,transparent 47%,rgba(224,231,255,.65) 49%,rgba(255,255,255,.9) 50%,transparent 53%),
+    linear-gradient(90deg,transparent 47%,rgba(196,181,253,.6) 49%,rgba(224,231,255,.9) 50%,transparent 53%) !important;
+  background-size:73px 69px,109px 97px,151px 117px,197px 151px,43px 47px,57px 61px !important;
+  animation:rmCelestialParticlesDrift 12s linear infinite,rmCelestialParticleGlow 3.4s ease-in-out infinite alternate !important;
+  filter:drop-shadow(0 0 4px rgba(167,139,250,.8));
+}
+@keyframes rmFrostParticlesDrift { from{background-position:0 0,20px 30px,55px 10px,10px 60px,0 0,25px 20px}to{background-position:71px 67px,-93px 121px,212px -111px,-183px 209px,47px 53px,-36px 87px} }
+@keyframes rmEmeraldParticlesDrift { from{background-position:0 0,30px 12px,65px 45px,12px 70px,0 0,19px 27px}to{background-position:-67px 73px,131px -89px,-74px 158px,193px -67px,39px 43px,-53px 86px} }
+@keyframes rmCelestialParticlesDrift { from{background-position:0 0,40px 25px,70px 55px,15px 80px,0 0,23px 17px}to{background-position:73px -69px,-149px 122px,221px -117px,-182px 231px,43px 47px,-34px 78px} }
+@keyframes rmFrostParticleGlow { from{opacity:.68}to{opacity:1} }
+@keyframes rmEmeraldParticleGlow { from{opacity:.7}to{opacity:1} }
+@keyframes rmCelestialParticleGlow { from{opacity:.65}to{opacity:1} }
+@media (prefers-reduced-motion:reduce) {
+ .profile-detail-frost::before,.profile-detail-emerald::before,.profile-detail-celestial::before { animation:none !important; }
+}
+
+/* Papan peringkat: tombol ikon saja, mengikuti gaya tab yang sudah ada. */
+.leaderboard-icon-tab { min-width:38px; height:32px; padding:0 10px !important; border-radius:8px !important; background:#2563eb !important; color:white !important; border:none !important; font-size:0.85rem !important; }
+.header-btn-group .leaderboard-icon-tab:hover { background:#1d4ed8 !important; }
+.header-btn-group .leaderboard-icon-tab { display:inline-flex; align-items:center; justify-content:center; }
+.information-icon-tab { min-width:38px; height:32px; padding:0 10px !important; border-radius:8px !important; background:#2563eb !important; color:white !important; border:none !important; font-size:0.95rem !important; display:inline-flex; align-items:center; justify-content:center; }
+.header-btn-group .information-icon-tab:hover { background:#1d4ed8 !important; }
+.leaderboard-shell { background:linear-gradient(145deg,#f8fafc,#eef2ff); border-color:#c7d2fe; }
+.leaderboard-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+.leaderboard-heading h2 { margin:0 0 4px; color:#1e1b4b; font-size:1.25rem; }
+.leaderboard-heading p { color:#64748b; font-size:.8rem; margin:0; }
+.leaderboard-refresh-mark { width:38px; height:38px; border-radius:12px; display:grid; place-items:center; background:#e0e7ff; color:#4338ca; font-size:1.5rem; }
+.leaderboard-category-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.leaderboard-category-btn { border:1px solid #cbd5e1; border-radius:10px; padding:9px 13px; background:#fff; color:#334155; font-weight:700; cursor:pointer; }
+.leaderboard-category-btn.active { background:#4338ca; border-color:#4338ca; color:#fff; }
+.leaderboard-claim-panel { border:1px solid #c7d2fe; background:rgba(255,255,255,.8); border-radius:12px; padding:12px; margin-bottom:14px; color:#312e81; font-size:.88rem; }
+.leaderboard-claim-panel .btn-action { margin-top:9px; }
+.leaderboard-list { display:flex; flex-direction:column; gap:8px; }
+.leaderboard-row { display:grid; grid-template-columns:42px minmax(0,1fr) auto; gap:10px; align-items:center; padding:11px 12px; background:#fff; border:1px solid #e2e8f0; border-radius:12px; }
+.leaderboard-row.is-self { border-color:#818cf8; background:#eef2ff; box-shadow:0 0 0 1px rgba(129,140,248,.15); }
+.leaderboard-rank-number { font-weight:900; color:#475569; text-align:center; }
+.leaderboard-rank-number.top-one { color:#b45309; font-size:1.1rem; }
+.leaderboard-player-name { min-width:0; overflow-wrap:anywhere; color:#0f172a; font-weight:750; }
+.leaderboard-player-sub { font-size:.72rem; color:#64748b; margin-top:3px; }
+.leaderboard-player-value { font-weight:850; color:#3730a3; white-space:nowrap; text-align:right; }
+.leaderboard-footnote { color:#64748b; font-size:.75rem; line-height:1.5; margin:14px 0 0; }
+@media(max-width:480px){.leaderboard-row{grid-template-columns:32px minmax(0,1fr) auto;padding:10px 8px;gap:7px}.leaderboard-player-value{font-size:.82rem}.leaderboard-category-btn{flex:1;padding:9px 6px;font-size:.82rem}}
+
+        #season-event-game-tab,#season-event-shop-tab { flex:1; }
+        #season-event-main .btn-action:disabled { opacity:.55; cursor:not-allowed; }
+        #season-event-shop-items .shop-item { box-sizing:border-box; width:100%; }
+        @media(max-width:480px){#season-game-arena{height:260px!important;min-height:220px!important}#season-event-main .card-box{padding:12px}}
+
+/* Partikel baru yang lebih tenang: pola berbeda, jarang, tanpa efek zoom. */
+.profile-detail-frost::before {
+  background: radial-gradient(circle,rgba(224,242,254,.75) 0 1px,transparent 2px),
+              radial-gradient(circle,rgba(125,211,252,.55) 0 1px,transparent 2.5px) !important;
+  background-size:97px 83px,151px 127px !important;
+  opacity:.38 !important; animation:newDetailFrostParticles 18s linear infinite !important;
+}
+.profile-detail-emerald::before {
+  background: radial-gradient(circle,rgba(167,243,208,.72) 0 1.2px,transparent 2.8px),
+              radial-gradient(circle,rgba(52,211,153,.45) 0 1px,transparent 2.5px) !important;
+  background-size:123px 109px,181px 153px !important;
+  opacity:.34 !important; animation:newDetailEmeraldParticles 20s linear infinite !important;
+}
+.profile-detail-celestial::before {
+  background: radial-gradient(circle,rgba(224,231,255,.76) 0 1px,transparent 2.3px),
+              radial-gradient(circle,rgba(196,181,253,.5) 0 1px,transparent 2.5px) !important;
+  background-size:139px 117px,193px 161px !important;
+  opacity:.34 !important; animation:newDetailCelestialParticles 22s linear infinite !important;
+}
+.profile-detail-frost::after,.profile-detail-emerald::after,.profile-detail-celestial::after {
+  opacity:.32 !important; text-shadow:0 0 3px currentColor !important;
+  animation:none !important;
+}
+.profile-detail-frost,.profile-detail-emerald,.profile-detail-celestial {
+  animation:none !important;
+}
+
+/* Penyesuaian khusus: partikel lebih padat dan glow lebih tebal, tetap bergerak. */
+.profile-detail-frost::before {
+  background:
+    linear-gradient(60deg,transparent 44%,rgba(240,249,255,.36) 48%,rgba(125,211,252,.20) 50%,transparent 54%),
+    linear-gradient(120deg,transparent 44%,rgba(186,230,253,.34) 48%,rgba(56,189,248,.18) 50%,transparent 54%),
+    linear-gradient(0deg,transparent 45%,rgba(255,255,255,.30) 48%,rgba(125,211,252,.16) 50%,transparent 54%),
+    radial-gradient(circle at 20% 25%,#fff 0 1.5px,rgba(186,230,253,.92) 2px,transparent 4px),
+    radial-gradient(circle at 70% 65%,#bae6fd 0 1.5px,rgba(56,189,248,.78) 2px,transparent 4.5px),
+    radial-gradient(circle at 40% 80%,#fff 0 1px,transparent 3px) !important;
+  background-size:29px 35px,29px 35px,29px 35px,67px 59px,83px 71px,47px 43px !important;
+  opacity:.92 !important;
+  filter:drop-shadow(0 0 3px rgba(186,230,253,.9)) drop-shadow(0 0 8px rgba(56,189,248,.6)) !important;
+  animation:newDetailFrostParticles 7s linear infinite, frostShardTwinkle 3.4s ease-in-out infinite alternate !important;
+}
+.profile-detail-emerald::before {
+  background:
+    linear-gradient(45deg,transparent 41%,rgba(209,250,229,.34) 47%,rgba(52,211,153,.22) 50%,transparent 56%),
+    linear-gradient(-45deg,transparent 41%,rgba(110,231,183,.32) 47%,rgba(16,185,129,.20) 50%,transparent 56%),
+    radial-gradient(circle at 20% 30%,#ecfdf5 0 1.5px,rgba(52,211,153,.92) 2px,transparent 4.5px),
+    radial-gradient(circle at 75% 70%,#6ee7b7 0 1.5px,rgba(16,185,129,.82) 2px,transparent 4.5px),
+    radial-gradient(circle at 42% 18%,#fff 0 1px,transparent 3px),
+    radial-gradient(circle at 60% 82%,#a7f3d0 0 1px,transparent 3px) !important;
+  background-size:23px 23px,23px 23px,61px 57px,73px 69px,43px 39px,51px 47px !important;
+  opacity:.94 !important;
+  filter:drop-shadow(0 0 3px rgba(167,243,208,.95)) drop-shadow(0 0 9px rgba(16,185,129,.68)) !important;
+  animation:newDetailEmeraldParticles 5.8s linear infinite, emeraldParticleGlow 3.2s ease-in-out infinite alternate !important;
+}
+@keyframes emeraldParticleGlow { from{opacity:.78;filter:drop-shadow(0 0 2px rgba(167,243,208,.7)) drop-shadow(0 0 6px rgba(16,185,129,.48))}to{opacity:1;filter:drop-shadow(0 0 4px rgba(209,250,229,1)) drop-shadow(0 0 12px rgba(16,185,129,.82))} }
+.profile-detail-celestial::before {
+  background:
+    linear-gradient(0deg,transparent 39%,rgba(255,255,255,.34) 47%,rgba(196,181,253,.22) 50%,transparent 57%),
+    linear-gradient(90deg,transparent 39%,rgba(224,231,255,.32) 47%,rgba(129,140,248,.20) 50%,transparent 57%),
+    radial-gradient(circle at 20% 25%,#fff 0 1.5px,rgba(196,181,253,.92) 2px,transparent 4.5px),
+    radial-gradient(circle at 70% 65%,#c4b5fd 0 1.5px,rgba(129,140,248,.84) 2px,transparent 4.5px),
+    radial-gradient(circle at 40% 80%,#a5f3fc 0 1px,transparent 3.5px),
+    radial-gradient(circle at 85% 30%,#fff 0 1px,transparent 3px) !important;
+  background-size:19px 19px,19px 19px,63px 57px,77px 69px,45px 41px,51px 47px !important;
+  opacity:.94 !important;
+  filter:drop-shadow(0 0 3px rgba(224,231,255,.95)) drop-shadow(0 0 9px rgba(167,139,250,.72)) !important;
+  animation:newDetailCelestialParticles 6.3s linear infinite, celestialStarTwinkle 3s ease-in-out infinite alternate !important;
+}
+
+/* Halloween Candy Basket name box */
+.name-box-halloween_candy_box{background:linear-gradient(135deg,#431407dd,#7c2d12dd 48%,#1e1b4bdd);border:1px solid #fb923c;box-shadow:0 0 9px #f9731680,inset 0 0 8px #fdba7480;border-radius:9px;padding:3px 9px;}
+
+
+/* Shop & Marketplace refresh — responsive, low-noise, touch-friendly. */
+.store-view { max-width: 820px; margin: 0 auto; }
+.store-heading {
+    position: relative; display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; overflow: hidden; margin: 0 0 14px; padding: 22px 20px;
+    border: 1px solid #263d68; border-radius: 18px;
+    color: #f8fafc; background: radial-gradient(circle at 88% 15%, rgba(56,189,248,.22), transparent 34%), linear-gradient(135deg,#101b35,#1e3a5f 68%,#164e63);
+    box-shadow: 0 10px 24px rgba(15,23,42,.12);
+}
+.store-heading-copy { min-width: 0; }
+.store-eyebrow { display: block; margin-bottom: 7px; color: #7dd3fc; font-size: .68rem; font-weight: 850; letter-spacing: .13em; }
+.store-heading h2, .marketplace-heading h2 { margin: 0; color: inherit; font-size: clamp(1.25rem,4vw,1.65rem); line-height: 1.2; }
+.store-heading p, .marketplace-heading p { margin: 7px 0 0; color: #cbd5e1; font-size: .84rem; line-height: 1.5; }
+.store-heading-mark { display: grid; place-items: center; flex: 0 0 54px; width: 54px; height: 54px; border: 1px solid rgba(125,211,252,.35); border-radius: 17px; color: #bae6fd; background: rgba(14,116,144,.2); font-size: 1.9rem; }
+.marketplace-entry, .marketplace-sell-cta {
+    display: flex; align-items: center; width: 100%; gap: 12px; box-sizing: border-box;
+    padding: 14px; border: 1px solid #bfdbfe; border-radius: 15px; text-align: left;
+    color: #0f172a; background: linear-gradient(110deg,#eff6ff,#f8fafc 72%);
+    cursor: pointer; transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.marketplace-entry { margin-bottom: 13px; }
+.marketplace-entry:hover, .marketplace-sell-cta:hover { border-color: #60a5fa; box-shadow: 0 6px 16px rgba(37,99,235,.1); }
+.marketplace-entry:active, .marketplace-sell-cta:active { transform: translateY(1px); }
+.marketplace-entry:focus-visible, .marketplace-sell-cta:focus-visible, .marketplace-back:focus-visible, .marketplace-edit-button:focus-visible, .btn-buy:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+.marketplace-entry-icon, .marketplace-sell-icon { display: grid; place-items: center; flex: 0 0 42px; width: 42px; height: 42px; border-radius: 13px; color: #1d4ed8; background: #dbeafe; font-size: 1.35rem; }
+.marketplace-entry-copy { display: grid; flex: 1; min-width: 0; gap: 3px; }
+.marketplace-entry-copy strong, .marketplace-sell-cta strong { font-size: .92rem; font-weight: 850; }
+.marketplace-entry-copy span, .marketplace-sell-cta small { color: #64748b; font-size: .76rem; line-height: 1.4; }
+.marketplace-entry-arrow { color: #2563eb; font-size: 1.35rem; font-weight: 800; }
+.store-wallet { display: flex; align-items: center; min-height: 44px; box-sizing: border-box; margin: 0 0 12px; padding: 11px 14px; border: 1px solid #f5d27a; border-radius: 12px; color: #92400e; background: linear-gradient(110deg,#fffbeb,#fef3c7); font-size: .88rem; font-weight: 850; }
+.store-search { display: flex; align-items: center; gap: 9px; box-sizing: border-box; width: 100%; min-height: 46px; margin: 0 0 14px; padding: 0 13px; border: 1px solid #cbd5e1; border-radius: 12px; color: #64748b; background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+.store-search:focus-within { border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(59,130,246,.12); }
+.store-search > span { font-size: 1.35rem; line-height: 1; }
+.store-search input { flex: 1; min-width: 0; width: 100%; padding: 11px 0; border: 0; outline: 0; color: #0f172a; background: transparent; font: inherit; font-size: .88rem; }
+.store-search input::placeholder { color: #94a3b8; }
+.shop-list { display: flex; flex-direction: column; gap: 11px; }
+.shop-item-card { position: relative; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; padding: 15px; border: 1px solid #dbe4f0; border-radius: 15px; background: #fff; box-shadow: 0 3px 12px rgba(15,23,42,.045); transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+.shop-item-card:hover { border-color: #93c5fd; box-shadow: 0 8px 20px rgba(15,23,42,.075); }
+.shop-card-main { min-width: 0; }
+.shop-card-copy { min-width: 0; }
+.shop-title { padding-right: 0; color: #0f172a; font-size: .98rem; font-weight: 850; line-height: 1.35; overflow-wrap: anywhere; }
+.shop-type-tag { margin-top: 5px; color: #64748b; font-size: .76rem; font-weight: 650; line-height: 1.5; overflow-wrap: anywhere; }
+.shop-expiry, .marketplace-seller { margin-top: 7px; color: #64748b; font-size: .76rem; line-height: 1.45; }
+.shop-expiry strong, .marketplace-seller strong { color: #334155; }
+.shop-card-footer { display: grid; grid-template-columns: minmax(0,1fr) auto auto; align-items: center; gap: 9px; padding-top: 11px; border-top: 1px solid #edf2f7; }
+.shop-price { color: #1d4ed8; font-size: .92rem; font-weight: 900; white-space: nowrap; }
+.shop-price span { color: #64748b; font-size: .72rem; font-weight: 600; }
+.shop-stock { display: inline-flex; align-items: center; justify-content: center; min-height: 28px; box-sizing: border-box; padding: 4px 9px; border-radius: 9px; color: #475569; background: #f1f5f9; font-size: .72rem; font-weight: 750; white-space: nowrap; }
+.shop-new-badge { top: 11px; right: 11px; padding: 5px 8px; border-radius: 7px; background: #2563eb; box-shadow: none; font-size: .64rem; }
+.shop-item-card:has(.shop-new-badge) .shop-title { padding-right: 54px; }
+.btn-buy { min-width: 68px; min-height: 36px; padding: 8px 13px; border-radius: 10px; color: #fff; background: #15803d; font-size: .8rem; font-weight: 850; }
+.btn-buy:hover { background: #166534; }
+.marketplace-heading { display: flex; align-items: flex-start; gap: 12px; margin: 0 0 14px; padding: 17px; border: 1px solid #c7d2fe; border-radius: 16px; color: #1e1b4b; background: linear-gradient(120deg,#eef2ff,#f8fafc); }
+.marketplace-heading .store-eyebrow { color: #4f46e5; }
+.marketplace-heading p { color: #64748b; }
+.marketplace-heading-copy { min-width: 0; }
+.marketplace-back { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; min-height: 38px; padding: 0 10px; border: 1px solid #c7d2fe; border-radius: 10px; color: #3730a3; background: #fff; font: inherit; font-size: .78rem; font-weight: 800; cursor: pointer; }
+.marketplace-sell-cta { margin: 0 0 14px; border-color: #c4b5fd; background: linear-gradient(110deg,#f5f3ff,#faf5ff); }
+.marketplace-sell-icon { color: #6d28d9; background: #ede9fe; font-size: 1.65rem; }
+.marketplace-sell-cta > span:nth-child(2) { display: grid; flex: 1; min-width: 0; gap: 3px; }
+.marketplace-sell-cta .marketplace-entry-arrow { color: #7c3aed; }
+.marketplace-edit-button { position: absolute; top: 11px; right: 11px; display: grid; place-items: center; width: 35px; height: 35px; border: 1px solid #cbd5e1; border-radius: 10px; color: #334155; background: #f8fafc; font-size: 1.1rem; cursor: pointer; }
+.marketplace-edit-button:hover { border-color: #93c5fd; background: #eff6ff; }
+.shop-card-main.has-seller-action .shop-title { padding-right: 44px; }
+@media (max-width: 480px) {
+    .store-heading { padding: 18px 15px; border-radius: 15px; }
+    .store-heading-mark { flex-basis: 44px; width: 44px; height: 44px; border-radius: 14px; font-size: 1.55rem; }
+    .shop-item-card { padding: 13px; }
+    .shop-card-footer { grid-template-columns: minmax(0,1fr) auto; gap: 8px; }
+    .shop-card-footer .btn-buy { grid-column: 1 / -1; width: 100%; }
+    .marketplace-heading { padding: 13px; gap: 9px; }
+    .marketplace-back { padding: 0 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .marketplace-entry, .marketplace-sell-cta, .shop-item-card { transition: none; }
+}
+
+
+/* Shop navigation: category picker + boxed subview headers. */
+.shop-category-view { display:flex; flex-direction:column; gap:14px; max-width:820px; margin:0 auto; }
+.shop-category-card { display:flex; align-items:center; gap:14px; width:100%; min-height:104px; box-sizing:border-box; padding:18px; border:1px solid transparent; border-radius:16px; color:#fff; text-align:left; cursor:pointer; box-shadow:0 7px 18px rgba(15,23,42,.12); transition:transform .16s ease, filter .16s ease, box-shadow .16s ease; }
+.shop-category-official { border-color:#60a5fa; background:linear-gradient(125deg,#1d4ed8,#1e3a8a); }
+.shop-category-market { border-color:#a5b4fc; background:linear-gradient(125deg,#312e81,#5b21b6); }
+.shop-category-card:hover { filter:brightness(1.08); box-shadow:0 10px 22px rgba(15,23,42,.17); }
+.shop-category-card:active { transform:translateY(1px); }
+.shop-category-card:focus-visible, .shop-heading-back:focus-visible, .marketplace-sell-button:focus-visible { outline:3px solid #93c5fd; outline-offset:3px; }
+.shop-category-icon { display:grid; place-items:center; flex:0 0 48px; width:48px; height:48px; border:1px solid rgba(255,255,255,.25); border-radius:14px; background:rgba(255,255,255,.13); font-size:1.65rem; }
+.shop-category-copy { display:grid; flex:1; min-width:0; gap:5px; }
+.shop-category-copy strong { font-size:1rem; font-weight:850; line-height:1.3; }
+.shop-category-copy small { color:rgba(255,255,255,.82); font-size:.78rem; line-height:1.45; }
+.shop-category-arrow { flex:0 0 auto; color:rgba(255,255,255,.9); font-size:2rem; line-height:1; }
+.shop-subview { max-width:820px; margin:0 auto; }
+.shop-subview-heading { display:flex; align-items:center; gap:12px; min-width:0; box-sizing:border-box; margin:0 0 14px; padding:14px; border:1px solid #29456f; border-radius:15px; color:#f8fafc; background:linear-gradient(125deg,#101b35,#1e3a5f 72%,#164e63); box-shadow:0 7px 18px rgba(15,23,42,.11); }
+.shop-marketplace-heading { border-color:#51418d; background:linear-gradient(125deg,#211b48,#373078 72%,#4c1d95); }
+.shop-subview-heading-copy { flex:1; min-width:0; }
+.shop-subview-heading h2 { margin:0; color:inherit; font-size:clamp(1.08rem,4vw,1.4rem); line-height:1.2; overflow-wrap:anywhere; }
+.shop-subview-heading p { margin:5px 0 0; color:#cbd5e1; font-size:.76rem; line-height:1.4; }
+.shop-subview-heading .store-eyebrow { margin-bottom:5px; font-size:.62rem; }
+.shop-heading-back { display:grid; place-items:center; flex:0 0 38px; width:38px; height:38px; padding:0 0 3px; border:1px solid rgba(255,255,255,.32); border-radius:11px; color:#fff; background:rgba(255,255,255,.12); font:inherit; font-size:1.8rem; line-height:1; cursor:pointer; }
+.shop-heading-back:hover { background:rgba(255,255,255,.22); }
+.marketplace-sell-button { display:inline-flex; align-items:center; justify-content:center; gap:5px; flex:0 0 auto; min-height:40px; padding:0 13px; border:1px solid #86efac; border-radius:11px; color:#052e16; background:linear-gradient(135deg,#bbf7d0,#4ade80); font:inherit; font-size:.82rem; font-weight:900; white-space:nowrap; cursor:pointer; box-shadow:0 3px 9px rgba(0,0,0,.15); }
+.marketplace-sell-button span { font-size:1.2rem; line-height:1; }
+.marketplace-sell-button:hover { filter:brightness(1.06); }
+@media (max-width:480px) {
+  .shop-category-card { min-height:92px; padding:14px; gap:11px; }
+  .shop-category-icon { flex-basis:42px; width:42px; height:42px; font-size:1.45rem; }
+  .shop-subview-heading { gap:9px; padding:11px; }
+  .shop-heading-back { flex-basis:35px; width:35px; height:35px; }
+  .marketplace-sell-button { min-height:37px; padding:0 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .shop-category-card { transition:none; } }
+
+
+/* Header: action buttons float at the top-right; only the main title reserves their space. */
+.shop-subview-heading { position:relative; display:block; }
+.shop-subview-heading-copy { display:block; width:100%; min-width:0; }
+.shop-subview-heading h2 { max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; text-wrap:balance; }
+.shop-official-heading h2 { max-width:calc(100% - 46px); }
+.shop-marketplace-heading h2 { max-width:calc(100% - 126px); }
+.shop-subview-heading p { width:100%; max-width:none; overflow-wrap:anywhere; }
+.shop-heading-actions { position:absolute; top:10px; right:10px; z-index:2; display:flex; align-items:flex-start; justify-content:flex-end; gap:8px; min-width:max-content; }
+.shop-heading-back { display:grid; place-items:center; flex:0 0 38px; width:38px; height:38px; padding:0 0 3px; border:0; border-radius:0; color:#000; background:transparent; box-shadow:none; font:inherit; font-size:1.9rem; font-weight:900; line-height:1; cursor:pointer; filter:drop-shadow(0 0 2px rgba(255,255,255,.9)); }
+.shop-heading-back:hover { color:#111; background:transparent; }
+.marketplace-sell-button { flex:0 0 auto; }
+@media (max-width:480px) {
+  .shop-heading-actions { top:7px; right:7px; gap:6px; }
+  .shop-heading-back { flex-basis:35px; width:35px; height:35px; }
+  .marketplace-sell-button { min-height:35px; padding:0 9px; font-size:.78rem; }
+  .shop-official-heading h2 { max-width:calc(100% - 42px); }
+  .shop-marketplace-heading h2 { max-width:calc(100% - 112px); }
+}
+@media (max-width:350px) {
+  .shop-marketplace-heading h2 { max-width:calc(100% - 104px); font-size:1rem; }
+  .shop-marketplace-heading .store-eyebrow { font-size:.56rem; }
+  .shop-heading-actions { gap:5px; }
+  .marketplace-sell-button { padding-inline:7px; }
+}
+
+
+/* Item cards: restore the compact horizontal layout and keep long names on one line. */
+.shop-item-card {
+    display:flex; flex-direction:row; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:10px 16px; padding:15px 16px; border:1px solid #bfcee3;
+    border-radius:12px; background:linear-gradient(115deg,#ffffff,#f8fbff);
+    box-shadow:0 4px 12px rgba(15,23,42,.07);
+}
+.shop-item-card:hover { border-color:#7da9e8; box-shadow:0 6px 16px rgba(15,23,42,.09); }
+.shop-card-main { flex:1 1 220px; min-width:0; }
+.shop-card-copy { min-width:0; width:100%; }
+.shop-title-row { display:flex; align-items:center; gap:9px; width:100%; min-width:0; }
+.shop-title-viewport { flex:1 1 auto; min-width:0; max-width:100%; overflow-x:auto; overflow-y:hidden; white-space:nowrap;
+    scrollbar-width:none; -ms-overflow-style:none; overscroll-behavior-x:contain; touch-action:pan-x; cursor:grab;
+    border-radius:4px; outline-offset:3px; }
+.shop-title-viewport::-webkit-scrollbar { display:none; }
+.shop-title-viewport.is-dragging { cursor:grabbing; user-select:none; }
+.shop-title-viewport:focus-visible { outline:2px solid #60a5fa; }
+.shop-title-text { display:inline-block; min-width:max-content; padding-right:14px; white-space:nowrap; }
+.shop-title { display:block; width:max-content; max-width:none; padding:0 !important; margin:0;
+    color:#0f172a; font-size:.98rem; font-weight:850; line-height:1.35; white-space:nowrap; overflow-wrap:normal; }
+.shop-new-badge { position:static; flex:0 0 auto; display:inline-flex; align-items:center; align-self:center;
+    z-index:auto; white-space:nowrap; margin:0; padding:5px 8px; border-radius:7px;
+    background:#2563eb; color:#fff; box-shadow:none; font-size:.64rem; line-height:1; }
+.shop-card-footer { display:flex; flex:0 0 auto; flex-wrap:wrap; align-items:center; justify-content:flex-end;
+    gap:9px; padding:0; border:0; }
+.shop-price { white-space:nowrap; }
+.marketplace-edit-button { position:static; flex:0 0 32px; width:32px; height:32px;
+    border:1px solid #cbd5e1; border-radius:9px; }
+.shop-card-main.has-seller-action .shop-title { padding-right:0; }
+@media (max-width:560px) {
+    .shop-item-card { align-items:flex-start; padding:13px; gap:10px; }
+    .shop-card-main { flex:1 1 100%; }
+    .shop-card-footer { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); width:100%; justify-content:initial; gap:8px; }
+    .shop-card-footer .shop-price { justify-self:start; font-size:.84rem; }
+    .shop-card-footer .shop-stock { justify-self:center; }
+    .shop-card-footer .btn-buy { justify-self:end; min-width:68px; width:auto; }
+}
+@media (prefers-reduced-motion:reduce) { .shop-title-viewport { scroll-behavior:auto; } }
+
+/* Shop Resmi: kategori bertab, warna berbeda, dan navigasi sentuh yang responsif. */
+.shop-official-tabs {
+    display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px;
+    margin:0 0 8px; padding:2px 0; min-width:0;
+}
+.shop-official-tab {
+    display:flex; align-items:center; justify-content:flex-start; gap:9px; min-width:0; min-height:54px;
+    padding:9px 11px; border:1px solid var(--shop-tab-border,#cbd5e1); border-radius:12px;
+    color:var(--shop-tab-text,#334155); background:var(--shop-tab-bg,#f8fafc);
+    font:inherit; text-align:left; cursor:pointer; transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease;
+}
+.shop-official-tab > span { display:grid; place-items:center; flex:0 0 30px; width:30px; height:30px; border-radius:9px; background:var(--shop-tab-icon-bg,#e2e8f0); font-size:1.05rem; }
+.shop-official-tab strong { min-width:0; font-size:.76rem; line-height:1.25; font-weight:850; }
+.shop-official-tab[data-shop-category="hiasan-nama"] { --shop-tab-bg:#fff7ed; --shop-tab-border:#fed7aa; --shop-tab-text:#9a3412; --shop-tab-icon-bg:#ffedd5; }
+.shop-official-tab[data-shop-category="kotak-nama"] { --shop-tab-bg:#eff6ff; --shop-tab-border:#bfdbfe; --shop-tab-text:#1d4ed8; --shop-tab-icon-bg:#dbeafe; }
+.shop-official-tab[data-shop-category="hiasan-profil"] { --shop-tab-bg:#f5f3ff; --shop-tab-border:#ddd6fe; --shop-tab-text:#6d28d9; --shop-tab-icon-bg:#ede9fe; }
+.shop-official-tab[data-shop-category="hiasan-detail"] { --shop-tab-bg:#ecfeff; --shop-tab-border:#a5f3fc; --shop-tab-text:#0e7490; --shop-tab-icon-bg:#cffafe; }
+.shop-official-tab[data-shop-category="gamepass"] { --shop-tab-bg:#fffbeb; --shop-tab-border:#fde68a; --shop-tab-text:#92400e; --shop-tab-icon-bg:#fef3c7; }
+.shop-official-tab[data-shop-category="item"] { --shop-tab-bg:#f0fdf4; --shop-tab-border:#bbf7d0; --shop-tab-text:#166534; --shop-tab-icon-bg:#dcfce7; }
+.shop-official-tab.is-active { border-color:var(--shop-tab-text); background:var(--shop-tab-bg); box-shadow:inset 0 0 0 1px var(--shop-tab-text),0 3px 9px rgba(15,23,42,.07); }
+.shop-official-tab:focus-visible { outline:3px solid #60a5fa; outline-offset:2px; }
+.shop-category-description { margin:0 0 12px; color:#64748b; font-size:.76rem; line-height:1.45; }
+.shop-card-divider { flex:0 0 100%; width:100%; height:1px; margin:1px 0 0; background:linear-gradient(90deg,rgba(100,116,139,.08),rgba(100,116,139,.48) 18%,rgba(100,116,139,.48) 82%,rgba(100,116,139,.08)); }
+.shop-card-footer { display:grid; flex:1 1 100%; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:9px; width:100%; justify-content:initial; }
+.shop-card-footer .shop-price { justify-self:start; }
+.shop-card-footer .shop-stock { justify-self:center; }
+.shop-card-footer .btn-buy { justify-self:end; }
+.shop-empty-card { display:grid; justify-items:center; gap:8px; width:100%; box-sizing:border-box; padding:26px 18px; border:1px dashed #b8c7dc; border-radius:13px; color:#475569; background:linear-gradient(135deg,#f8fafc,#eff6ff); text-align:center; }
+.shop-empty-icon { display:grid; place-items:center; width:48px; height:48px; border-radius:14px; background:#e2e8f0; font-size:1.5rem; }
+.shop-empty-card strong { color:#1e293b; font-size:.95rem; }
+.shop-empty-card p { max-width:360px; margin:0; color:#64748b; font-size:.78rem; line-height:1.5; }
+.shop-empty-status { padding:4px 8px; border:1px solid #cbd5e1; border-radius:999px; color:#64748b; background:#fff; font-size:.6rem; font-weight:850; letter-spacing:.06em; }
+@media (max-width:560px) {
+    .shop-official-tabs { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+    .shop-official-tab { min-height:50px; padding:8px; gap:7px; }
+    .shop-official-tab > span { flex-basis:27px; width:27px; height:27px; font-size:.95rem; }
+    .shop-official-tab strong { font-size:.7rem; }
+    .shop-card-divider { margin-top:0; }
+}
+@media (prefers-reduced-motion:reduce) { .shop-official-tab { transition:none; } }
+
+
+/* Shop Resmi: halaman kategori terpisah dari halaman isi kategori. */
+.shop-official-category-list { display:grid; grid-template-columns:minmax(0,1fr); gap:10px; margin:0 0 14px; }
+.shop-official-category-card { display:flex; align-items:center; gap:12px; width:100%; min-width:0; min-height:76px; box-sizing:border-box; padding:12px 15px; border:1px solid var(--category-border); border-radius:13px; color:var(--category-text); background:var(--category-bg); text-align:left; cursor:pointer; transition:filter .16s ease,transform .16s ease,box-shadow .16s ease; }
+.shop-official-category-card:hover { filter:brightness(.98); transform:translateY(-1px); box-shadow:0 5px 13px rgba(15,23,42,.07); }
+.shop-official-category-card:active { transform:translateY(0); }
+.shop-official-category-card:focus-visible { outline:3px solid #60a5fa; outline-offset:2px; }
+.shop-official-category-icon { display:grid; place-items:center; flex:0 0 42px; width:42px; height:42px; border-radius:11px; background:var(--category-icon-bg); font-size:1.35rem; }
+.shop-official-category-copy { display:grid; flex:1 1 auto; min-width:0; gap:3px; }
+.shop-official-category-copy strong { font-size:.9rem; line-height:1.25; font-weight:850; }
+.shop-official-category-copy small { color:inherit; opacity:.78; font-size:.72rem; line-height:1.35; }
+.shop-official-category-card .shop-category-arrow { flex:0 0 auto; color:inherit; font-size:1.7rem; line-height:1; }
+.shop-official-category-card.category-name { --category-bg:#fff7ed; --category-border:#fed7aa; --category-text:#9a3412; --category-icon-bg:#ffedd5; }
+.shop-official-category-card.category-box { --category-bg:#eff6ff; --category-border:#bfdbfe; --category-text:#1d4ed8; --category-icon-bg:#dbeafe; }
+.shop-official-category-card.category-profile { --category-bg:#f5f3ff; --category-border:#ddd6fe; --category-text:#6d28d9; --category-icon-bg:#ede9fe; }
+.shop-official-category-card.category-detail { --category-bg:#ecfeff; --category-border:#a5f3fc; --category-text:#0e7490; --category-icon-bg:#cffafe; }
+.shop-official-category-card.category-gamepass { --category-bg:#fffbeb; --category-border:#fde68a; --category-text:#92400e; --category-icon-bg:#fef3c7; }
+.shop-official-category-card.category-item { --category-bg:#f0fdf4; --category-border:#bbf7d0; --category-text:#166534; --category-icon-bg:#dcfce7; }
+
+/* Tombol X tipis, tanpa kotak dan tanpa ketebalan berlebihan. */
+.shop-heading-back { color:#64748b !important; font-weight:400 !important; font-size:1.75rem !important; filter:drop-shadow(0 1px 2px rgba(255,255,255,.85)) !important; }
+.shop-heading-back:hover { color:#475569 !important; }
+
+/* Footer card: harga kiri, stok tengah, tombol Beli kanan dalam satu baris. */
+.shop-card-footer { display:grid !important; grid-template-columns:minmax(0,1fr) auto auto !important; align-items:center !important; gap:7px !important; width:100% !important; flex:1 1 100% !important; }
+.shop-card-footer .shop-price { justify-self:start !important; min-width:0; white-space:nowrap; }
+.shop-card-footer .shop-stock { justify-self:center !important; white-space:nowrap; }
+.shop-card-footer .btn-buy { grid-column:auto !important; justify-self:end !important; width:auto !important; min-width:64px; white-space:nowrap; }
+@media (max-width:560px) {
+  .shop-card-footer { grid-template-columns:minmax(0,1fr) auto auto !important; gap:6px !important; }
+  .shop-card-footer .shop-price { font-size:.78rem !important; }
+  .shop-card-footer .shop-stock { padding-inline:6px; font-size:.66rem; }
+  .shop-card-footer .btn-buy { min-width:58px; padding-inline:9px; }
+}
+@media (max-width:350px) {
+  .shop-card-footer { gap:4px !important; }
+  .shop-card-footer .shop-price { font-size:.7rem !important; }
+  .shop-card-footer .shop-stock { font-size:.62rem; }
+  .shop-card-footer .btn-buy { min-width:52px; padding-inline:6px; }
+}
+@media (prefers-reduced-motion:reduce) { .shop-official-category-card { transition:none; } }
+
+
+/* Tombol kembali Shop mengikuti ukuran dan gaya tombol X kategori Pinjaman. */
+.shop-heading-back {
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  flex:0 0 32px !important; width:32px !important; height:32px !important;
+  min-width:32px !important; padding:0 !important; margin:0 !important;
+  border:0 !important; border-radius:50% !important;
+  color:#0f172a !important; background:#f1f5f9 !important;
+  font-family:inherit !important; font-size:1.2rem !important;
+  font-weight:400 !important; line-height:1 !important;
+  box-shadow:none !important; filter:none !important; cursor:pointer !important;
+}
+.shop-heading-back:hover, .shop-heading-back:focus-visible {
+  color:#0f172a !important; background:#e2e8f0 !important;
+}

@@ -1,0 +1,2173 @@
+/* Main layout and base styles. */
+* {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 { font-size: 1.15rem; font-weight: 700; }
+
+        .header-btn-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn-admin {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .btn-admin:hover { background: #1d4ed8; }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card-box {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid #3b82f6;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            margin-bottom: 16px;
+        }
+
+        .empty-notice {
+            text-align: center;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 16px;
+            color: #64748b;
+            font-weight: 600;
+            border: 1px solid #3b82f6;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .member-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid #3b82f6;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .member-card.decor-yellow, .card-box.decor-yellow {
+            background: linear-gradient(135deg, #fffdf0 0%, #fff7bf 48%, #fde68a 100%) !important;
+            border: 3px solid #facc15 !important;
+            box-shadow: 0 8px 22px rgba(234, 179, 8, 0.28), inset 0 0 14px rgba(255, 255, 255, 0.75), 0 0 0 1px #fff7a8 !important;
+            overflow: visible;
+        }
+        .member-card.decor-yellow::before, .member-card.decor-yellow::after,
+        .card-box.decor-yellow::before, .card-box.decor-yellow::after {
+            content: '✦';
+            position: absolute;
+            width: 27px;
+            height: 27px;
+            background: linear-gradient(135deg, #fff7a8, #facc15);
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            border: 2px solid #fffef0;
+            box-shadow: 0 2px 9px rgba(180, 83, 9, 0.35), 0 0 0 1px #eab308;
+            z-index: 4;
+            transform: rotate(45deg);
+        }
+        .member-card.decor-yellow::before, .card-box.decor-yellow::before { top: -14px; left: -14px; }
+        .member-card.decor-yellow::after, .card-box.decor-yellow::after { bottom: -14px; right: -14px; }
+
+        /* HIASAN PROFIL HITAM & HIJAU */
+        .member-card.decor-hitam-ornamen, .card-box.decor-hitam-ornamen {
+            background: linear-gradient(135deg, #050505 0%, #111827 48%, #000000 100%) !important;
+            border: 3px solid #64748b !important;
+            border-radius: 18px !important;
+            box-shadow: 0 10px 28px rgba(0,0,0,.42), inset 0 0 18px rgba(255,255,255,.08), 0 0 0 1px rgba(255,255,255,.18) !important;
+            overflow: hidden; position: relative;
+        }
+        .member-card.decor-hitam-ornamen .member-name, .member-card.decor-hitam-ornamen .member-bio, .member-card.decor-hitam-ornamen .stat-item,
+        .card-box.decor-hitam-ornamen .member-name, .card-box.decor-hitam-ornamen .member-bio, .card-box.decor-hitam-ornamen .stat-item,
+        .member-card.decor-hijau-ornamen .member-name, .member-card.decor-hijau-ornamen .member-bio, .member-card.decor-hijau-ornamen .stat-item,
+        .card-box.decor-hijau-ornamen .member-name, .card-box.decor-hijau-ornamen .member-bio, .card-box.decor-hijau-ornamen .stat-item { color:#f8fafc; }
+        .member-card.decor-hitam-ornamen .stats-grid, .member-card.decor-hijau-ornamen .stats-grid { background:rgba(15,23,42,.58); border:1px solid rgba(255,255,255,.12); }
+
+        .member-card.decor-hitam-ornamen::before, .card-box.decor-hitam-ornamen::before {
+            content: '◆  ◇  ◆'; position: absolute; top: 6px; right: 12px;
+            color: rgba(255,255,255,.72); font-size: 13px; letter-spacing: 4px; z-index: 2;
+            text-shadow: 0 0 8px rgba(255,255,255,.45); pointer-events:none;
+        }
+        .member-card.decor-hitam-ornamen::after, .card-box.decor-hitam-ornamen::after {
+            content: '✦'; position: absolute; bottom: -11px; left: -11px; width: 30px; height: 30px;
+            display:flex; align-items:center; justify-content:center; transform:rotate(45deg);
+            color:#fff; background:linear-gradient(135deg,#111827,#475569); border:2px solid #cbd5e1;
+            box-shadow:0 0 12px rgba(255,255,255,.28); z-index:4;
+        }
+        .member-card.decor-hitam-ornamen .member-name,
+        .card-box.decor-hitam-ornamen .member-name {
+            position: relative;
+            z-index: 3;
+        }
+        .member-card.decor-hijau-ornamen .member-name,
+        .card-box.decor-hijau-ornamen .member-name {
+            position: relative;
+            z-index: 3;
+        }
+        .member-card.decor-hitam-ornamen .name-gold-shiny,
+        .member-card.decor-hitam-ornamen .name-green-shiny,
+        .member-card.decor-hitam-ornamen .name-purple-shiny,
+        .member-card.decor-hitam-ornamen .name-red-shiny,
+        .member-card.decor-hitam-ornamen .name-diamond-shiny,
+        .member-card.decor-hijau-ornamen .name-gold-shiny,
+        .member-card.decor-hijau-ornamen .name-green-shiny,
+        .member-card.decor-hijau-ornamen .name-purple-shiny,
+        .member-card.decor-hijau-ornamen .name-red-shiny,
+        .member-card.decor-hijau-ornamen .name-diamond-shiny {
+            color: transparent !important;
+            -webkit-text-fill-color: transparent !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+        }
+
+        .member-card.decor-hijau-ornamen, .card-box.decor-hijau-ornamen {
+            background: linear-gradient(135deg, #052e16 0%, #166534 45%, #052e16 100%) !important;
+            border: 3px solid #22c55e !important;
+            border-radius: 18px !important;
+            box-shadow: 0 10px 30px rgba(22,163,74,.34), inset 0 0 18px rgba(134,239,172,.18), 0 0 0 1px rgba(187,247,208,.7) !important;
+            overflow: hidden; position: relative;
+        }
+        .member-card.decor-hijau-ornamen::before, .card-box.decor-hijau-ornamen::before {
+            content: '❖  ✦  ❖'; position:absolute; top:6px; right:10px;
+            color:#bbf7d0; font-size:13px; letter-spacing:3px; z-index:2;
+            text-shadow:0 0 9px rgba(74,222,128,.9); pointer-events:none;
+        }
+        .member-card.decor-hijau-ornamen::after, .card-box.decor-hijau-ornamen::after {
+            content:'✦'; position:absolute; bottom:-11px; right:-11px; width:30px; height:30px;
+            display:flex; align-items:center; justify-content:center; transform:rotate(45deg);
+            color:#ecfdf5; background:linear-gradient(135deg,#16a34a,#4ade80); border:2px solid #dcfce7;
+            box-shadow:0 0 14px rgba(74,222,128,.9); z-index:4;
+        }
+
+.member-card.decor-biru-bercahaya, .card-box.decor-biru-bercahaya {
+            background: linear-gradient(135deg, #e0f7ff 0%, #7dd3fc 28%, #38bdf8 52%, #0ea5e9 78%, #dff8ff 100%) !important;
+            background-size: 180% 180% !important;
+            border: 3px solid #2563eb !important;
+            border-radius: 18px !important;
+            box-shadow: 0 10px 30px rgba(14,165,233,.34), inset 0 0 20px rgba(255,255,255,.68), 0 0 0 1px rgba(255,255,255,.9) !important;
+            overflow: hidden;
+            position: relative;
+            animation: blueDiamondCard 5s ease-in-out infinite;
+        }
+        .member-card.decor-biru-bercahaya::before, .card-box.decor-biru-bercahaya::before {
+            content: '';
+            position: absolute;
+            width: 26%; height: 175%; top: -38%; left: -48%;
+            border-radius: 50%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.82), rgba(255,255,255,.45), transparent);
+            transform: rotate(18deg);
+            animation: blueCardShine 4.6s ease-in-out infinite;
+            z-index: 1; pointer-events: none;
+        }
+        .member-card.decor-biru-bercahaya::after, .card-box.decor-biru-bercahaya::after {
+            content: '✦';
+            position: absolute;
+            bottom: -10px; right: -10px;
+            width: 27px; height: 27px;
+            color: #ffffff;
+            background: linear-gradient(135deg,#e0f7ff,#38bdf8);
+            border: 2px solid rgba(255,255,255,.95);
+            border-radius: 7px;
+            transform: rotate(45deg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 900;
+            box-shadow: 0 0 12px rgba(255,255,255,.75), 0 0 10px rgba(14,165,233,.45);
+            z-index: 4;
+        }
+
+        @keyframes blueCardShine {
+            0%, 20% { left: -48%; opacity: 0; }
+            32% { opacity: .85; }
+            62% { left: 125%; opacity: .85; }
+            76%, 100% { left: 125%; opacity: 0; }
+        }
+        @keyframes blueDiamondCard {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .member-card .btn-profile-detail, .card-box .btn-profile-detail {
+            position: absolute !important;
+            top: 8px !important;
+            right: 8px !important;
+            left: auto !important;
+            bottom: auto !important;
+            z-index: 5 !important;
+            margin: 0 !important;
+            transform: none !important;
+        }
+
+        .btn-profile-detail {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: 0.2s;
+            z-index: 5;
+        }
+        .btn-profile-detail:hover {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        .member-card .btn-profile-gallery, .card-box .btn-profile-gallery {
+            position: absolute !important;
+            top: 8px !important;
+            right: 44px !important;
+            left: auto !important;
+            bottom: auto !important;
+            z-index: 20 !important;
+            width: 30px !important;
+            height: 30px !important;
+            min-width: 30px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 50% !important;
+            background: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+            cursor: pointer !important;
+            font-size: .9rem !important;
+            line-height: 1 !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,.1) !important;
+            transition: .2s;
+            transform: none !important;
+        }
+        .member-card .btn-profile-gallery:hover, .card-box .btn-profile-gallery:hover { background:#2563eb !important; color:#fff !important; border-color:#2563eb !important; }
+
+        .member-header-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+            padding-right: 32px;
+        }
+
+        .chat-message-text {
+            color: #1e293b !important;
+            -webkit-text-fill-color: #1e293b !important;
+        }
+
+        .decor-hitam-ornamen .chat-message-text,
+        .decor-hijau-ornamen .chat-message-text {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
+        /* Pastikan hiasan nama tetap tampil pada bubble chat hitam & hijau */
+        .card-box.decor-hitam-ornamen .name-gold-shiny,
+        .card-box.decor-hitam-ornamen .name-green-shiny,
+        .card-box.decor-hitam-ornamen .name-purple-shiny,
+        .card-box.decor-hitam-ornamen .name-red-shiny,
+        .card-box.decor-hitam-ornamen .name-diamond-shiny,
+        .card-box.decor-hijau-ornamen .name-gold-shiny,
+        .card-box.decor-hijau-ornamen .name-green-shiny,
+        .card-box.decor-hijau-ornamen .name-purple-shiny,
+        .card-box.decor-hijau-ornamen .name-red-shiny,
+        .card-box.decor-hijau-ornamen .name-diamond-shiny {
+            color: transparent !important;
+            -webkit-text-fill-color: transparent !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+        }
+
+        .member-name { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
+
+        .name-gold-shiny {
+            background: linear-gradient(90deg, #b8860b, #ffd700, #ff8c00, #ffd700, #b8860b);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: goldShine 3s linear infinite;
+            display: inline-block;
+        }
+        @keyframes goldShine { to { background-position: 200% center; } }
+
+        .name-green-shiny {
+            background: linear-gradient(90deg, #15803d, #22c55e, #ffffff, #22c55e, #15803d);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: greenShine 2.5s linear infinite;
+            display: inline-block;
+        }
+        @keyframes greenShine { to { background-position: 200% center; } }
+
+        .name-purple-shiny {
+            background: linear-gradient(90deg, #6b21a8, #a855f7, #ffffff, #a855f7, #6b21a8);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: purpleShine 2.5s linear infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.6));
+        }
+        @keyframes purpleShine { to { background-position: 200% center; } }
+
+        .name-red-shiny {
+            background: linear-gradient(90deg, #991b1b, #ef4444, #ffffff, #ef4444, #991b1b);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: redShine 2.5s linear infinite;
+            display: inline-block;
+        }
+        @keyframes redShine { to { background-position: 200% center; } }
+
+        .name-diamond-shiny {
+            background: linear-gradient(90deg, #1e3a8a, #0284c7, #38bdf8, #0284c7, #1e3a8a);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: diamondShine 2.5s linear infinite;
+            display: inline-block;
+        }
+        @keyframes diamondShine { to { background-position: 200% center; } }
+
+
+        /* 5 HIASAN NAMA BARU: warna berbeda dengan kilau putih terang */
+        .name-rose-shiny,.name-cyan-shiny,.name-orange-shiny,.name-silver-shiny,.name-rainbow-shiny {
+            background-size: 200% auto; color: transparent !important; -webkit-text-fill-color: transparent !important;
+            -webkit-background-clip: text !important; background-clip: text !important; font-weight: 800;
+            display: inline-block; animation: newNameWhiteShine 2.5s linear infinite;
+        }
+        .name-rose-shiny { background-image: linear-gradient(90deg,#9f1239 0%,#fb7185 22%,#ffe4e6 36%,#fff 46%,#fff 54%,#ffe4e6 64%,#fb7185 78%,#9f1239 100%); }
+        .name-cyan-shiny { background-image: linear-gradient(90deg,#155e75 0%,#06b6d4 22%,#cffafe 36%,#fff 46%,#fff 54%,#cffafe 64%,#22d3ee 78%,#155e75 100%); }
+        .name-orange-shiny { background-image: linear-gradient(90deg,#9a3412 0%,#f97316 22%,#fff7ed 36%,#fff 46%,#fff 54%,#fff7ed 64%,#fb923c 78%,#9a3412 100%); }
+        .name-silver-shiny { background-image: linear-gradient(90deg,#475569 0%,#94a3b8 22%,#f8fafc 36%,#fff 46%,#fff 54%,#f8fafc 64%,#cbd5e1 78%,#475569 100%); }
+        .name-rainbow-shiny { background-image: linear-gradient(90deg,#ef4444 0%,#f97316 16%,#fde047 28%,#a7f3d0 38%,#fff 46%,#fff 54%,#93c5fd 64%,#a78bfa 76%,#ef4444 100%); }
+        .name-amethyst-shiny,.name-lava-shiny,.name-mint-shiny,.name-sakura-shiny,.name-sunset-shiny,
+        .name-ocean-shiny,.name-aurora-shiny,.name-obsidian-shiny,.name-golden-sky-shiny,.name-void-shiny {
+            background-size: 200% auto; color: transparent !important; -webkit-text-fill-color: transparent !important;
+            -webkit-background-clip: text !important; background-clip: text !important; font-weight: 800;
+            display: inline-block; animation: newNameWhiteShine 3s linear infinite;
+        }
+        .name-amethyst-shiny { background-image:linear-gradient(90deg,#240046 0%,#5a189a 18%,#c77dff 34%,#f3c4fb 44%,#fff 50%,#9d4edd 62%,#3c096c 82%,#240046 100%); }
+        .name-lava-shiny { background-image:linear-gradient(90deg,#370617 0%,#9d0208 18%,#dc2f02 34%,#ffba08 45%,#fff3b0 50%,#e85d04 62%,#6a040f 82%,#370617 100%); }
+        .name-mint-shiny { background-image:linear-gradient(90deg,#132a13 0%,#31572c 18%,#90a955 32%,#ecf39e 44%,#fff 50%,#4f772d 63%,#1b4332 82%,#132a13 100%); }
+        .name-sakura-shiny { background-image:linear-gradient(90deg,#590d22 0%,#a4133c 18%,#ff4d6d 32%,#ffccd5 44%,#fff 50%,#ff8fa3 62%,#800f2f 82%,#590d22 100%); }
+        .name-sunset-shiny { background-image:linear-gradient(90deg,#3c096c 0%,#7b2cbf 18%,#f72585 32%,#ff9e00 44%,#fff3b0 50%,#ff5400 62%,#6a040f 82%,#3c096c 100%); }
+        .name-ocean-shiny { background-image:linear-gradient(90deg,#03045e 0%,#0077b6 18%,#00b4d8 32%,#90e0ef 44%,#fff 50%,#48cae4 62%,#023e8a 82%,#03045e 100%); }
+        .name-aurora-shiny { background-image:linear-gradient(90deg,#081c15 0%,#1b4332 18%,#52b788 32%,#b7e4c7 43%,#fff 50%,#72efdd 62%,#6930c3 82%,#081c15 100%); }
+        .name-obsidian-shiny { background-image:linear-gradient(90deg,#000814 0%,#001d3d 18%,#003566 32%,#ffc300 44%,#fff8e7 50%,#6c757d 62%,#212529 82%,#000814 100%); }
+        .name-golden-sky-shiny { background-image:linear-gradient(90deg,#582f0e 0%,#936639 18%,#dda15e 32%,#fefae0 44%,#fff 50%,#bc6c25 62%,#7f4f24 82%,#582f0e 100%); }
+        .name-void-shiny { background-image:linear-gradient(90deg,#10002b 0%,#240046 18%,#3c096c 30%,#7209b7 42%,#f0e6ff 50%,#560bad 62%,#10002b 82%,#10002b 100%); }
+        @keyframes newNameWhiteShine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+
+        @keyframes rmProfileCrackShine { 0%,100% { opacity:.48; filter:brightness(.9) drop-shadow(0 0 2px currentColor); } 50% { opacity:.92; filter:brightness(1.45) drop-shadow(0 0 6px currentColor); } }
+
+        /* Hiasan nama memakai animasi dan warna asli masing-masing agar loop tetap natural. */
+
+        /* 5 HIASAN DETAIL PROFIL BARU: masing-masing punya motif tersendiri */
+        .member-card.decor-phoenix-ember, .card-box.decor-phoenix-ember { position:relative; overflow:hidden; background:radial-gradient(ellipse at 50% 110%,#f97316 0%,#7f1d1d 32%,#1c1917 72%,#09090b 100%) !important; color:#fff7ed; border:2px solid #fb923c !important; box-shadow:inset 0 -12px 30px rgba(249,115,22,.25),0 8px 24px rgba(127,29,29,.3) !important; }
+        .member-card.decor-phoenix-ember::before, .card-box.decor-phoenix-ember::before { content:'♨  ✦  ♨'; position:absolute; right:12px; top:8px; color:#fed7aa; letter-spacing:5px; text-shadow:0 0 12px #f97316; pointer-events:none; }
+        .member-card.decor-neon-matrix, .card-box.decor-neon-matrix { position:relative; overflow:hidden; background:linear-gradient(135deg,#020617,#052e16 55%,#020617) !important; color:#d9f99d; border:2px solid #4ade80 !important; box-shadow:inset 0 0 24px rgba(34,197,94,.2),0 8px 24px rgba(22,163,74,.22) !important; }
+        .member-card.decor-neon-matrix::before, .card-box.decor-neon-matrix::before { content:none !important; display:none !important; }
+        .member-card.decor-frost-relic, .card-box.decor-frost-relic { position:relative; overflow:hidden; background:linear-gradient(135deg,#082f49,#bae6fd 42%,#e0f2fe 50%,#075985) !important; color:#082f49; border:3px solid #e0f2fe !important; box-shadow:inset 0 0 18px rgba(255,255,255,.65),0 8px 24px rgba(14,116,144,.25) !important; }
+        .member-card.decor-frost-relic::before, .card-box.decor-frost-relic::before { content:'❄  ✧  ❄'; position:absolute; right:12px; top:8px; color:#fff; letter-spacing:5px; text-shadow:0 0 8px #0284c7; pointer-events:none; }
+        .member-card.decor-desert-mirage, .card-box.decor-desert-mirage { position:relative; overflow:hidden; background:linear-gradient(135deg,#451a03,#b45309 38%,#fcd34d 52%,#92400e 72%,#422006) !important; color:#fffbeb; border:2px solid #fbbf24 !important; box-shadow:inset 0 0 22px rgba(253,230,138,.22),0 8px 24px rgba(146,64,14,.3) !important; }
+        .member-card.decor-desert-mirage::before, .card-box.decor-desert-mirage::before { content:'☼  ◈  ☼'; position:absolute; right:12px; top:8px; color:#fef3c7; letter-spacing:5px; text-shadow:0 0 10px #f59e0b; pointer-events:none; }
+        .member-card.decor-deep-space, .card-box.decor-deep-space { position:relative; overflow:hidden; background:radial-gradient(circle at 18% 25%,#a78bfa 0 2px,transparent 3px),radial-gradient(circle at 78% 60%,#67e8f9 0 2px,transparent 3px),radial-gradient(circle at 45% 82%,#f0abfc 0 1px,transparent 2px),linear-gradient(135deg,#020617,#1e1b4b 55%,#581c87) !important; color:#f5f3ff; border:2px solid #a78bfa !important; box-shadow:inset 0 0 25px rgba(167,139,250,.2),0 8px 24px rgba(49,46,129,.3) !important; }
+        .member-card.decor-deep-space::before, .card-box.decor-deep-space::before { content:'✦  ·  ✧  ·  ✦'; position:absolute; right:12px; top:8px; color:#e9d5ff; letter-spacing:4px; text-shadow:0 0 9px #c4b5fd; pointer-events:none; }
+        .member-card.decor-phoenix-ember .member-name,.member-card.decor-phoenix-ember .member-bio,.member-card.decor-phoenix-ember .stat-item,
+        .card-box.decor-phoenix-ember .member-name,.card-box.decor-phoenix-ember .member-bio,.card-box.decor-phoenix-ember .stat-item,
+        .member-card.decor-neon-matrix .member-name,.member-card.decor-neon-matrix .member-bio,.member-card.decor-neon-matrix .stat-item,
+        .card-box.decor-neon-matrix .member-name,.card-box.decor-neon-matrix .member-bio,.card-box.decor-neon-matrix .stat-item,
+        .member-card.decor-desert-mirage .member-name,.member-card.decor-desert-mirage .member-bio,.member-card.decor-desert-mirage .stat-item,
+        .card-box.decor-desert-mirage .member-name,.card-box.decor-desert-mirage .member-bio,.card-box.decor-desert-mirage .stat-item,
+        .member-card.decor-deep-space .member-name,.member-card.decor-deep-space .member-bio,.member-card.decor-deep-space .stat-item,
+        .card-box.decor-deep-space .member-name,.card-box.decor-deep-space .member-bio,.card-box.decor-deep-space .stat-item { color:#fff !important; }
+        .member-card.decor-phoenix-ember > *, .card-box.decor-phoenix-ember > *,
+        .member-card.decor-neon-matrix > *, .card-box.decor-neon-matrix > *,
+        .member-card.decor-frost-relic > *, .card-box.decor-frost-relic > *,
+        .member-card.decor-desert-mirage > *, .card-box.decor-desert-mirage > *,
+        .member-card.decor-deep-space > *, .card-box.decor-deep-space > * { position:relative; z-index:2; }
+
+
+        .profile-detail-aurora { position:relative; overflow:hidden; background:linear-gradient(135deg,#052e16,#0f766e,#164e63,#312e81); color:#f0fdfa; border-top:3px solid #5eead4; border-bottom:3px solid #a7f3d0; box-shadow:inset 0 0 24px rgba(94,234,212,.22); }
+        .profile-detail-aurora::before { content:' '; position:absolute; inset:-30% -10%; pointer-events:none; background:repeating-linear-gradient(115deg,transparent 0 24px,rgba(167,243,208,.18) 27px 34px,transparent 38px 58px); animation:detailAuroraFlow 7s ease-in-out infinite alternate; }
+        @keyframes detailAuroraFlow { from{transform:translateX(-4%) skewX(-7deg)}to{transform:translateX(5%) skewX(7deg)} }
+        .profile-detail-circuit { position:relative; overflow:hidden; background:linear-gradient(135deg,#020617,#172554); color:#dbeafe; border-top:3px solid #38bdf8; border-bottom:3px solid #2563eb; box-shadow:inset 0 0 22px rgba(56,189,248,.2); }
+        .profile-detail-circuit::before { content:' '; position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg,transparent 48%,rgba(56,189,248,.25) 49%,transparent 51%),linear-gradient(0deg,transparent 48%,rgba(96,165,250,.18) 49%,transparent 51%); background-size:28px 28px; }
+        .profile-detail-ocean { position:relative; overflow:hidden; background:linear-gradient(160deg,#082f49,#0369a1,#0e7490); color:#ecfeff; border-top:4px solid #67e8f9; border-bottom:4px solid #155e75; box-shadow:inset 0 0 25px rgba(103,232,249,.2); }
+        .profile-detail-ocean::before { content:'〰 〜 〰 〜 〰'; position:absolute; left:0; right:0; bottom:8px; font-size:2rem; letter-spacing:8px; color:rgba(207,250,254,.2); white-space:nowrap; pointer-events:none; }
+        .profile-detail-prism { position:relative; overflow:hidden; background:linear-gradient(125deg,#fff7ed,#fbcfe8,#ddd6fe,#bfdbfe,#ccfbf1,#fff7ed); color:#312e81; border:3px solid #fff !important; box-shadow:inset 0 0 0 2px rgba(129,140,248,.55),0 0 18px rgba(196,181,253,.35); }
+        .profile-detail-prism::before { content:' '; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(135deg,transparent 0 30px,rgba(255,255,255,.75) 31px 33px,transparent 35px 62px); }
+        .profile-detail-galaxy { position:relative; overflow:hidden; background:radial-gradient(circle at 18% 20%,#7c3aed 0 2px,transparent 3px),radial-gradient(circle at 78% 65%,#67e8f9 0 2px,transparent 3px),radial-gradient(circle at 60% 18%,#fff 0 1px,transparent 2px),linear-gradient(135deg,#020617,#312e81 55%,#581c87); color:#f5f3ff; border-top:3px solid #c4b5fd; border-bottom:3px solid #818cf8; box-shadow:inset 0 0 28px rgba(167,139,250,.25); }
+        .profile-detail-aurora > *, .profile-detail-circuit > *, .profile-detail-ocean > *, .profile-detail-prism > *, .profile-detail-galaxy > * { position:relative; z-index:1; }
+        .profile-detail-aurora .stat-item,.profile-detail-circuit .stat-item,.profile-detail-ocean .stat-item,.profile-detail-galaxy .stat-item { color:inherit !important; }
+        .profile-detail-aurora .stats-grid,.profile-detail-circuit .stats-grid,.profile-detail-ocean .stats-grid,.profile-detail-galaxy .stats-grid { background:rgba(2,6,23,.24) !important; border:1px solid rgba(255,255,255,.18); }
+
+        /* KELAS EFEK SHINY TERANG UNTUK MASA AKTIF */
+        .duration-gold-shiny {
+            background: linear-gradient(90deg, #b8860b, #ffd700, #ffffff, #ffd700, #b8860b);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: goldShine 3s linear infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.6));
+        }
+
+        .duration-green-shiny {
+            background: linear-gradient(90deg, #15803d, #22c55e, #ffffff, #22c55e, #15803d);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: greenShine 2.5s linear infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.6));
+        }
+
+        .duration-purple-shiny {
+            background: linear-gradient(90deg, #6b21a8, #a855f7, #ffffff, #a855f7, #6b21a8);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: purpleShine 2.5s linear infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.8));
+        }
+
+        .duration-red-shiny {
+            background: linear-gradient(90deg, #991b1b, #ef4444, #ffffff, #ef4444, #991b1b);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: redShine 2.5s linear infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6));
+        }
+
+        .duration-diamond-shiny {
+            background: linear-gradient(90deg, #1e3a8a, #0284c7, #38bdf8, #ffffff, #38bdf8, #0284c7, #1e3a8a);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: diamondShine 2.5s linear infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.7));
+        }
+
+        .duration-yellow-shiny {
+            background: linear-gradient(90deg, #ca8a04, #facc15, #ffffff, #facc15, #ca8a04);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: goldShine 3s linear infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.6));
+        }
+
+        /* Masa aktif mengikuti warna dan efek shiny dari 5 hiasan nama baru */
+        .duration-rose-shiny,.duration-cyan-shiny,.duration-orange-shiny,.duration-silver-shiny,.duration-rainbow-shiny {
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: newNameWhiteShine 2.5s linear infinite;
+            display: inline-block;
+        }
+        .duration-rose-shiny { background-image: linear-gradient(90deg,#9f1239,#fb7185,#fff,#ffe4e6,#fff,#fb7185,#9f1239); }
+        .duration-cyan-shiny { background-image: linear-gradient(90deg,#155e75,#06b6d4,#fff,#cffafe,#fff,#22d3ee,#155e75); }
+        .duration-orange-shiny { background-image: linear-gradient(90deg,#9a3412,#f97316,#fff7ed,#fff,#fff7ed,#fb923c,#9a3412); }
+        .duration-silver-shiny { background-image: linear-gradient(90deg,#475569,#cbd5e1,#fff,#f8fafc,#fff,#94a3b8,#475569); }
+        .duration-rainbow-shiny { background-image: linear-gradient(90deg,#ef4444,#f97316,#fde047,#fff,#34d399,#38bdf8,#a78bfa,#fff,#ef4444); }
+
+        /* Masa aktif mengikuti warna masing-masing hiasan detail profil */
+        .duration-detail-aurora,.duration-detail-circuit,.duration-detail-ocean,.duration-detail-prism,.duration-detail-galaxy {
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            animation: detailDurationShine 3s linear infinite;
+            display: inline-block;
+        }
+        .duration-detail-aurora { background-image: linear-gradient(90deg,#047857,#2dd4bf,#ecfdf5,#a7f3d0,#0f766e); }
+        .duration-detail-circuit { background-image: linear-gradient(90deg,#1d4ed8,#38bdf8,#eff6ff,#60a5fa,#1e3a8a); }
+        .duration-detail-ocean { background-image: linear-gradient(90deg,#155e75,#06b6d4,#ecfeff,#67e8f9,#0369a1); }
+        .duration-detail-prism { background-image: linear-gradient(90deg,#f472b6,#a78bfa,#60a5fa,#5eead4,#fde68a,#f472b6); }
+        .duration-detail-galaxy { background-image: linear-gradient(90deg,#6d28d9,#a78bfa,#f5f3ff,#c4b5fd,#7e22ce); }
+        @keyframes detailDurationShine { to { background-position: 200% center; } }
+
+        /* Masa aktif untuk 10 hiasan nama gradasi terbaru: warnanya mengikuti item */
+        .duration-amethyst-shiny,.duration-lava-shiny,.duration-mint-shiny,.duration-sakura-shiny,.duration-sunset-shiny,
+        .duration-ocean-shiny,.duration-aurora-shiny,.duration-obsidian-shiny,.duration-golden-sky-shiny,.duration-void-shiny,
+        .duration-phoenix-ember,.duration-neon-matrix,.duration-frost-relic,.duration-desert-mirage,.duration-deep-space {
+            background-size: 240% auto; color: transparent !important; -webkit-text-fill-color: transparent !important;
+            -webkit-background-clip: text !important; background-clip: text !important; font-weight: 800;
+            display: inline-block; animation: newNameWhiteShine 3s linear infinite;
+        }
+        .duration-amethyst-shiny { background-image:linear-gradient(90deg,#240046,#5a189a,#c77dff,#fff,#9d4edd,#3c096c,#240046); }
+        .duration-lava-shiny { background-image:linear-gradient(90deg,#370617,#9d0208,#dc2f02,#ffba08,#fff3b0,#e85d04,#370617); }
+        .duration-mint-shiny { background-image:linear-gradient(90deg,#132a13,#31572c,#90a955,#ecf39e,#fff,#4f772d,#132a13); }
+        .duration-sakura-shiny { background-image:linear-gradient(90deg,#590d22,#a4133c,#ff4d6d,#ffccd5,#fff,#ff8fa3,#590d22); }
+        .duration-sunset-shiny { background-image:linear-gradient(90deg,#3c096c,#7b2cbf,#f72585,#ff9e00,#fff3b0,#ff5400,#3c096c); }
+        .duration-ocean-shiny { background-image:linear-gradient(90deg,#03045e,#0077b6,#00b4d8,#90e0ef,#fff,#48cae4,#03045e); }
+        .duration-aurora-shiny { background-image:linear-gradient(90deg,#081c15,#1b4332,#52b788,#b7e4c7,#fff,#72efdd,#6930c3,#081c15); }
+        .duration-obsidian-shiny { background-image:linear-gradient(90deg,#000814,#001d3d,#003566,#ffc300,#fff8e7,#6c757d,#000814); }
+        .duration-golden-sky-shiny { background-image:linear-gradient(90deg,#582f0e,#936639,#dda15e,#fefae0,#fff,#bc6c25,#582f0e); }
+        .duration-void-shiny { background-image:linear-gradient(90deg,#10002b,#240046,#3c096c,#7209b7,#f0e6ff,#560bad,#10002b); }
+        .duration-phoenix-ember { background-image:linear-gradient(90deg,#431407,#c2410c,#fb923c,#ffedd5,#fff,#f97316,#7f1d1d); }
+        .duration-neon-matrix { background-image:linear-gradient(90deg,#052e16,#16a34a,#bef264,#f7fee7,#fff,#4ade80,#052e16); }
+        .duration-frost-relic { background-image:linear-gradient(90deg,#082f49,#0284c7,#bae6fd,#fff,#e0f2fe,#38bdf8,#082f49); }
+        .duration-desert-mirage { background-image:linear-gradient(90deg,#451a03,#b45309,#fbbf24,#fffbeb,#fff,#d97706,#451a03); }
+        .duration-deep-space { background-image:linear-gradient(90deg,#020617,#312e81,#7e22ce,#e9d5ff,#fff,#67e8f9,#581c87,#020617); }
+
+        .name-vip-plus-gold {
+            background: linear-gradient(90deg, #8a5a00, #d4af37, #fff7b2, #ffffff, #fff7b2, #d4af37, #8a5a00);
+            background-size: 250% auto; color: transparent; -webkit-background-clip: text; background-clip: text;
+            font-weight: 900; animation: vipPlusGoldShine 2.2s linear infinite; display: inline-block;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,.85)) drop-shadow(0 0 5px rgba(212,175,55,.75));
+        }
+        @keyframes vipPlusGoldShine { 0% { background-position: 0% center; } 100% { background-position: 250% center; } }
+        .member-gelar.vip-plus {
+            background: linear-gradient(90deg,#8a5a00,#d4af37,#ffffff,#d4af37,#8a5a00); background-size:220% auto;
+            color:transparent !important; -webkit-background-clip:text; background-clip:text; border:1px solid #d4af37;
+            font-weight:900; animation:vipPlusGoldShine 2.2s linear infinite; filter:drop-shadow(0 0 5px rgba(255,255,255,.8));
+        }
+        /* HIASAN PROFIL VIP PLUS GOLD */
+        .member-card.decor-vip-plus-gold, .card-box.decor-vip-plus-gold { background:linear-gradient(135deg,#fffdf0,#f7d774,#fff8cf,#d4af37,#fffdf0)!important; background-size:220% 220%!important; border:3px solid transparent!important; border-radius:18px!important; box-shadow:inset 0 0 10px rgba(255,255,255,.45),0 0 0 1px rgba(255,255,255,.95)!important; overflow:visible; position:relative; }
+        .member-card.decor-vip-plus-gold { border-image:linear-gradient(90deg,#8a5a00,#fff,#d4af37,#fff,#8a5a00) 1!important; animation:none!important; }
+        .member-card.decor-vip-plus-gold::before,.card-box.decor-vip-plus-gold::before { content:'✦'; position:absolute; width:30px;height:30px;top:-17px;left:-17px;border-radius:8px;display:flex;align-items:center;justify-content:center;transform:rotate(45deg);color:#fff;font-size:13px;font-weight:900;background:linear-gradient(135deg,#8a5a00,#d4af37,#fff,#d4af37);border:2px solid #fff;box-shadow:0 2px 5px rgba(92,55,0,.22);z-index:4;pointer-events:none; }
+        .member-card.decor-vip-plus-gold::after,.card-box.decor-vip-plus-gold::after { content:'❖';position:absolute;bottom:-17px;right:-17px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;transform:rotate(45deg);color:#fff;font-size:13px;font-weight:900;background:linear-gradient(135deg,#fff8cf,#d4af37,#fff);border:2px solid #fff;box-shadow:0 2px 5px rgba(92,55,0,.22);z-index:4;pointer-events:none; }
+        .member-card.decor-vip-plus-gold .member-name,.card-box.decor-vip-plus-gold .member-name,.member-card.decor-vip-plus-gold .member-bio,.card-box.decor-vip-plus-gold .member-bio,.member-card.decor-vip-plus-gold .stat-item,.card-box.decor-vip-plus-gold .stat-item { position:relative;z-index:3; }
+        @keyframes vipPlusCardGlow { 0%,100%{background-position:0% 50%}50%{background-position:100% 50%} }
+        @keyframes vipPlusBorderShine { 0%,100%{filter:brightness(1)}50%{filter:brightness(1.35) drop-shadow(0 0 7px rgba(255,255,255,.9))} }
+        @keyframes vipPlusCornerShine { 0%,100%{filter:brightness(1);transform:rotate(45deg) scale(1)}50%{filter:brightness(1.5) drop-shadow(0 0 7px rgba(255,255,255,.95));transform:rotate(45deg) scale(1.08)} }
+        .vip-plus-detail-decoration { position:relative;overflow:hidden;margin:0 0 16px;padding:18px;border-radius:16px;background:linear-gradient(135deg,#6b4600,#d4af37,#fff4b0,#d4af37,#7a5100);background-size:240% 240%;border:2px solid #fff;box-shadow:0 0 0 2px #d4af37,0 8px 25px rgba(212,175,55,.45),inset 0 0 20px rgba(255,255,255,.65);animation:vipPlusDetailGlow 4s ease-in-out infinite; }
+        .vip-plus-detail-decoration::before { content:'';position:absolute;width:24%;height:180%;top:-40%;left:-45%;transform:rotate(18deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),rgba(255,255,255,.55),transparent);animation:vipPlusDetailShine 3.4s ease-in-out infinite;pointer-events:none; }
+        .vip-plus-detail-decoration::after { content:'✦  ❖  ✦';position:absolute;top:7px;right:12px;color:#fff;letter-spacing:5px;text-shadow:0 0 9px rgba(255,255,255,.95),0 0 12px rgba(212,175,55,.9);animation:vipPlusCornerShine 2.5s ease-in-out infinite; }
+        .vip-plus-detail-decoration > * { position:relative;z-index:2; } .vip-plus-detail-title{color:#fff;font-weight:900;text-shadow:0 0 7px rgba(255,255,255,.9),0 2px 4px rgba(92,55,0,.65)} .vip-plus-detail-decoration .vip-plus-detail-value{color:#fffdf0;font-weight:800;text-shadow:0 0 6px rgba(255,255,255,.8)}
+        @keyframes vipPlusDetailShine { 0%,18%{left:-45%;opacity:0}32%{opacity:1}64%{left:125%;opacity:1}80%,100%{left:125%;opacity:0} }
+        @keyframes vipPlusDetailGlow { 0%,100%{background-position:0% 50%;box-shadow:0 0 0 2px #d4af37,0 8px 25px rgba(212,175,55,.45),inset 0 0 20px rgba(255,255,255,.65)}50%{background-position:100% 50%;box-shadow:0 0 0 2px #fff,0 0 28px rgba(255,255,255,.65),0 8px 30px rgba(212,175,55,.65),inset 0 0 24px rgba(255,255,255,.85)} }
+        .modal-body:has(.profile-detail-vip-plus-card) { padding:0; }
+        .profile-detail-vip-plus-card { position:relative; overflow:hidden; min-height:100%; width:100%; padding:18px 20px; margin:0; border-radius:0; background:linear-gradient(135deg,#fffdf0 0%,#f4d35e 24%,#fff8cf 48%,#d4af37 72%,#fffdf0 100%); background-size:240% 240%; border:0; border-top:2px solid #d4af37; border-bottom:2px solid #d4af37; box-shadow:inset 0 0 18px rgba(255,255,255,.72); animation:vipPlusDetailCardShine 4s ease-in-out infinite; }
+        .profile-detail-vip-plus-card::before { content:''; position:absolute; width:22%; height:180%; top:-40%; left:-42%; transform:rotate(18deg); background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),rgba(255,255,255,.45),transparent); animation:vipPlusDetailCardSweep 3.6s ease-in-out infinite; pointer-events:none; }
+        .profile-detail-vip-plus-card::after { content:'✦  ❖  ✦'; position:absolute; top:8px; right:12px; color:#fff; font-weight:900; letter-spacing:4px; text-shadow:0 1px 4px rgba(92,55,0,.45); pointer-events:none; }
+        .profile-detail-vip-plus-card > * { position:relative; z-index:2; }
+        /* HIASAN PROFIL CRYSTAL UNGU */
+        .member-card.decor-crystal-ungu, .card-box.decor-crystal-ungu {
+            position: relative;
+            background: linear-gradient(135deg, #faf5ff 0%, #e9d5ff 42%, #c084fc 72%, #f5f3ff 100%) !important;
+            border: 3px solid #a855f7 !important;
+            border-radius: 18px !important;
+            box-shadow: 0 10px 28px rgba(126,34,206,.25), inset 0 0 18px rgba(255,255,255,.7), 0 0 0 1px rgba(255,255,255,.85) !important;
+            overflow: hidden;
+        }
+        .member-card.decor-crystal-ungu::before, .card-box.decor-crystal-ungu::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: .72;
+            animation: crystalUnguCrackShine 2.8s ease-in-out infinite;
+            background:
+                linear-gradient(132deg, transparent 0 24%, rgba(126,34,206,.72) 24.5%, transparent 25.2% 100%),
+                linear-gradient(48deg, transparent 0 38%, rgba(168,85,247,.68) 38.5%, transparent 39.2% 100%),
+                linear-gradient(166deg, transparent 0 55%, rgba(109,40,217,.62) 55.5%, transparent 56.2% 100%),
+                linear-gradient(22deg, transparent 0 68%, rgba(192,132,252,.75) 68.5%, transparent 69.2% 100%),
+                linear-gradient(108deg, transparent 0 78%, rgba(124,58,237,.62) 78.5%, transparent 79.2% 100%);
+        }
+        .member-card.decor-crystal-ungu::after, .card-box.decor-crystal-ungu::after {
+            display: none !important;
+        }
+        .member-card.decor-crystal-ungu > *, .card-box.decor-crystal-ungu > * { position: relative; z-index: 3; }
+        .member-card.decor-crystal-ungu .stats-grid, .card-box.decor-crystal-ungu .stats-grid {
+            background: rgba(255,255,255,.52);
+            border: 1px solid rgba(126,34,206,.16);
+        }
+        @keyframes crystalUnguCrackShine {
+            0%, 100% { opacity: .58; filter: brightness(1); }
+            45% { opacity: .95; filter: brightness(1.7); }
+            62% { opacity: .72; filter: brightness(1.15); }
+        }
+
+        /* HIASAN PROFIL LANGIT MALAM */
+        .member-card.decor-aurora-cerah, .card-box.decor-aurora-cerah {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, #020617 0%, #0f172a 42%, #172554 72%, #020617 100%) !important;
+            border: 3px solid #64748b !important;
+            border-radius: 18px !important;
+            box-shadow: 0 10px 30px rgba(2,6,23,.45), inset 0 0 24px rgba(96,165,250,.18), 0 0 0 1px rgba(148,163,184,.5) !important;
+        }
+        .member-card.decor-aurora-cerah::before, .card-box.decor-aurora-cerah::before {
+            content: '✦';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            color: #ffffff;
+            font-size: 10px;
+            line-height: 1;
+            text-shadow:
+                8vw 7vh 0 #ffffff,
+                21vw 16vh 0 #ffffff,
+                34vw 6vh 0 #ffffff,
+                48vw 22vh 0 #ffffff,
+                62vw 10vh 0 #ffffff,
+                78vw 25vh 0 #ffffff,
+                91vw 9vh 0 #ffffff,
+                14vw 48vh 0 #ffffff,
+                29vw 63vh 0 #ffffff,
+                45vw 49vh 0 #ffffff,
+                59vw 70vh 0 #ffffff,
+                74vw 54vh 0 #ffffff,
+                88vw 72vh 0 #ffffff,
+                5vw 88vh 0 #ffffff,
+                23vw 82vh 0 #ffffff,
+                39vw 91vh 0 #ffffff,
+                56vw 84vh 0 #ffffff,
+                71vw 94vh 0 #ffffff,
+                94vw 87vh 0 #ffffff;
+            filter: drop-shadow(0 0 4px rgba(255,255,255,.55));
+            opacity: .88;
+            animation: langitMalamStars 8s ease-in-out infinite;
+        }
+        
+        @keyframes langitMalamStars {
+            0%, 100% {
+                opacity: .78;
+                filter: blur(0) saturate(1);
+                transform: translateX(-3px) scale(.96);
+            }
+            50% {
+                opacity: 1;
+                filter: blur(0) saturate(1);
+                transform: translateX(3px) scale(1.045);
+            }
+        }
+
+
+        .member-card.decor-aurora-cerah > *, .card-box.decor-aurora-cerah > * { position: relative; z-index: 3; }
+        .member-card.decor-aurora-cerah .stats-grid, .card-box.decor-aurora-cerah .stats-grid {
+            background: rgba(15,23,42,.62);
+            border: 1px solid rgba(148,163,184,.28);
+        }
+        .member-card.decor-aurora-cerah .member-bio,
+        .member-card.decor-aurora-cerah .stat-item,
+                .card-box.decor-aurora-cerah .member-bio,
+        .card-box.decor-aurora-cerah .stat-item,
+                .card-box.decor-aurora-cerah .chat-message-text {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+        .member-card.decor-aurora-cerah .member-name,
+        .card-box.decor-aurora-cerah .member-name {
+            -webkit-text-fill-color: initial;
+        }
+        @keyframes langitMalamParticles {
+            0%, 100% { transform: translate3d(-2px, 0, 0) scale(0.94) rotate(45deg); opacity: .52; filter: blur(1.2px) saturate(.72); }
+            50% { transform: translate3d(3px, -2px, 0) scale(1.02) rotate(48deg); opacity: .98; filter: blur(0) saturate(1.35); }
+        }
+        @keyframes langitMalamParticlesFar {
+            0%, 100% { transform: translate3d(2px, 0, 0) scale(0.94) rotate(45deg); opacity: .38; filter: blur(1.3px) saturate(.68); }
+            50% { transform: translate3d(-3px, 2px, 0) scale(1.01) rotate(42deg); opacity: .9; filter: blur(0) saturate(1.3); }
+        }
+
+        .modal-body:has(.profile-detail-vip-plus-card) { padding:0; }
+        .profile-detail-vip-plus-card { position:relative; overflow:hidden; min-height:100%; width:100%; padding:18px 20px; margin:0; border-radius:0; background:linear-gradient(135deg,#fffdf0 0%,#f4d35e 24%,#fff8cf 48%,#d4af37 72%,#fffdf0 100%); background-size:240% 240%; border:0; border-top:2px solid #d4af37; border-bottom:2px solid #d4af37; box-shadow:inset 0 0 18px rgba(255,255,255,.72); animation:vipPlusDetailCardShine 4s ease-in-out infinite; }
+        .profile-detail-vip-plus-card::before { content:''; position:absolute; width:22%; height:180%; top:-40%; left:-42%; transform:rotate(18deg); background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),rgba(255,255,255,.45),transparent); animation:vipPlusDetailCardSweep 3.6s ease-in-out infinite; pointer-events:none; }
+        .profile-detail-vip-plus-card::after { content:'✦  ❖  ✦'; position:absolute; top:8px; right:12px; color:#fff; font-weight:900; letter-spacing:4px; text-shadow:0 1px 4px rgba(92,55,0,.45); pointer-events:none; }
+        .profile-detail-vip-plus-card > * { position:relative; z-index:2; }
+        /* Nuansa emas samar pada kotak putih di dalam Detail Profil VIP Plus */
+        .profile-detail-vip-plus-card .stats-grid {
+            background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,248,220,.72), rgba(255,255,255,.94)) !important;
+            border: 1px solid rgba(212,175,55,.22);
+            box-shadow: inset 0 0 10px rgba(212,175,55,.08);
+        }
+        .profile-detail-vip-plus-card .stat-item { color:#334155; }
+        .profile-detail-vip-plus-card [style*="background: #f8fafc"],
+        .profile-detail-vip-plus-card [style*="background:#f8fafc"],
+        .profile-detail-vip-plus-card [style*="background: white"],
+        .profile-detail-vip-plus-card [style*="background:white"] {
+            background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,248,220,.58), rgba(255,255,255,.96)) !important;
+            border-color: rgba(212,175,55,.2) !important;
+        }
+        @keyframes vipPlusDetailCardSweep { 0%,18%{left:-42%;opacity:0}32%{opacity:1}64%{left:125%;opacity:1}80%,100%{left:125%;opacity:0} }
+        @keyframes vipPlusDetailCardShine { 0%,100%{background-position:0% 50%}50%{background-position:100% 50%} }
+
+.member-gelar {
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid #3b82f6;
+        }
+
+        .member-gelar.vip {
+            background: #fef3c7;
+            color: #d97706;
+            border: 1px solid #f59e0b;
+        }
+
+        .member-bio { font-size: 0.85rem; color: #64748b; margin: 8px 0 14px; font-style: italic; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            background: rgba(248, 250, 252, 0.85);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .stat-item { font-size: 0.85rem; font-weight: 600; color: #334155; }
+
+        .immortal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(217, 119, 6, 0.2);
+        }
+
+        .shop-list { display: flex; flex-direction: column; gap: 12px; }
+        .shop-item-card {
+            position: relative;
+            display: flex; justify-content: space-between; align-items: center;
+            background: white; padding: 16px; border-radius: 12px;
+            border: 1px solid #3b82f6;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .shop-new-badge { position:absolute; top:7px; right:8px; z-index:2; background:#2563eb; color:#fff; font-size:.68rem; font-weight:800; letter-spacing:.3px; line-height:1; padding:5px 8px; border-radius:7px; box-shadow:0 2px 6px rgba(37,99,235,.24); }
+        .shop-title { font-weight: 700; font-size: 0.98rem; color: #0f172a; }
+        .shop-price { font-weight: 600; color: #2563eb; font-size: 0.9rem; }
+        .shop-type-tag { font-size: 0.78rem; color: #64748b; font-weight: 600; margin-top: 2px; }
+        .shop-stock { display:inline-block; width:fit-content; max-width:100%; box-sizing:border-box; white-space:nowrap; font-size: 0.8rem; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 12px; }
+
+        .btn-buy {
+            background: #16a34a; color: white; border: none; padding: 8px 14px;
+            border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: 0.2s;
+        }
+        .btn-buy:hover { background: #15803d; }
+
+        .admin-member-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px solid #e2e8f0; gap: 8px;
+        }
+        .btn-del-mini {
+            background: #fee2e2; color: #ef4444; border: none; padding: 6px 12px;
+            border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .btn-del-mini:hover { background: #fca5a5; }
+
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding-right: 42px !important;
+        }
+
+        .toggle-password-btn {
+            position: absolute;
+            right: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            padding: 6px;
+            z-index: 2;
+        }
+        .toggle-password-btn:hover { color: #1e293b; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 2000; padding: 16px;
+        }
+
+        .modal-content {
+            background: white; width: 100%; max-width: 500px; max-height: 85vh;
+            border-radius: 20px; display: flex; flex-direction: column;
+            overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            border: 1px solid #3b82f6;
+        }
+
+
+        .loans-modal-overlay { padding:0 !important; }
+        .loans-modal-content {
+            width:100vw !important; height:100vh !important; height:100dvh !important; max-width:none !important; max-height:none !important;
+            border-radius:0 !important; border:0 !important; overflow:hidden;
+        }
+        .loans-modal-body { display:flex; flex:1 1 auto; min-height:0; box-sizing:border-box; flex-direction:column; gap:16px; padding:16px 16px calc(56px + env(safe-area-inset-bottom, 0px)); overflow-y:auto; overscroll-behavior:contain; scrollbar-gutter:stable; }
+        .loan-section-placeholder { background:#fff; border:1px solid #cbd5e1; border-radius:14px; padding:16px; min-height:170px; box-shadow:0 4px 12px rgba(15,23,42,.06); }
+        .loan-section-placeholder h3 { margin-bottom:8px; color:#1d4ed8; }
+        .loan-section-placeholder p { color:#64748b; font-size:.9rem; }
+        .loan-offers-list { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+        .loan-offer-card { position:relative; border:1px solid #dbeafe; border-radius:10px; padding:12px; padding-right:42px; background:#f8fafc; color:#1e293b; }
+        .loan-offer-card .loan-refund-x { position:absolute; top:7px; right:7px; margin:0; padding:2px 7px; min-width:26px; background:#dc2626; color:#fff; border:0; border-radius:6px; font-weight:700; cursor:pointer; }
+        .loan-offer-card strong { color:#1d4ed8; }
+        .loan-offer-card .loan-meta { font-size:.84rem; color:#475569; margin-top:4px; }
+        .loan-offer-card button:not(.loan-refund-x) { display:flex; align-items:center; justify-content:center; width:100%; max-width:100%; box-sizing:border-box; margin:12px 0 0; padding:12px 14px; border:0; border-radius:9px; background:#2563eb !important; color:#fff !important; cursor:pointer; text-align:center; text-align-last:center; white-space:normal; line-height:1.35; font-weight:750; flex:0 0 100%; }
+        .loan-offer-card button:not(.loan-refund-x):hover,
+        .loan-offer-card button:not(.loan-refund-x):active,
+        .loan-offer-card button:not(.loan-refund-x):focus,
+        .loan-offer-card button:not(.loan-refund-x):focus-visible { background:#2563eb !important; color:#fff !important; filter:none !important; opacity:1 !important; box-shadow:none !important; outline:none; }
+
+        .modal-header {
+            padding: 16px 20px; border-bottom: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .modal-header h2 { font-size: 1.15rem; color: #0f172a; }
+
+        .btn-close {
+            background: #f1f5f9; border: none; width: 32px; height: 32px;
+            border-radius: 50%; cursor: pointer; font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+        
+        .form-group { 
+            margin-bottom: 16px; 
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #334155; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.92rem; outline: none;
+            box-sizing: border-box;
+        }
+
+        .btn-action {
+            width: 100%;
+            background: #2563eb; color: white; border: none;
+            padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .btn-action:hover { background: #1d4ed8; }
+
+        .btn-secondary { background: #64748b; margin-top: 8px; }
+        .btn-secondary:hover { background: #475569; }
+
+        .arcade-card {
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            color: white;
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid #6366f1;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+        }
+        .arcade-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .result-modal-overlay {
+            position: fixed; inset: 0; z-index: 3000;
+            display: none; align-items: center; justify-content: center;
+            padding: 16px; background: rgba(15,23,42,.58);
+            backdrop-filter: blur(4px);
+        }
+        .result-modal-overlay.show { display: flex; }
+        .result-modal {
+          width: min(92vw, 390px);
+            background: #fff; border: 1px solid #bfdbfe;
+            border-radius: 18px; padding: 22px;
+            box-shadow: 0 20px 45px rgba(15,23,42,.25);
+            text-align: center;
+        }
+        .result-modal-icon { font-size: 2rem; margin-bottom: 6px; }
+        .result-modal-title { font-size: 1.08rem; font-weight: 800; color:#0f172a; margin-bottom: 7px; }
+        .result-modal-message { color:#475569; font-size:.88rem; line-height:1.55; white-space:pre-line; }
+        .result-modal-actions { display:flex; gap:8px; margin-top:16px; }
+        .result-modal-actions button {
+            flex:1; border:0; border-radius:10px; padding:10px;
+            font-weight:700; cursor:pointer;
+        }
+        .result-ok { background:#2563eb; color:white; }
+
+        .arcade-link-list { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+        .arcade-link-card {
+            background:linear-gradient(135deg,#1e1b4b,#312e81); color:white;
+            border:1px solid #6366f1; border-radius:14px; padding:14px; cursor:pointer;
+            box-shadow:0 7px 18px rgba(49,46,129,.2);
+        }
+        .arcade-link-card h4 { font-size:.98rem; margin-bottom:4px; }
+        .arcade-link-card p { font-size:.78rem; opacity:.86; line-height:1.45; }
+
+         .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 10px auto;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 22px solid #ef4444;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        #wheelCanvas, #superWheelCanvas {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 6px solid #312e81;
+            box-sizing: border-box;
+            display: block;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            transition: transform 2.5s cubic-bezier(0.15, 0.85, 0.35, 1.0);
+        }
+
+         @media (max-width: 480px) {
+            header { padding: 10px 12px; gap: 8px; }
+            header h1 { font-size: 0.98rem; white-space: nowrap; }
+            .btn-admin { padding: 7px 10px; font-size: 0.78rem; }
+            .header-btn-group { margin-left: auto; }
+        }
+   
+
+        /* PENYESUAIAN HIASAN DETAIL PROFIL BARU: memenuhi popup dan kotak bernuansa */
+        .modal-body:has(.profile-detail-aurora),
+        .modal-body:has(.profile-detail-circuit),
+        .modal-body:has(.profile-detail-ocean),
+        .modal-body:has(.profile-detail-prism),
+        .modal-body:has(.profile-detail-galaxy) { padding: 0 !important; }
+        .profile-detail-aurora,
+        .profile-detail-circuit,
+        .profile-detail-ocean,
+        .profile-detail-prism,
+        .profile-detail-galaxy {
+            box-sizing: border-box; width: 100%; min-height: 100%; margin: 0; padding: 18px 20px;
+            border-radius: 0; isolation: isolate;
+        }
+        .profile-detail-aurora { animation: detailAuroraGlow 5s ease-in-out infinite; }
+        @keyframes detailAuroraGlow {
+            0%,100% { box-shadow: inset 0 0 24px rgba(94,234,212,.22), 0 0 12px rgba(45,212,191,.12); }
+            50% { box-shadow: inset 0 0 32px rgba(94,234,212,.34), 0 0 24px rgba(45,212,191,.3); }
+        }
+        .profile-detail-aurora::after {
+            content: ''; position: absolute; width: 22%; height: 180%; top: -40%; left: -42%;
+            transform: rotate(18deg); pointer-events: none; z-index: 0;
+            background: linear-gradient(90deg,transparent,rgba(255,255,255,.36),rgba(204,251,241,.5),transparent);
+            animation: detailAuroraSweep 6s ease-in-out infinite;
+        }
+        @keyframes detailAuroraSweep { 0%,20%{left:-42%;opacity:0}35%{opacity:.8}65%{left:125%;opacity:.8}80%,100%{left:125%;opacity:0} }
+
+        /* Kotak informasi mengikuti palet masing-masing dekorasi, tetap lebih samar */
+        .profile-detail-aurora .stats-grid,
+        .profile-detail-aurora > div[style*="background: #f8fafc"],
+        .profile-detail-aurora > div[style*="background:#f8fafc"],
+        .profile-detail-circuit .stats-grid,
+        .profile-detail-circuit > div[style*="background: #f8fafc"],
+        .profile-detail-circuit > div[style*="background:#f8fafc"],
+        .profile-detail-ocean .stats-grid,
+        .profile-detail-ocean > div[style*="background: #f8fafc"],
+        .profile-detail-ocean > div[style*="background:#f8fafc"],
+        .profile-detail-galaxy .stats-grid,
+        .profile-detail-galaxy > div[style*="background: #f8fafc"],
+        .profile-detail-galaxy > div[style*="background:#f8fafc"] {
+            background: linear-gradient(135deg,rgba(2,6,23,.48),rgba(15,23,42,.28),rgba(2,6,23,.42)) !important;
+            border: 1px solid rgba(167,243,252,.2) !important;
+            box-shadow: inset 0 0 14px rgba(148,163,184,.08);
+        }
+        .profile-detail-aurora .stat-item,.profile-detail-circuit .stat-item,
+        .profile-detail-ocean .stat-item,.profile-detail-galaxy .stat-item { color:#f0fdfa !important; }
+        .profile-detail-aurora > div[style*="background: #f8fafc"] *,
+        .profile-detail-aurora > div[style*="background:#f8fafc"] *,
+        .profile-detail-circuit > div[style*="background: #f8fafc"] *,
+        .profile-detail-circuit > div[style*="background:#f8fafc"] *,
+        .profile-detail-ocean > div[style*="background: #f8fafc"] *,
+        .profile-detail-ocean > div[style*="background:#f8fafc"] *,
+        .profile-detail-galaxy > div[style*="background: #f8fafc"] *,
+        .profile-detail-galaxy > div[style*="background:#f8fafc"] * { color:#e0f2fe !important; }
+
+        .profile-detail-prism .stats-grid,
+        .profile-detail-prism > div[style*="background: #f8fafc"],
+        .profile-detail-prism > div[style*="background:#f8fafc"] {
+            background: linear-gradient(135deg,rgba(255,255,255,.62),rgba(221,214,254,.58),rgba(204,251,241,.56),rgba(251,207,232,.58)) !important;
+            border: 1px solid rgba(129,140,248,.28) !important;
+            box-shadow: inset 0 0 14px rgba(255,255,255,.28);
+        }
+        .profile-detail-prism .stat-item { color:#37306f !important; }
+        .profile-detail-prism > div[style*="background: #f8fafc"] *,
+        .profile-detail-prism > div[style*="background:#f8fafc"] * { color:#43386f !important; }
+
+        /* Prisma Pelangi: hilangkan garis putih dan ganti dengan sapuan shiny warna-warni */
+        .profile-detail-prism::before {
+            content: ''; position: absolute; width: 24%; height: 190%; top: -45%; left: -45%;
+            inset-block: auto; inset-inline: auto; pointer-events: none; z-index: 0;
+            transform: rotate(18deg);
+            background: linear-gradient(90deg,transparent,rgba(244,114,182,.24),rgba(255,255,255,.72),rgba(96,165,250,.3),rgba(94,234,212,.3),transparent);
+            animation: detailPrismShine 4.2s ease-in-out infinite;
+        }
+        .profile-detail-prism::after {
+            content: '✦  ◇  ✧'; position: absolute; top: 8px; right: 12px; z-index: 0;
+            color: rgba(255,255,255,.88); letter-spacing: 5px; font-weight: 900;
+            text-shadow: 0 0 8px rgba(167,139,250,.8),0 0 12px rgba(244,114,182,.55); pointer-events: none;
+        }
+        @keyframes detailPrismShine { 0%,18%{left:-45%;opacity:0}32%{opacity:.95}64%{left:125%;opacity:.95}80%,100%{left:125%;opacity:0} }
+
+        /* Galaksi Bintang: sapuan shiny plus glow lembut bernuansa aurora */
+        .profile-detail-galaxy { animation: detailGalaxyAuroraGlow 4.8s ease-in-out infinite; }
+        .profile-detail-galaxy::before {
+            content: ''; position: absolute; width: 22%; height: 190%; top: -45%; left: -42%;
+            transform: rotate(18deg); pointer-events: none; z-index: 0;
+            background: linear-gradient(90deg,transparent,rgba(255,255,255,.58),rgba(196,181,253,.68),rgba(103,232,249,.42),transparent);
+            animation: detailGalaxyShine 4.4s ease-in-out infinite;
+        }
+        .profile-detail-galaxy::after {
+            content: '✦   ·   ✧   ·   ✦'; position: absolute; top: 8px; right: 12px; z-index: 0;
+            color: rgba(224,231,255,.9); letter-spacing: 3px; font-weight: 900;
+            text-shadow: 0 0 8px rgba(196,181,253,.95),0 0 16px rgba(103,232,249,.72); pointer-events: none;
+            animation: detailGalaxyStars 3.6s ease-in-out infinite;
+        }
+        @keyframes detailGalaxyShine { 0%,18%{left:-42%;opacity:0}32%{opacity:.9}64%{left:125%;opacity:.9}80%,100%{left:125%;opacity:0} }
+        @keyframes detailGalaxyAuroraGlow {
+            0%,100% { box-shadow: inset 0 0 28px rgba(167,139,250,.25),0 0 12px rgba(124,58,237,.18); }
+            50% { box-shadow: inset 0 0 38px rgba(103,232,249,.22),0 0 26px rgba(139,92,246,.42),0 0 34px rgba(45,212,191,.18); }
+        }
+        @keyframes detailGalaxyStars { 0%,100%{opacity:.62;filter:brightness(1)}50%{opacity:1;filter:brightness(1.5)} }
+
+
+        /* Prisma Pelangi: pertahankan motif garis warna-warni, tanpa efek sapuan shiny */
+        .profile-detail-prism::before {
+            content: ' ' !important;
+            position: absolute !important;
+            inset: 0 !important;
+            width: auto !important;
+            height: auto !important;
+            top: 0 !important;
+            left: 0 !important;
+            transform: none !important;
+            pointer-events: none !important;
+            z-index: 0 !important;
+            background: repeating-linear-gradient(135deg, transparent 0 30px, rgba(255,255,255,.42) 31px 33px, transparent 35px 62px) !important;
+            animation: none !important;
+        }
+
+        /* Galaksi Bintang: hilangkan sapuan shiny, pertahankan motif bintang dan warna dasar */
+        .profile-detail-galaxy::before {
+            content: none !important;
+            animation: none !important;
+        }
+        .profile-detail-galaxy {
+            animation: none !important;
+            box-shadow: inset 0 0 28px rgba(167,139,250,.25) !important;
+        }
+
+        .profile-detail-prism > *,
+        .profile-detail-galaxy > * { position: relative; z-index: 2; }
+
+        /* Teks masa aktif di semua hiasan detail mengikuti warna/shiny item seperti card profil */
+        .profile-detail-aurora [class*="duration-"],
+        .profile-detail-circuit [class*="duration-"],
+        .profile-detail-ocean [class*="duration-"],
+        .profile-detail-prism [class*="duration-"],
+        .profile-detail-galaxy [class*="duration-"] {
+            color: transparent !important;
+            -webkit-text-fill-color: transparent !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+        }
+
+        
+        /* PERBAIKAN: Prisma Pelangi dan Galaksi Bintang memakai glow lembut, tanpa garis putih/sapuan shiny */
+        .profile-detail-prism {
+            animation: prismSoftGlow 3.8s ease-in-out infinite !important;
+            box-shadow: inset 0 0 18px rgba(196,181,253,.38), 0 0 12px rgba(244,114,182,.32), 0 0 22px rgba(129,140,248,.25) !important;
+        }
+        .profile-detail-prism::before {
+            content: none !important;
+            display: none !important;
+            animation: none !important;
+            background: none !important;
+        }
+        .profile-detail-prism::after {
+            content: '✦  ◇  ✧' !important;
+            color: rgba(255,255,255,.9) !important;
+            text-shadow: 0 0 5px rgba(167,139,250,.95), 0 0 10px rgba(244,114,182,.8) !important;
+        }
+        @keyframes prismSoftGlow {
+            0%,100% { box-shadow: inset 0 0 18px rgba(196,181,253,.32), 0 0 9px rgba(244,114,182,.25), 0 0 15px rgba(129,140,248,.2); }
+            50% { box-shadow: inset 0 0 24px rgba(196,181,253,.48), 0 0 17px rgba(244,114,182,.45), 0 0 27px rgba(129,140,248,.38); }
+        }
+        .profile-detail-galaxy {
+            animation: galaxySoftGlow 4.2s ease-in-out infinite !important;
+            box-shadow: inset 0 0 25px rgba(167,139,250,.25), 0 0 12px rgba(124,58,237,.3) !important;
+        }
+        .profile-detail-galaxy::before { content: none !important; display:none !important; animation:none !important; }
+        .profile-detail-galaxy::after { animation: detailGalaxyStars 3.6s ease-in-out infinite !important; }
+        @keyframes galaxySoftGlow {
+            0%,100% { box-shadow: inset 0 0 25px rgba(167,139,250,.25), 0 0 10px rgba(124,58,237,.25); }
+            50% { box-shadow: inset 0 0 34px rgba(167,139,250,.4), 0 0 22px rgba(139,92,246,.48), 0 0 30px rgba(45,212,191,.14); }
+        }
+
+        .member-card.decor-sakura-bersemi > *, .card-box.decor-sakura-bersemi > *,
+        .member-card.decor-api-naga > *, .card-box.decor-api-naga > *,
+        .member-card.decor-petir-neon > *, .card-box.decor-petir-neon > *,
+        .member-card.decor-emerald-venom > *, .card-box.decor-emerald-venom > *,
+        .member-card.decor-debu-kosmik > *, .card-box.decor-debu-kosmik > * { position:relative; z-index:3; }
+
+        /* 5 HIASAN PROFIL BARU: animasi ringan dan partikel berbeda */
+        .member-card.decor-sakura-bersemi, .card-box.decor-sakura-bersemi {
+            position:relative; overflow:hidden; background:linear-gradient(135deg,#fff1f2,#fbcfe8 48%,#fce7f3) !important;
+            border:2px solid #f472b6 !important; box-shadow:0 0 14px rgba(244,114,182,.25), inset 0 0 16px rgba(255,255,255,.7) !important;
+            animation:sakuraBreath 4s ease-in-out infinite;
+        }
+        .decor-sakura-bersemi::before { content:'✿  ·   ❀   ·  ✿'; position:absolute; inset:8px 8px auto auto; color:#be185d; opacity:.7; font-size:13px; letter-spacing:4px; pointer-events:none; z-index:1; animation:sakuraPetals 5s ease-in-out infinite; }
+        .decor-sakura-bersemi::after { content:'✧'; position:absolute; left:12%; bottom:15%; color:#ec4899; font-size:10px; pointer-events:none; z-index:1; text-shadow:18px -18px #f472b6,42px -4px #db2777,65px -23px #f9a8d4,90px -10px #ec4899; animation:sakuraFloat 6s ease-in-out infinite; }
+        @keyframes sakuraBreath { 0%,100%{box-shadow:0 0 10px rgba(244,114,182,.2),inset 0 0 14px rgba(255,255,255,.65)}50%{box-shadow:0 0 22px rgba(244,114,182,.42),inset 0 0 20px rgba(255,255,255,.85)} }
+        @keyframes sakuraPetals { 0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(5px) rotate(3deg)} }
+        @keyframes sakuraFloat { 0%,100%{transform:translate(0,0);opacity:.45}50%{transform:translate(8px,-5px);opacity:.95} }
+
+        .member-card.decor-api-naga, .card-box.decor-api-naga {
+            position:relative; overflow:hidden; background:linear-gradient(135deg,#431407,#9a3412 48%,#7f1d1d) !important;
+            border:2px solid #fb923c !important; color:#fff7ed; box-shadow:0 0 14px rgba(249,115,22,.28),inset 0 0 18px rgba(251,146,60,.14) !important;
+        }
+        .decor-api-naga .member-name,.decor-api-naga .member-bio,.decor-api-naga .stat-item,.decor-api-naga .chat-message-text { color:#fff7ed !important; -webkit-text-fill-color:#fff7ed !important; }
+        .decor-api-naga::before { content:'♨  ◆  ♨'; position:absolute; top:7px; right:10px; color:#fdba74; letter-spacing:5px; font-size:13px; z-index:1; pointer-events:none; text-shadow:0 0 8px #f97316; animation:dragonEmbers 2.8s ease-in-out infinite; }
+        .decor-api-naga::after { content:'•'; position:absolute; left:10%; bottom:12%; color:#fbbf24; font-size:12px; z-index:1; pointer-events:none; text-shadow:22px -18px #fb923c,47px -4px #fde68a,73px -22px #f97316,100px -8px #fdba74; animation:emberDrift 4s linear infinite; }
+        @keyframes dragonEmbers { 0%,100%{opacity:.65;filter:brightness(1)}50%{opacity:1;filter:brightness(1.45)} }
+        @keyframes emberDrift { 0%{transform:translateY(3px);opacity:.45}50%{transform:translateY(-8px);opacity:1}100%{transform:translateY(3px);opacity:.45} }
+
+        .member-card.decor-petir-neon, .card-box.decor-petir-neon {
+            position:relative; overflow:hidden; background:linear-gradient(135deg,#111827,#172554 55%,#312e81) !important;
+            border:2px solid #67e8f9 !important; box-shadow:0 0 12px rgba(34,211,238,.3),inset 0 0 16px rgba(59,130,246,.18) !important;
+            animation:neonPulse 3.2s ease-in-out infinite;
+        }
+        .decor-petir-neon .member-name,.decor-petir-neon .member-bio,.decor-petir-neon .stat-item,.decor-petir-neon .chat-message-text { color:#ecfeff !important; -webkit-text-fill-color:#ecfeff !important; }
+        .decor-petir-neon::before { content:'ϟ'; position:absolute; top:5px; right:13px; color:#a5f3fc; font-size:25px; z-index:1; pointer-events:none; text-shadow:0 0 6px #22d3ee,0 0 14px #3b82f6; animation:lightningFlash 3.5s steps(2,end) infinite; }
+        .decor-petir-neon::after { content:'·'; position:absolute; left:13%; bottom:15%; color:#67e8f9; font-size:12px; z-index:1; pointer-events:none; text-shadow:24px -19px #22d3ee,49px -3px #a5f3fc,76px -24px #60a5fa,104px -9px #c4b5fd; animation:neonDots 4.5s ease-in-out infinite; }
+        @keyframes neonPulse { 0%,100%{box-shadow:0 0 10px rgba(34,211,238,.2),inset 0 0 12px rgba(59,130,246,.12)}50%{box-shadow:0 0 22px rgba(34,211,238,.5),inset 0 0 20px rgba(59,130,246,.25)} }
+        @keyframes lightningFlash { 0%,84%,88%,100%{opacity:.55}85%,87%{opacity:1;filter:brightness(1.8)} }
+        @keyframes neonDots { 0%,100%{transform:translateX(-3px);opacity:.45}50%{transform:translateX(5px);opacity:1} }
+
+        .member-card.decor-emerald-venom, .card-box.decor-emerald-venom {
+            position:relative; overflow:hidden; background:linear-gradient(135deg,#022c22,#065f46 52%,#064e3b) !important;
+            border:2px solid #34d399 !important; box-shadow:0 0 14px rgba(52,211,153,.25),inset 0 0 18px rgba(167,243,208,.12) !important;
+        }
+        .decor-emerald-venom .member-name,.decor-emerald-venom .member-bio,.decor-emerald-venom .stat-item,.decor-emerald-venom .chat-message-text { color:#ecfdf5 !important; -webkit-text-fill-color:#ecfdf5 !important; }
+        .decor-emerald-venom::before { content:'❖  ⟡  ❖'; position:absolute; top:7px; right:10px; color:#a7f3d0; font-size:12px; letter-spacing:4px; z-index:1; pointer-events:none; text-shadow:0 0 8px rgba(52,211,153,.8); animation:venomPulse 3.4s ease-in-out infinite; }
+        .decor-emerald-venom::after { content:'·'; position:absolute; left:12%; bottom:14%; color:#6ee7b7; font-size:12px; z-index:1; pointer-events:none; text-shadow:20px -16px #34d399,42px -4px #a7f3d0,68px -22px #10b981,95px -7px #6ee7b7; animation:venomFloat 5s ease-in-out infinite; }
+        @keyframes venomPulse { 0%,100%{opacity:.55;filter:brightness(.9)}50%{opacity:1;filter:brightness(1.35)} }
+        @keyframes venomFloat { 0%,100%{transform:translateY(2px);opacity:.4}50%{transform:translateY(-5px);opacity:.95} }
+
+        .member-card.decor-debu-kosmik, .card-box.decor-debu-kosmik {
+            position:relative; overflow:hidden; background:linear-gradient(135deg,#1e1b4b,#312e81 48%,#0f172a) !important;
+            border:2px solid #a78bfa !important; box-shadow:0 0 14px rgba(167,139,250,.28),inset 0 0 18px rgba(196,181,253,.12) !important;
+        }
+        .decor-debu-kosmik .member-name,.decor-debu-kosmik .member-bio,.decor-debu-kosmik .stat-item,.decor-debu-kosmik .chat-message-text { color:#f5f3ff !important; -webkit-text-fill-color:#f5f3ff !important; }
+        .decor-debu-kosmik::before { content:'✦  ·  ✧'; position:absolute; top:7px; right:11px; color:#ddd6fe; font-size:13px; letter-spacing:4px; z-index:1; pointer-events:none; text-shadow:0 0 8px #a78bfa; animation:cosmicTwinkle 3s ease-in-out infinite; }
+        .decor-debu-kosmik::after { content:'·'; position:absolute; left:10%; bottom:14%; color:#c4b5fd; font-size:12px; z-index:1; pointer-events:none; text-shadow:18px -18px #f5f3ff,40px -5px #a78bfa,62px -23px #818cf8,88px -9px #67e8f9,112px -20px #ddd6fe; animation:cosmicDrift 6s ease-in-out infinite; }
+        @keyframes cosmicTwinkle { 0%,100%{opacity:.55;transform:scale(.96)}50%{opacity:1;transform:scale(1.08)} }
+        @keyframes cosmicDrift { 0%,100%{transform:translate(0,0);opacity:.45}50%{transform:translate(7px,-5px);opacity:1} }
+
+        
+        /* FIX LANJUTAN: glow lebih kuat, kilau bergerak, partikel lebih ramai
+           khusus untuk lima hiasan profil baru. */
+        .member-card.decor-sakura-bersemi,
+        .card-box.decor-sakura-bersemi {
+            box-shadow: 0 0 10px rgba(244,114,182,.55), 0 0 24px rgba(236,72,153,.35),
+                        inset 0 0 20px rgba(255,255,255,.78) !important;
+            animation: sakuraPremiumGlow 3.2s ease-in-out infinite;
+        }
+        .member-card.decor-api-naga,
+        .card-box.decor-api-naga {
+            box-shadow: 0 0 12px rgba(249,115,22,.62), 0 0 27px rgba(239,68,68,.32),
+                        inset 0 0 22px rgba(251,146,60,.22) !important;
+            animation: dragonPremiumGlow 2.6s ease-in-out infinite;
+        }
+        .member-card.decor-petir-neon,
+        .card-box.decor-petir-neon {
+            box-shadow: 0 0 12px rgba(34,211,238,.62), 0 0 28px rgba(59,130,246,.38),
+                        inset 0 0 22px rgba(96,165,250,.22) !important;
+            animation: neonPulse 2.4s ease-in-out infinite;
+        }
+        .member-card.decor-emerald-venom,
+        .card-box.decor-emerald-venom {
+            box-shadow: 0 0 12px rgba(52,211,153,.62), 0 0 27px rgba(16,185,129,.38),
+                        inset 0 0 22px rgba(167,243,208,.2) !important;
+            animation: emeraldPremiumGlow 2.8s ease-in-out infinite;
+        }
+        .member-card.decor-debu-kosmik,
+        .card-box.decor-debu-kosmik {
+            box-shadow: 0 0 12px rgba(167,139,250,.62), 0 0 30px rgba(124,58,237,.42),
+                        inset 0 0 24px rgba(192,132,252,.22) !important;
+            animation: galaxyPremiumGlow 3.4s ease-in-out infinite;
+        }
+
+        /* Kilau putih tipis bergerak di seluruh permukaan; motif ikon tetap terlihat. */
+        .decor-sakura-bersemi::before,
+        .decor-api-naga::before,
+        .decor-petir-neon::before,
+        .decor-emerald-venom::before,
+        .decor-debu-kosmik::before {
+            inset: 0 !important;
+            width: auto !important;
+            height: auto !important;
+            padding: 7px 10px !important;
+            text-align: right !important;
+            background: linear-gradient(112deg, transparent 0%, transparent 30%,
+                rgba(255,255,255,.04) 39%, rgba(255,255,255,.12) 48%,
+                rgba(255,255,255,.05) 53%, transparent 63%, transparent 100%) !important;
+            background-size: 240% 100% !important;
+            animation: premiumDecorationShine 5s linear infinite !important;
+            pointer-events: none !important;
+        }
+        /* Kilau pojok kanan bawah mengikuti warna tiap hiasan, bukan putih menyilaukan. */
+        .decor-sakura-bersemi::before { background-image:linear-gradient(112deg,transparent 0%,transparent 30%,rgba(244,114,182,.10) 39%,rgba(236,72,153,.42) 48%,rgba(251,207,232,.14) 53%,transparent 63%,transparent 100%) !important; color:#be185d; text-shadow:0 0 8px #fff,0 0 15px #f472b6,0 0 24px #ec4899 !important; }
+        .decor-api-naga::before { background-image:linear-gradient(112deg,transparent 0%,transparent 30%,rgba(251,146,60,.12) 39%,rgba(249,115,22,.48) 48%,rgba(253,186,116,.16) 53%,transparent 63%,transparent 100%) !important; color:#ffedd5; text-shadow:0 0 8px #fb923c,0 0 16px #f97316,0 0 24px #ef4444 !important; }
+        .decor-petir-neon::before { background-image:linear-gradient(112deg,transparent 0%,transparent 30%,rgba(34,211,238,.12) 39%,rgba(14,165,233,.48) 48%,rgba(96,165,250,.16) 53%,transparent 63%,transparent 100%) !important; color:#ecfeff; text-shadow:0 0 8px #fff,0 0 16px #22d3ee,0 0 26px #3b82f6 !important; }
+        .decor-emerald-venom::before { background-image:linear-gradient(112deg,transparent 0%,transparent 30%,rgba(52,211,153,.12) 39%,rgba(16,185,129,.48) 48%,rgba(110,231,183,.16) 53%,transparent 63%,transparent 100%) !important; color:#d1fae5; text-shadow:0 0 8px #a7f3d0,0 0 17px #34d399,0 0 25px #10b981 !important; }
+        .decor-debu-kosmik::before { background-image:linear-gradient(112deg,transparent 0%,transparent 30%,rgba(167,139,250,.12) 39%,rgba(124,58,237,.48) 48%,rgba(196,181,253,.16) 53%,transparent 63%,transparent 100%) !important; color:#f5f3ff; text-shadow:0 0 8px #fff,0 0 16px #a78bfa,0 0 26px #7c3aed !important; }
+
+        /* Partikel tambahan, tetap berada di lapisan dekorasi di belakang teks. */
+        .decor-sakura-bersemi::after {
+            text-shadow: 18px -18px #f472b6, 42px -4px #db2777, 65px -23px #f9a8d4,
+                90px -10px #ec4899, 118px -30px #fff, 143px -6px #fbcfe8,
+                168px -22px #fb7185, 194px -2px #f9a8d4, 220px -28px #fff,
+                245px -10px #ec4899, 270px -25px #fbcfe8, 296px -3px #fb7185,
+                24px -45px #fff, 75px -48px #f9a8d4, 130px -55px #ec4899,
+                186px -46px #fff, 240px -52px #f472b6 !important;
+            filter: drop-shadow(0 0 5px rgba(244,114,182,.9));
+        }
+        .decor-api-naga::after {
+            text-shadow: 22px -18px #fb923c,47px -4px #fde68a,73px -22px #f97316,
+                100px -8px #fdba74,128px -28px #fff7ed,154px -10px #ef4444,
+                181px -35px #fbbf24,207px -15px #fb923c,235px -30px #fff,
+                260px -6px #f97316,286px -26px #fbbf24,312px -12px #fdba74,
+                38px -48px #fbbf24,92px -58px #fb923c,148px -48px #fff7ed,
+                202px -60px #ef4444,258px -50px #fbbf24 !important;
+            filter: drop-shadow(0 0 5px rgba(249,115,22,.95));
+        }
+        .decor-petir-neon::after {
+            text-shadow: 24px -19px #22d3ee,49px -3px #a5f3fc,76px -24px #60a5fa,
+                104px -9px #c4b5fd,130px -32px #fff,158px -13px #22d3ee,
+                185px -28px #60a5fa,211px -7px #a5f3fc,239px -34px #818cf8,
+                266px -14px #fff,293px -27px #22d3ee,320px -8px #60a5fa,
+                40px -52px #67e8f9,94px -60px #fff,150px -50px #a5f3fc,
+                207px -62px #38bdf8,263px -53px #c4b5fd !important;
+            filter: drop-shadow(0 0 5px rgba(34,211,238,.95));
+        }
+        .decor-emerald-venom::after {
+            text-shadow: 22px -18px #6ee7b7,48px -5px #34d399,74px -24px #a7f3d0,
+                101px -9px #10b981,129px -31px #ecfdf5,156px -13px #6ee7b7,
+                183px -28px #34d399,210px -6px #d1fae5,238px -34px #10b981,
+                265px -12px #a7f3d0,292px -28px #ecfdf5,319px -8px #34d399,
+                39px -51px #a7f3d0,94px -60px #34d399,149px -49px #fff,
+                205px -62px #6ee7b7,261px -52px #10b981 !important;
+            filter: drop-shadow(0 0 5px rgba(52,211,153,.95));
+        }
+        .decor-debu-kosmik::after {
+            text-shadow: 20px -17px #c4b5fd,44px -5px #a78bfa,70px -25px #fff,
+                96px -8px #818cf8,123px -31px #e9d5ff,150px -11px #c4b5fd,
+                177px -28px #7c3aed,204px -6px #fff,231px -33px #a78bfa,
+                258px -12px #ddd6fe,285px -27px #818cf8,312px -8px #fff,
+                36px -50px #a78bfa,91px -59px #fff,147px -48px #c4b5fd,
+                202px -61px #7c3aed,258px -52px #e9d5ff !important;
+            filter: drop-shadow(0 0 5px rgba(167,139,250,.95));
+        }
+
+        /* Kotak statistik/ikon dibuat seperti kaca transparan mengikuti hiasan aktif. */
+        .member-card.decor-sakura-bersemi .stats-grid, .card-box.decor-sakura-bersemi .stats-grid {
+            background:rgba(255,255,255,.42) !important; border:1px solid rgba(190,24,93,.22) !important;
+            box-shadow:inset 0 0 12px rgba(255,255,255,.35); backdrop-filter:blur(3px);
+        }
+        .member-card.decor-api-naga .stats-grid, .card-box.decor-api-naga .stats-grid {
+            background:rgba(40,10,4,.42) !important; border:1px solid rgba(253,186,116,.3) !important;
+            box-shadow:inset 0 0 12px rgba(251,146,60,.15); backdrop-filter:blur(3px);
+        }
+        .member-card.decor-petir-neon .stats-grid, .card-box.decor-petir-neon .stats-grid {
+            background:rgba(2,6,23,.48) !important; border:1px solid rgba(103,232,249,.3) !important;
+            box-shadow:inset 0 0 12px rgba(34,211,238,.13); backdrop-filter:blur(3px);
+        }
+        .member-card.decor-emerald-venom .stats-grid, .card-box.decor-emerald-venom .stats-grid {
+            background:rgba(2,44,34,.45) !important; border:1px solid rgba(167,243,208,.28) !important;
+            box-shadow:inset 0 0 12px rgba(52,211,153,.14); backdrop-filter:blur(3px);
+        }
+        .member-card.decor-debu-kosmik .stats-grid, .card-box.decor-debu-kosmik .stats-grid {
+            background:rgba(15,10,40,.5) !important; border:1px solid rgba(196,181,253,.3) !important;
+            box-shadow:inset 0 0 12px rgba(167,139,250,.16); backdrop-filter:blur(3px);
+        }
+
+        /* Hiasan nama harus tetap memakai gradasi/shiny walau kartu profil berwarna gelap/terang. */
+        .decor-sakura-bersemi .member-name[class*="name-"],
+        .decor-api-naga .member-name[class*="name-"],
+        .decor-petir-neon .member-name[class*="name-"],
+        .decor-emerald-venom .member-name[class*="name-"],
+        .decor-debu-kosmik .member-name[class*="name-"] {
+            color:transparent !important;
+            -webkit-text-fill-color:transparent !important;
+            -webkit-background-clip:text !important;
+            background-clip:text !important;
+            position:relative; z-index:4 !important;
+            filter:drop-shadow(0 0 4px rgba(255,255,255,.35));
+        }
+        .decor-sakura-bersemi .member-name:not([class*="name-"]),
+        .decor-api-naga .member-name:not([class*="name-"]),
+        .decor-petir-neon .member-name:not([class*="name-"]),
+        .decor-emerald-venom .member-name:not([class*="name-"]),
+        .decor-debu-kosmik .member-name:not([class*="name-"]) {
+            color:#fff !important; -webkit-text-fill-color:#fff !important;
+            text-shadow:0 0 5px rgba(255,255,255,.28);
+        }
+        @keyframes premiumDecorationShine {
+            0%,8% { background-position:-130% 0; }
+            82% { background-position:130% 0; }
+            100% { background-position:130% 0; }
+        }
+        @keyframes sakuraPremiumGlow {
+            0%,100% { box-shadow:0 0 10px rgba(244,114,182,.38),0 0 18px rgba(236,72,153,.2),inset 0 0 16px rgba(255,255,255,.7); }
+            50% { box-shadow:0 0 20px rgba(244,114,182,.78),0 0 34px rgba(236,72,153,.48),inset 0 0 24px rgba(255,255,255,.92); }
+        }
+        @keyframes dragonPremiumGlow {
+            0%,100% { box-shadow:0 0 12px rgba(249,115,22,.42),0 0 20px rgba(239,68,68,.22),inset 0 0 18px rgba(251,146,60,.15); }
+            50% { box-shadow:0 0 22px rgba(249,115,22,.82),0 0 35px rgba(239,68,68,.48),inset 0 0 25px rgba(251,146,60,.28); }
+        }
+        @keyframes emeraldPremiumGlow {
+            0%,100% { box-shadow:0 0 12px rgba(52,211,153,.4),0 0 20px rgba(16,185,129,.22),inset 0 0 18px rgba(167,243,208,.13); }
+            50% { box-shadow:0 0 22px rgba(52,211,153,.82),0 0 35px rgba(16,185,129,.48),inset 0 0 25px rgba(167,243,208,.24); }
+        }
+        @keyframes galaxyPremiumGlow {
+            0%,100% { box-shadow:0 0 12px rgba(167,139,250,.4),0 0 20px rgba(124,58,237,.22),inset 0 0 18px rgba(192,132,252,.14); }
+            50% { box-shadow:0 0 22px rgba(167,139,250,.82),0 0 36px rgba(124,58,237,.5),inset 0 0 27px rgba(192,132,252,.27); }
+        }
+
+    
+        /* Shiny memakai pseudo-element motif yang sudah ada agar motif tidak hilang. */
+
+        /* Tiap hiasan punya motif khas, bukan cuma beda warna */
+        .member-card.decor-sakura-bersemi,
+        .card-box.decor-sakura-bersemi {
+            border: 3px solid #f9a8d4 !important;
+            outline: 1px solid rgba(255,255,255,.72);
+            outline-offset: -6px;
+        }
+        .decor-sakura-bersemi::after {
+            content: '✿' !important;
+            text-shadow:
+                18px -18px #f472b6,42px -4px #db2777,65px -23px #f9a8d4,
+                90px -10px #ec4899,118px -30px #fff,143px -6px #fbcfe8,
+                168px -22px #fb7185,194px -2px #f9a8d4,220px -28px #fff,
+                245px -10px #ec4899,270px -25px #fbcfe8,296px -3px #fb7185,
+                24px -45px #fff,75px -48px #f9a8d4,130px -55px #ec4899,
+                186px -46px #fff,240px -52px #f472b6,
+                35px -70px #fbcfe8,105px -75px #fff,175px -72px #fb7185,
+                250px -78px #f9a8d4,310px -65px #fff !important;
+            filter: drop-shadow(0 0 6px rgba(244,114,182,.95));
+        }
+        .member-card.decor-api-naga,
+        .card-box.decor-api-naga {
+            border: 3px solid #fb923c !important;
+            outline: 1px dashed rgba(254,215,170,.85);
+            outline-offset: -6px;
+        }
+        .decor-api-naga::after {
+            content: '♨' !important;
+            text-shadow:
+                22px -18px #fb923c,47px -4px #fde68a,73px -22px #f97316,
+                100px -8px #fdba74,128px -28px #fff7ed,154px -10px #ef4444,
+                181px -35px #fbbf24,207px -15px #fb923c,235px -30px #fff,
+                260px -6px #f97316,286px -26px #fbbf24,312px -12px #fdba74,
+                38px -48px #fbbf24,92px -58px #fb923c,148px -48px #fff7ed,
+                202px -60px #ef4444,258px -50px #fbbf24,
+                58px -76px #fff7ed,125px -82px #f97316,195px -76px #fbbf24,
+                275px -82px #fb923c,330px -70px #fff !important;
+            filter: drop-shadow(0 0 6px rgba(249,115,22,.98));
+        }
+        .member-card.decor-petir-neon,
+        .card-box.decor-petir-neon {
+            border: 3px solid #67e8f9 !important;
+            outline: 1px solid rgba(255,255,255,.8);
+            outline-offset: -6px;
+        }
+        .decor-petir-neon::after {
+            content: 'ϟ' !important;
+            text-shadow:
+                24px -19px #22d3ee,49px -3px #a5f3fc,76px -24px #60a5fa,
+                104px -9px #c4b5fd,130px -32px #fff,158px -13px #22d3ee,
+                185px -28px #60a5fa,211px -7px #a5f3fc,239px -34px #818cf8,
+                266px -14px #fff,293px -27px #22d3ee,320px -8px #60a5fa,
+                40px -52px #67e8f9,94px -60px #fff,150px -50px #a5f3fc,
+                207px -62px #38bdf8,263px -53px #c4b5fd,
+                65px -78px #fff,135px -85px #22d3ee,215px -80px #60a5fa,
+                285px -86px #a5f3fc,345px -75px #fff !important;
+            filter: drop-shadow(0 0 6px rgba(34,211,238,.98));
+        }
+        .member-card.decor-emerald-venom,
+        .card-box.decor-emerald-venom {
+            border: 3px solid #6ee7b7 !important;
+            outline: 1px dashed rgba(167,243,208,.85);
+            outline-offset: -6px;
+        }
+        .decor-emerald-venom::after {
+            content: '⬡' !important;
+            text-shadow:
+                22px -18px #6ee7b7,48px -5px #34d399,74px -24px #a7f3d0,
+                101px -9px #10b981,129px -31px #ecfdf5,156px -13px #6ee7b7,
+                183px -28px #34d399,210px -6px #d1fae5,238px -34px #10b981,
+                265px -12px #a7f3d0,292px -28px #ecfdf5,319px -8px #34d399,
+                39px -51px #a7f3d0,94px -60px #34d399,149px -49px #fff,
+                205px -62px #6ee7b7,261px -52px #10b981,
+                60px -77px #6ee7b7,130px -84px #ecfdf5,200px -77px #34d399,
+                275px -85px #a7f3d0,335px -73px #6ee7b7 !important;
+            filter: drop-shadow(0 0 6px rgba(52,211,153,.98));
+        }
+        .member-card.decor-debu-kosmik,
+        .card-box.decor-debu-kosmik {
+            border: 3px solid #c4b5fd !important;
+            outline: 1px dotted rgba(237,233,254,.9);
+            outline-offset: -6px;
+        }
+        .decor-debu-kosmik::after {
+            content: '✧' !important;
+            text-shadow:
+                20px -17px #c4b5fd,44px -5px #a78bfa,70px -25px #fff,
+                96px -8px #818cf8,123px -31px #e9d5ff,150px -11px #c4b5fd,
+                177px -28px #7c3aed,204px -6px #fff,231px -33px #a78bfa,
+                258px -12px #ddd6fe,285px -27px #818cf8,312px -8px #fff,
+                36px -50px #a78bfa,91px -59px #fff,147px -48px #c4b5fd,
+                202px -61px #7c3aed,258px -52px #e9d5ff,
+                55px -76px #fff,125px -82px #c4b5fd,195px -76px #a78bfa,
+                270px -84px #fff,330px -72px #818cf8 !important;
+            filter: drop-shadow(0 0 6px rgba(167,139,250,.98));
+        }
+
+        /* Border kotak statistik dibuat senada dan lebih jelas untuk tiap motif */
+        .member-card.decor-sakura-bersemi .stats-grid,
+        .card-box.decor-sakura-bersemi .stats-grid {
+            border: 2px solid rgba(244,114,182,.82) !important;
+            box-shadow: inset 0 0 12px rgba(255,255,255,.38), 0 0 8px rgba(244,114,182,.22) !important;
+        }
+        .member-card.decor-api-naga .stats-grid,
+        .card-box.decor-api-naga .stats-grid {
+            border: 2px solid rgba(251,146,60,.88) !important;
+            box-shadow: inset 0 0 12px rgba(251,146,60,.18), 0 0 8px rgba(249,115,22,.24) !important;
+        }
+        .member-card.decor-petir-neon .stats-grid,
+        .card-box.decor-petir-neon .stats-grid {
+            border: 2px solid rgba(103,232,249,.9) !important;
+            box-shadow: inset 0 0 12px rgba(34,211,238,.18), 0 0 8px rgba(34,211,238,.25) !important;
+        }
+        .member-card.decor-emerald-venom .stats-grid,
+        .card-box.decor-emerald-venom .stats-grid {
+            border: 2px solid rgba(110,231,183,.9) !important;
+            box-shadow: inset 0 0 12px rgba(52,211,153,.18), 0 0 8px rgba(52,211,153,.24) !important;
+        }
+        .member-card.decor-debu-kosmik .stats-grid,
+        .card-box.decor-debu-kosmik .stats-grid {
+            border: 2px solid rgba(196,181,253,.9) !important;
+            box-shadow: inset 0 0 12px rgba(167,139,250,.2), 0 0 8px rgba(167,139,250,.25) !important;
+        }
+
+
+        /* Shiny bergerak diagonal dari pojok kiri atas ke pojok kanan bawah. */
+        .rm-decoration-shine {
+            position:absolute !important; inset:0 !important;
+            width:100% !important; height:100% !important; z-index:2 !important;
+            display:block; pointer-events:none; overflow:hidden; border-radius:inherit;
+            background:linear-gradient(135deg,transparent 0%,transparent 38%,rgba(255,255,255,.12) 44%,rgba(255,255,255,.42) 49%,rgba(255,255,255,.18) 53%,transparent 60%,transparent 100%);
+            background-size:260% 260%; background-position:0% 0%;
+            animation:rmDecorationShineSweep 3.5s linear infinite;
+        }
+        .rm-decoration-particles {
+            position:absolute !important; inset:0 !important; z-index:2 !important;
+            display:block; pointer-events:none; overflow:hidden; border-radius:inherit;
+        }
+        .rm-decoration-particles span {
+            position:absolute; display:block; width:4px; height:4px; border-radius:50%;
+            background:var(--particle-color,#fff); box-shadow:0 0 6px 2px var(--particle-glow,rgba(255,255,255,.7));
+            opacity:.2; animation:rmDecorationParticleFloat var(--particle-speed,3.2s) ease-in-out infinite;
+            animation-delay:var(--particle-delay,0s);
+        }
+        .rm-decoration-particles span:nth-child(3n) { width:3px;height:3px; }
+        .rm-decoration-particles span:nth-child(4n) { width:5px;height:5px; }
+        @keyframes rmDecorationShineSweep {
+            /* Arah sapuan dibalik agar terlihat dari kiri atas menuju kanan bawah. */
+            0%,10% { background-position:100% 100%; opacity:0; }
+            18% { opacity:.58; }
+            82% { background-position:0% 0%; opacity:.52; }
+            92%,100% { background-position:0% 0%; opacity:0; }
+        }
+        /* Hilangkan cahaya putih di pojok kanan bawah tanpa mengubah partikel lain. */
+        .rm-decoration-particles span[style*="left: 90%"] {
+            text-shadow:none !important;
+            box-shadow:none !important;
+            filter:none !important;
+            opacity:0 !important;
+        }
+        @keyframes rmDecorationParticleFloat {
+            0%,100% { transform:translate3d(0,5px,0) scale(.55); opacity:.18; }
+            45% { transform:translate3d(4px,-7px,0) scale(1.15); opacity:.95; }
+            70% { transform:translate3d(-3px,-11px,0) scale(.8); opacity:.52; }
+        }
+
+        /* Ornamen kanan bawah memakai warna tema tanpa cahaya/glow putih. */
+        .decor-sakura-bersemi::after,
+        .decor-api-naga::after,
+        .decor-petir-neon::after,
+        .decor-emerald-venom::after,
+        .decor-debu-kosmik::after {
+            left:auto !important; right:10px !important; bottom:8px !important;
+            width:auto !important; height:auto !important; font-size:18px !important;
+            line-height:1 !important; text-shadow:none !important; filter:none !important;
+            background:transparent !important; border:0 !important; box-shadow:none !important;
+            opacity:.92 !important; animation:none !important;
+        }
+        .decor-sakura-bersemi::after { content:'✿  ❀' !important; color:#ec4899 !important; }
+        .decor-api-naga::after { content:'♨  ◆' !important; color:#fdba74 !important; }
+        .decor-petir-neon::after { content:'ϟ  ✦' !important; color:#22d3ee !important; }
+        .decor-emerald-venom::after { content:'❖  ✧' !important; color:#34d399 !important; }
+        .decor-debu-kosmik::after { content:'✦  ✧' !important; color:#a78bfa !important; }
+
+
+        /* Quest layout: rapikan tab dan pisahkan setiap misi dalam card tersendiri. */
+        #tab-quest .quest-subtabs {
+            display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px;
+            margin:16px 0; padding:6px; background:#eef2f7; border:1px solid #dbe3ee;
+            border-radius:14px;
+        }
+        #tab-quest .quest-subtab {
+            min-width:0; border:1px solid transparent; border-radius:10px;
+            padding:11px 8px; background:transparent; color:#475569;
+            font-size:.88rem; font-weight:700; line-height:1.35; cursor:pointer;
+            transition:background .18s ease, color .18s ease, box-shadow .18s ease;
+        }
+        #tab-quest .quest-subtab.active {
+            background:#fff; color:#1d4ed8; border-color:#cbdcfb;
+            box-shadow:0 2px 7px rgba(15,23,42,.08);
+        }
+        #tab-quest .quest-panel { display:none; }
+        #tab-quest .quest-panel.active { display:flex; flex-direction:column; gap:12px; }
+        #tab-quest .quest-top-note {
+            padding:11px 13px; border:1px solid #dbeafe; border-left:4px solid #3b82f6;
+            border-radius:10px; background:#eff6ff; color:#334155; font-size:.86rem;
+            line-height:1.55; overflow-wrap:anywhere;
+        }
+        #tab-quest .quest-card {
+            display:flex; flex-direction:column; gap:12px; min-width:0;
+            padding:15px; background:#fff; border:1px solid #dbe3ee; border-radius:14px;
+            box-shadow:0 3px 10px rgba(15,23,42,.045); overflow:hidden;
+        }
+        #tab-quest .quest-card-head {
+            display:flex; align-items:flex-start; gap:12px; min-width:0;
+        }
+        #tab-quest .quest-card-icon {
+            display:flex; align-items:center; justify-content:center; flex:0 0 44px;
+            width:44px; height:44px; border-radius:12px; background:#eff6ff;
+            border:1px solid #dbeafe; font-size:1.35rem;
+        }
+        #tab-quest .quest-card-head h4 {
+            margin:1px 0 6px; color:#0f172a; font-size:1rem; font-weight:800;
+            line-height:1.4; overflow-wrap:anywhere;
+        }
+        #tab-quest .quest-card-head p {
+            margin:0; color:#475569; font-size:.9rem; line-height:1.55;
+            overflow-wrap:anywhere;
+        }
+        #tab-quest .quest-reward {
+            display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px;
+            margin-top:9px; padding:6px 9px; border:1px solid #bbf7d0;
+            border-radius:8px; background:#f0fdf4; color:#166534;
+            font-size:.84rem; font-weight:750; line-height:1.4; overflow-wrap:anywhere;
+        }
+        #tab-quest .quest-progress {
+            height:8px; width:100%; overflow:hidden; border-radius:999px;
+            background:#e2e8f0; border:1px solid #e2e8f0;
+        }
+        #tab-quest .quest-progress span {
+            display:block; height:100%; border-radius:999px;
+            background:linear-gradient(90deg,#3b82f6,#6366f1); transition:width .25s ease;
+        }
+        #tab-quest .quest-card-foot {
+            display:flex; align-items:center; justify-content:space-between; gap:10px;
+            flex-wrap:wrap; padding-top:11px; border-top:1px solid #e2e8f0;
+        }
+        #tab-quest .quest-progress-label {
+            color:#64748b; font-size:.82rem; line-height:1.45; font-weight:600;
+            overflow-wrap:anywhere; flex:1 1 145px;
+        }
+        #tab-quest .quest-claim-btn {
+            flex:0 0 auto; max-width:100%; padding:9px 13px; border:0;
+            border-radius:9px; background:#2563eb; color:#fff; font-size:.84rem;
+            font-weight:750; line-height:1.35; cursor:pointer; white-space:normal;
+            transition:background .18s ease, opacity .18s ease;
+        }
+        #tab-quest .quest-claim-btn:not(:disabled):hover { background:#1d4ed8; }
+        #tab-quest .quest-claim-btn:disabled { background:#e2e8f0; color:#64748b; cursor:not-allowed; }
+        #tab-quest .quest-login-required {
+            padding:12px 14px; border:1px solid #fde68a; border-radius:10px;
+            background:#fffbeb; color:#92400e; font-size:.9rem; line-height:1.5;
+        }
+        @media (max-width:480px) {
+            #tab-quest .quest-subtabs { gap:5px; padding:4px; }
+            #tab-quest .quest-subtab { padding:9px 4px; font-size:.76rem; }
+            #tab-quest .quest-card { padding:12px; gap:10px; }
+            #tab-quest .quest-card-head { gap:9px; }
+            #tab-quest .quest-card-icon { flex-basis:38px; width:38px; height:38px; font-size:1.15rem; }
+            #tab-quest .quest-card-head h4 { font-size:.94rem; }
+            #tab-quest .quest-card-head p { font-size:.84rem; }
+            #tab-quest .quest-card-foot { align-items:stretch; }
+            #tab-quest .quest-claim-btn { width:100%; }
+        }
+
+
+        /* Upgrade efek 5 hiasan profil baru: glow berlapis, partikel, dan statistik berwarna */
+        .member-card.decor-phoenix-ember::after,.card-box.decor-phoenix-ember::after,
+        .member-card.decor-neon-matrix::after,.card-box.decor-neon-matrix::after,
+        .member-card.decor-frost-relic::after,.card-box.decor-frost-relic::after,
+        .member-card.decor-desert-mirage::after,.card-box.decor-desert-mirage::after,
+        .member-card.decor-deep-space::after,.card-box.decor-deep-space::after {
+            content:""; position:absolute; inset:0; z-index:1; pointer-events:none; border-radius:inherit;
+            background-size:100% 100%; animation:decorParticlesDrift 9s linear infinite;
+        }
+        .member-card.decor-phoenix-ember,.card-box.decor-phoenix-ember { box-shadow:inset 0 -18px 42px rgba(249,115,22,.38),inset 0 0 25px rgba(251,146,60,.16),0 0 22px rgba(249,115,22,.28),0 8px 24px rgba(127,29,29,.35) !important; }
+        .member-card.decor-phoenix-ember::after,.card-box.decor-phoenix-ember::after { background-image:radial-gradient(circle at 12% 72%,#fdba74 0 2px,transparent 3px),radial-gradient(circle at 27% 35%,#fb923c 0 1.5px,transparent 3px),radial-gradient(circle at 52% 82%,#fed7aa 0 2px,transparent 4px),radial-gradient(circle at 76% 28%,#f97316 0 2px,transparent 4px),radial-gradient(circle at 90% 70%,#fdba74 0 1.5px,transparent 3px),linear-gradient(115deg,transparent 25%,rgba(251,146,60,.13) 48%,transparent 65%); }
+        .member-card.decor-neon-matrix,.card-box.decor-neon-matrix { box-shadow:inset 0 0 32px rgba(34,197,94,.3),0 0 20px rgba(74,222,128,.24),0 8px 24px rgba(22,163,74,.22) !important; }
+        .member-card.decor-frost-relic,.card-box.decor-frost-relic { box-shadow:inset 0 0 32px rgba(255,255,255,.45),0 0 22px rgba(56,189,248,.3),0 8px 24px rgba(14,116,144,.25) !important; }
+        .member-card.decor-frost-relic::after,.card-box.decor-frost-relic::after { background-image:radial-gradient(circle at 14% 32%,#fff 0 2px,transparent 4px),radial-gradient(circle at 32% 75%,#bae6fd 0 1.5px,transparent 3px),radial-gradient(circle at 61% 20%,#fff 0 1.5px,transparent 3px),radial-gradient(circle at 86% 61%,#e0f2fe 0 2px,transparent 4px),linear-gradient(125deg,transparent 30%,rgba(255,255,255,.26) 48%,transparent 65%); }
+        .member-card.decor-desert-mirage,.card-box.decor-desert-mirage { box-shadow:inset 0 0 32px rgba(251,191,36,.28),0 0 24px rgba(245,158,11,.28),0 8px 24px rgba(146,64,14,.3) !important; }
+        .member-card.decor-desert-mirage::after,.card-box.decor-desert-mirage::after { background-image:radial-gradient(circle at 17% 65%,#fde68a 0 2px,transparent 4px),radial-gradient(circle at 37% 25%,#fef3c7 0 1.5px,transparent 3px),radial-gradient(circle at 69% 78%,#fbbf24 0 2px,transparent 4px),radial-gradient(circle at 88% 39%,#fff7ed 0 1.5px,transparent 3px),linear-gradient(110deg,transparent 25%,rgba(253,230,138,.2) 48%,transparent 68%); }
+        .member-card.decor-deep-space,.card-box.decor-deep-space { box-shadow:inset 0 0 34px rgba(167,139,250,.3),0 0 24px rgba(139,92,246,.25),0 8px 24px rgba(49,46,129,.3) !important; }
+        .member-card.decor-deep-space::after,.card-box.decor-deep-space::after { background-image:radial-gradient(circle at 12% 34%,#fff 0 1.5px,transparent 3px),radial-gradient(circle at 29% 72%,#c4b5fd 0 2px,transparent 4px),radial-gradient(circle at 58% 24%,#67e8f9 0 1.5px,transparent 3px),radial-gradient(circle at 73% 81%,#f0abfc 0 2px,transparent 4px),radial-gradient(circle at 91% 42%,#ddd6fe 0 1px,transparent 3px); }
+        @keyframes decorParticlesDrift { 0%{background-position:0 0,0 0,0 0,0 0,0 0,0 0} 50%{background-position:8px -5px,-5px 8px,7px 4px,-6px -7px,5px -4px,0 0} 100%{background-position:0 0,0 0,0 0,0 0,0 0,0 0} }
+        .member-card.decor-phoenix-ember .stats-grid,.card-box.decor-phoenix-ember .stats-grid { background:rgba(67,20,7,.55)!important; border:1px solid rgba(251,146,60,.65); border-radius:12px; padding:5px; }
+        .member-card.decor-neon-matrix .stats-grid,.card-box.decor-neon-matrix .stats-grid { background:rgba(2,44,24,.58)!important; border:1px solid rgba(74,222,128,.6); border-radius:12px; padding:5px; }
+        .member-card.decor-frost-relic .stats-grid,.card-box.decor-frost-relic .stats-grid { background:rgba(224,242,254,.55)!important; border:1px solid rgba(255,255,255,.8); border-radius:12px; padding:5px; }
+        .member-card.decor-desert-mirage .stats-grid,.card-box.decor-desert-mirage .stats-grid { background:rgba(69,26,3,.45)!important; border:1px solid rgba(253,230,138,.65); border-radius:12px; padding:5px; }
+        .member-card.decor-deep-space .stats-grid,.card-box.decor-deep-space .stats-grid { background:rgba(30,27,75,.58)!important; border:1px solid rgba(196,181,253,.55); border-radius:12px; padding:5px; }
+        .member-card.decor-phoenix-ember .stat-item,.card-box.decor-phoenix-ember .stat-item { background:rgba(249,115,22,.18); border:1px solid rgba(251,146,60,.24); border-radius:8px; }
+        .member-card.decor-neon-matrix .stat-item,.card-box.decor-neon-matrix .stat-item { background:rgba(34,197,94,.13); border:1px solid rgba(134,239,172,.22); border-radius:8px; }
+        .member-card.decor-frost-relic .stat-item,.card-box.decor-frost-relic .stat-item { background:rgba(255,255,255,.48); border:1px solid rgba(14,116,144,.16); border-radius:8px; }
+        .member-card.decor-desert-mirage .stat-item,.card-box.decor-desert-mirage .stat-item { background:rgba(251,191,36,.14); border:1px solid rgba(253,230,138,.22); border-radius:8px; }
+        .member-card.decor-deep-space .stat-item,.card-box.decor-deep-space .stat-item { background:rgba(139,92,246,.15); border:1px solid rgba(196,181,253,.23); border-radius:8px; }
+
+
+        /* Polish khusus lima hiasan profil baru: glow berlapis dan denyut cahaya lebih hidup. */
+        .member-card.decor-sakura-bersemi, .card-box.decor-sakura-bersemi { border-color:#f9a8d4 !important; box-shadow:0 0 9px rgba(244,114,182,.85),0 0 22px rgba(236,72,153,.65),0 0 42px rgba(244,114,182,.35),inset 0 0 22px rgba(255,255,255,.9),inset 0 0 42px rgba(249,168,212,.32) !important; animation:sakuraUltraGlow 3.2s ease-in-out infinite !important; }
+        .member-card.decor-api-naga, .card-box.decor-api-naga { border-color:#fdba74 !important; box-shadow:0 0 10px rgba(251,146,60,.9),0 0 25px rgba(249,115,22,.72),0 0 45px rgba(220,38,38,.38),inset 0 0 22px rgba(251,146,60,.3),inset 0 0 40px rgba(239,68,68,.16) !important; animation:dragonUltraGlow 2.6s ease-in-out infinite !important; }
+        .member-card.decor-petir-neon, .card-box.decor-petir-neon { border-color:#a5f3fc !important; box-shadow:0 0 10px rgba(103,232,249,.95),0 0 25px rgba(34,211,238,.8),0 0 46px rgba(59,130,246,.52),inset 0 0 22px rgba(96,165,250,.34),inset 0 0 42px rgba(34,211,238,.16) !important; animation:lightningUltraGlow 3.2s ease-in-out infinite !important; }
+        .member-card.decor-emerald-venom, .card-box.decor-emerald-venom { border-color:#a7f3d0 !important; box-shadow:0 0 10px rgba(110,231,183,.92),0 0 26px rgba(16,185,129,.76),0 0 44px rgba(5,150,105,.42),inset 0 0 22px rgba(167,243,208,.3),inset 0 0 40px rgba(16,185,129,.18) !important; animation:emeraldUltraGlow 2.9s ease-in-out infinite !important; }
+        .member-card.decor-debu-kosmik, .card-box.decor-debu-kosmik { border-color:#ddd6fe !important; box-shadow:0 0 10px rgba(221,214,254,.9),0 0 26px rgba(139,92,246,.78),0 0 48px rgba(124,58,237,.5),inset 0 0 24px rgba(196,181,253,.34),inset 0 0 44px rgba(124,58,237,.2) !important; animation:cosmicUltraGlow 3.4s ease-in-out infinite !important; }
+        @keyframes sakuraUltraGlow { 0%,100%{box-shadow:0 0 8px rgba(244,114,182,.65),0 0 20px rgba(236,72,153,.45),0 0 32px rgba(244,114,182,.25),inset 0 0 18px rgba(255,255,255,.8)}50%{box-shadow:0 0 13px rgba(249,168,212,1),0 0 32px rgba(236,72,153,.82),0 0 54px rgba(244,114,182,.48),inset 0 0 28px rgba(255,255,255,.98),inset 0 0 42px rgba(249,168,212,.38)} }
+        @keyframes dragonUltraGlow { 0%,100%{box-shadow:0 0 9px rgba(249,115,22,.7),0 0 20px rgba(220,38,38,.45),0 0 34px rgba(249,115,22,.25),inset 0 0 18px rgba(251,146,60,.18)}50%{box-shadow:0 0 15px rgba(253,186,116,1),0 0 34px rgba(249,115,22,.9),0 0 55px rgba(220,38,38,.55),inset 0 0 28px rgba(251,146,60,.38),inset 0 0 44px rgba(239,68,68,.22)} }
+        @keyframes lightningUltraGlow { 0%,100%{box-shadow:0 0 8px rgba(34,211,238,.65),0 0 20px rgba(59,130,246,.45),0 0 34px rgba(34,211,238,.25),inset 0 0 18px rgba(96,165,250,.18)}45%{box-shadow:0 0 16px rgba(165,243,252,1),0 0 35px rgba(34,211,238,.9),0 0 58px rgba(59,130,246,.58),inset 0 0 28px rgba(96,165,250,.38)}48%{box-shadow:0 0 22px rgba(255,255,255,.92),0 0 42px rgba(34,211,238,1),0 0 64px rgba(59,130,246,.72),inset 0 0 32px rgba(165,243,252,.48)}50%{box-shadow:0 0 8px rgba(34,211,238,.65),0 0 20px rgba(59,130,246,.45),0 0 34px rgba(34,211,238,.25),inset 0 0 18px rgba(96,165,250,.18)} }
+        @keyframes emeraldUltraGlow { 0%,100%{box-shadow:0 0 8px rgba(52,211,153,.65),0 0 20px rgba(16,185,129,.45),0 0 32px rgba(5,150,105,.25),inset 0 0 18px rgba(167,243,208,.18)}50%{box-shadow:0 0 14px rgba(167,243,208,1),0 0 33px rgba(16,185,129,.9),0 0 54px rgba(5,150,105,.52),inset 0 0 28px rgba(167,243,208,.38),inset 0 0 44px rgba(16,185,129,.22)} }
+        @keyframes cosmicUltraGlow { 0%,100%{box-shadow:0 0 8px rgba(167,139,250,.65),0 0 20px rgba(124,58,237,.45),0 0 34px rgba(124,58,237,.25),inset 0 0 18px rgba(196,181,253,.18)}50%{box-shadow:0 0 14px rgba(221,214,254,1),0 0 34px rgba(139,92,246,.9),0 0 58px rgba(124,58,237,.58),inset 0 0 30px rgba(196,181,253,.4),inset 0 0 46px rgba(124,58,237,.24)} }
+        .immortal-badge-row { display:flex; align-items:center; margin-top:5px; position:relative; z-index:3; }
+        .immortal-badge-row .immortal-badge { display:inline-flex; width:max-content; }
+
+
+        /* PERMINTAAN KHUSUS: Relik Es memakai teks putih untuk bio/statistik,
+           tetapi nama dan gelar tetap memakai warna item aslinya. */
+        .member-card.decor-frost-relic .member-bio,
+        .card-box.decor-frost-relic .member-bio,
+        .member-card.decor-frost-relic .stats-grid,
+        .card-box.decor-frost-relic .stats-grid,
+        .member-card.decor-frost-relic .stats-grid .stat-item,
+        .card-box.decor-frost-relic .stats-grid .stat-item,
+        .member-card.decor-frost-relic .stat-item,
+        .card-box.decor-frost-relic .stat-item {
+            color:#fff !important;
+            text-shadow:0 1px 3px rgba(3,37,65,.72), 0 0 7px rgba(255,255,255,.25);
+        }
+
+        /* Upgrade visual lima hiasan profil baru: aura berlapis, cahaya bergerak,
+           dan partikel berkilau. Nama dan gelar tidak disentuh oleh efek ini. */
+        .member-card.decor-phoenix-ember,.card-box.decor-phoenix-ember {
+            background-size:180% 180% !important;
+            box-shadow:inset 0 -18px 36px rgba(249,115,22,.48),inset 0 0 28px rgba(255,196,80,.16),
+                0 0 10px rgba(251,146,60,.75),0 0 26px rgba(239,68,68,.55),0 0 48px rgba(249,115,22,.28) !important;
+            animation:rmPhoenixAura 4s ease-in-out infinite;
+        }
+        .member-card.decor-neon-matrix,.card-box.decor-neon-matrix {
+            background-size:180% 180% !important;
+            box-shadow:inset 0 0 30px rgba(34,197,94,.36),0 0 10px rgba(74,222,128,.8),
+                0 0 26px rgba(34,197,94,.55),0 0 48px rgba(16,185,129,.25) !important;
+            animation:rmMatrixAura 3.2s ease-in-out infinite;
+        }
+        .member-card.decor-frost-relic,.card-box.decor-frost-relic {
+            background-size:220% 220% !important;
+            box-shadow:inset 0 0 28px rgba(255,255,255,.85),inset 0 0 52px rgba(56,189,248,.42),
+                0 0 10px rgba(186,230,253,.95),0 0 28px rgba(56,189,248,.65),0 0 52px rgba(14,165,233,.32) !important;
+            animation:rmFrostAura 4.5s ease-in-out infinite;
+        }
+        .member-card.decor-desert-mirage,.card-box.decor-desert-mirage {
+            background-size:220% 220% !important;
+            box-shadow:inset 0 0 28px rgba(253,230,138,.36),0 0 10px rgba(251,191,36,.8),
+                0 0 26px rgba(245,158,11,.52),0 0 48px rgba(217,119,6,.28) !important;
+            animation:rmDesertAura 4.2s ease-in-out infinite;
+        }
+        .member-card.decor-deep-space,.card-box.decor-deep-space {
+            background-size:180% 180% !important;
+            box-shadow:inset 0 0 32px rgba(167,139,250,.4),0 0 10px rgba(196,181,253,.8),
+                0 0 28px rgba(129,140,248,.6),0 0 52px rgba(91,33,182,.38) !important;
+            animation:rmSpaceAura 5s ease-in-out infinite;
+        }
+        .member-card.decor-phoenix-ember::after,.card-box.decor-phoenix-ember::after,
+        .member-card.decor-neon-matrix::after,.card-box.decor-neon-matrix::after,
+        .member-card.decor-frost-relic::after,.card-box.decor-frost-relic::after,
+        .member-card.decor-desert-mirage::after,.card-box.decor-desert-mirage::after,
+        .member-card.decor-deep-space::after,.card-box.decor-deep-space::after {
+            content:"✦  ·  ✧  ·  ✦  ·  ✧";
+            position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;
+            display:block; padding:0; letter-spacing:9px; font-size:13px; line-height:1;
+            background:
+                radial-gradient(circle at 8% 18%,currentColor 0 1px,transparent 3px),
+                radial-gradient(circle at 19% 72%,rgba(255,255,255,.98) 0 1.2px,transparent 3px),
+                radial-gradient(circle at 31% 36%,currentColor 0 1.5px,transparent 3.5px),
+                radial-gradient(circle at 43% 86%,rgba(255,255,255,.92) 0 1px,transparent 3px),
+                radial-gradient(circle at 57% 19%,currentColor 0 1.2px,transparent 3px),
+                radial-gradient(circle at 68% 62%,rgba(255,255,255,.95) 0 1.5px,transparent 3.5px),
+                radial-gradient(circle at 82% 31%,currentColor 0 1px,transparent 3px),
+                radial-gradient(circle at 94% 82%,rgba(255,255,255,.9) 0 1.2px,transparent 3px);
+            background-size:100% 100%;
+            background-position:center;
+            animation:rmRelicParticles 3.8s ease-in-out infinite;
+            text-shadow:0 0 6px currentColor,0 0 14px currentColor;
+            opacity:.96;
+        }
+        .member-card.decor-phoenix-ember::after,.card-box.decor-phoenix-ember::after { color:#ffb45e; }
+        .member-card.decor-neon-matrix::after,.card-box.decor-neon-matrix::after { color:#86efac; }
+        .member-card.decor-frost-relic::after,.card-box.decor-frost-relic::after { color:#e0f7ff; }
+        .member-card.decor-desert-mirage::after,.card-box.decor-desert-mirage::after { color:#fde68a; }
+        .member-card.decor-deep-space::after,.card-box.decor-deep-space::after { color:#ddd6fe; }
+        .member-card.decor-phoenix-ember::before,.card-box.decor-phoenix-ember::before,
+        .member-card.decor-neon-matrix::before,.card-box.decor-neon-matrix::before,
+        .member-card.decor-frost-relic::before,.card-box.decor-frost-relic::before,
+        .member-card.decor-desert-mirage::before,.card-box.decor-desert-mirage::before,
+        .member-card.decor-deep-space::before,.card-box.decor-deep-space::before {
+            animation:rmRelicSigilGlow 2.2s ease-in-out infinite;
+        }
+        @keyframes rmRelicParticles {
+            0%,100% { transform:translate3d(0,0,0); opacity:.58; }
+            25% { transform:translate3d(2px,-5px,0); opacity:1; }
+            55% { transform:translate3d(-2px,-10px,0); opacity:.78; }
+            80% { transform:translate3d(1px,-4px,0); opacity:1; }
+        }
+        @keyframes rmRelicSigilGlow {
+            0%,100% { filter:brightness(1) drop-shadow(0 0 3px currentColor); }
+            50% { filter:brightness(1.5) drop-shadow(0 0 10px currentColor); }
+        }
+        @keyframes rmPhoenixAura {
+            0%,100% { background-position:0% 45%; filter:brightness(1); }
+            50% { background-position:100% 55%; filter:brightness(1.13); }
+        }
+        @keyframes rmMatrixAura {
+            0%,100% { background-position:0% 50%; filter:brightness(1); }
+            50% { background-position:100% 50%; filter:brightness(1.16); }
+        }
+        @keyframes rmFrostAura {
+            0%,100% { background-position:0% 40%; filter:brightness(1); }
+            50% { background-position:100% 60%; filter:brightness(1.13); }
+        }
+        @keyframes rmDesertAura {
+            0%,100% { background-position:0% 50%; filter:brightness(1); }
+            50% { background-position:100% 50%; filter:brightness(1.15); }
+        }
+        @keyframes rmSpaceAura {
+            0%,100% { background-position:0% 45%; filter:brightness(1); }
+            50% { background-position:100% 55%; filter:brightness(1.14); }
+        }
+
+        /* Efek khusus: kilau berputar hanya di kotak statistik, bukan di background kartu. */
+        .member-card.decor-phoenix-ember .stats-grid,.card-box.decor-phoenix-ember .stats-grid,
+        .member-card.decor-neon-matrix .stats-grid,.card-box.decor-neon-matrix .stats-grid,
+        .member-card.decor-frost-relic .stats-grid,.card-box.decor-frost-relic .stats-grid,
+        .member-card.decor-desert-mirage .stats-grid,.card-box.decor-desert-mirage .stats-grid,
+        .member-card.decor-deep-space .stats-grid,.card-box.decor-deep-space .stats-grid {
+            position:relative; isolation:isolate; overflow:hidden;
+        }
+        .member-card.decor-phoenix-ember .stats-grid::before,.card-box.decor-phoenix-ember .stats-grid::before,
+        .member-card.decor-neon-matrix .stats-grid::before,.card-box.decor-neon-matrix .stats-grid::before,
+        .member-card.decor-frost-relic .stats-grid::before,.card-box.decor-frost-relic .stats-grid::before,
+        .member-card.decor-desert-mirage .stats-grid::before,.card-box.decor-desert-mirage .stats-grid::before,
+        .member-card.decor-deep-space .stats-grid::before,.card-box.decor-deep-space .stats-grid::before {
+            content:""; position:absolute; inset:-70%; z-index:0; pointer-events:none; border-radius:50%;
+            background:conic-gradient(from 0deg,transparent 0 65%,rgba(255,255,255,.04) 72%,rgba(255,255,255,.92) 77%,rgba(255,255,255,.12) 81%,transparent 88% 100%);
+            animation:rmStatsOrbit 3.1s linear infinite; opacity:.82;
+        }
+        .member-card.decor-phoenix-ember .stats-grid::before,.card-box.decor-phoenix-ember .stats-grid::before { filter:drop-shadow(0 0 7px #fb923c); }
+        .member-card.decor-neon-matrix .stats-grid::before,.card-box.decor-neon-matrix .stats-grid::before { filter:drop-shadow(0 0 7px #4ade80); }
+        .member-card.decor-frost-relic .stats-grid::before,.card-box.decor-frost-relic .stats-grid::before { filter:drop-shadow(0 0 7px #7dd3fc); }
+        .member-card.decor-desert-mirage .stats-grid::before,.card-box.decor-desert-mirage .stats-grid::before { filter:drop-shadow(0 0 7px #fbbf24); }
+        .member-card.decor-deep-space .stats-grid::before,.card-box.decor-deep-space .stats-grid::before { filter:drop-shadow(0 0 7px #a78bfa); }
+        .member-card.decor-phoenix-ember .stats-grid .stat-item,.card-box.decor-phoenix-ember .stats-grid .stat-item,
+        .member-card.decor-neon-matrix .stats-grid .stat-item,.card-box.decor-neon-matrix .stats-grid .stat-item,
+        .member-card.decor-frost-relic .stats-grid .stat-item,.card-box.decor-frost-relic .stats-grid .stat-item,
+        .member-card.decor-desert-mirage .stats-grid .stat-item,.card-box.decor-desert-mirage .stats-grid .stat-item,
+        .member-card.decor-deep-space .stats-grid .stat-item,.card-box.decor-deep-space .stats-grid .stat-item {
+            position:relative; z-index:1;
+        }
+        /* Tiap hiasan punya warna dan gerakan partikel tersendiri. */
+        .member-card.decor-phoenix-ember::after,.card-box.decor-phoenix-ember::after {
+            background-image:radial-gradient(circle at 10% 90%,#fff1c2 0 1.5px,transparent 4px),radial-gradient(circle at 24% 64%,#fb923c 0 2px,transparent 5px),radial-gradient(circle at 48% 82%,#f97316 0 1.5px,transparent 4px),radial-gradient(circle at 71% 60%,#ffedd5 0 1.5px,transparent 4px),radial-gradient(circle at 89% 86%,#ef4444 0 2px,transparent 5px);
+            animation:rmEmberRise 3.2s ease-in-out infinite alternate;
+        }
+        .member-card.decor-neon-matrix::after,.card-box.decor-neon-matrix::after {
+            background-image:radial-gradient(circle at 12% 20%,#bef264 0 1.5px,transparent 4px),radial-gradient(circle at 28% 75%,#4ade80 0 2px,transparent 5px),radial-gradient(circle at 52% 32%,#f7fee7 0 1px,transparent 3px),radial-gradient(circle at 76% 82%,#22c55e 0 2px,transparent 5px),radial-gradient(circle at 92% 45%,#86efac 0 1.5px,transparent 4px);
+            animation:rmMatrixFlicker 2.2s steps(2,end) infinite;
+        }
+        .member-card.decor-frost-relic::after,.card-box.decor-frost-relic::after {
+            background-image:radial-gradient(circle at 14% 30%,#fff 0 1.5px,transparent 4px),radial-gradient(circle at 34% 78%,#bae6fd 0 2px,transparent 5px),radial-gradient(circle at 54% 22%,#e0f2fe 0 1px,transparent 3px),radial-gradient(circle at 74% 68%,#fff 0 1.5px,transparent 4px),radial-gradient(circle at 91% 38%,#7dd3fc 0 2px,transparent 5px);
+            animation:rmFrostDrift 4.6s ease-in-out infinite alternate;
+        }
+        .member-card.decor-desert-mirage::after,.card-box.decor-desert-mirage::after {
+            background-image:radial-gradient(circle at 9% 70%,#fef3c7 0 1.5px,transparent 4px),radial-gradient(circle at 30% 34%,#fbbf24 0 2px,transparent 5px),radial-gradient(circle at 51% 84%,#fff7ae 0 1.5px,transparent 4px),radial-gradient(circle at 72% 25%,#d97706 0 2px,transparent 5px),radial-gradient(circle at 91% 63%,#fde68a 0 1.5px,transparent 4px);
+            animation:rmMirageWave 5s ease-in-out infinite alternate;
+        }
+        .member-card.decor-deep-space::after,.card-box.decor-deep-space::after {
+            background-image:radial-gradient(circle at 11% 24%,#fff 0 1.5px,transparent 4px),radial-gradient(circle at 29% 78%,#c4b5fd 0 2px,transparent 5px),radial-gradient(circle at 49% 38%,#e9d5ff 0 1px,transparent 3px),radial-gradient(circle at 73% 70%,#818cf8 0 2px,transparent 5px),radial-gradient(circle at 90% 18%,#ddd6fe 0 1.5px,transparent 4px);
+            animation:rmCosmicDrift 6s linear infinite;
+        }
+        @keyframes rmStatsOrbit { to { transform:rotate(360deg); } }
+        @keyframes rmEmberRise { from { transform:translateY(7px) scale(1); opacity:.65; } to { transform:translateY(-12px) scale(1.025); opacity:1; } }
+        @keyframes rmMatrixFlicker { 0%,100% { transform:translate(0,0); opacity:.65; } 50% { transform:translate(2px,-5px); opacity:1; } }
+        @keyframes rmFrostDrift { from { transform:translate(-2px,5px); opacity:.65; } to { transform:translate(3px,-8px); opacity:1; } }
+        @keyframes rmMirageWave { from { transform:translate(-3px,3px); opacity:.7; } to { transform:translate(4px,-6px); opacity:1; } }
+        @keyframes rmCosmicDrift { from { transform:translate(-3px,4px) rotate(0deg); opacity:.62; } to { transform:translate(4px,-7px) rotate(2deg); opacity:1; } }
+
+
+
+        /* Revisi partikel: hilangkan ornamen teks di bagian atas; partikel tersebar di area dalam kartu. */
+        .member-card.decor-phoenix-ember::after,.card-box.decor-phoenix-ember::after,
+        .member-card.decor-neon-matrix::after,.card-box.decor-neon-matrix::after,
+        .member-card.decor-frost-relic::after,.card-box.decor-frost-relic::after,
+        .member-card.decor-desert-mirage::after,.card-box.decor-desert-mirage::after,
+        .member-card.decor-deep-space::after,.card-box.decor-deep-space::after {
+            content:"" !important;
+            inset:24px 9px 9px !important;
+            padding:0 !important;
+            letter-spacing:0 !important;
+            font-size:0 !important;
+            line-height:0 !important;
+            background-size:100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100% !important;
+            background-position:0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0 !important;
+            opacity:.96;
+        }
+        .member-card.decor-phoenix-ember::after,.card-box.decor-phoenix-ember::after {
+            background-image:radial-gradient(circle at 8% 78%,#fff1c2 0 1.4px,transparent 4px),radial-gradient(circle at 17% 38%,#fb923c 0 2px,transparent 5px),radial-gradient(circle at 27% 63%,#f97316 0 1.4px,transparent 4px),radial-gradient(circle at 38% 22%,#ffedd5 0 1.5px,transparent 4px),radial-gradient(circle at 49% 81%,#ef4444 0 2px,transparent 5px),radial-gradient(circle at 59% 47%,#fdba74 0 1.5px,transparent 4px),radial-gradient(circle at 69% 70%,#fff7ed 0 1px,transparent 3px),radial-gradient(circle at 78% 28%,#f97316 0 2px,transparent 5px),radial-gradient(circle at 91% 57%,#ffedd5 0 1.5px,transparent 4px),radial-gradient(circle at 14% 15%,#fb923c 0 1px,transparent 3px),radial-gradient(circle at 57% 12%,#fff1c2 0 1px,transparent 3px),radial-gradient(circle at 86% 88%,#ef4444 0 1.5px,transparent 4px) !important;
+            animation:rmEmberInterior 4.1s ease-in-out infinite alternate !important;
+        }
+        /* Neon Matrix: angka biner tersebar, setiap karakter berganti 0/1 di lokasi tetap. */
+        .member-card.decor-neon-matrix::after,.card-box.decor-neon-matrix::after {
+            content:"0      1             0\A   1          0       1\A             1     0\A  0          1          0\A       1              0\A 1             0       1\A          0       1" !important;
+            white-space:pre !important;
+            inset:28px 12px 10px !important;
+            padding:0 !important;
+            font:700 12px/1.65 monospace !important;
+            letter-spacing:0 !important;
+            color:#86efac !important;
+            text-shadow:0 0 5px #22c55e,0 0 10px rgba(34,197,94,.7) !important;
+            background:none !important;
+            animation:rmMatrixBinarySwap 1.2s steps(1,end) infinite !important;
+            opacity:.92 !important;
+        }
+        @keyframes rmMatrixBinarySwap {
+            0%,49% { content:"0      1             0\A   1          0       1\A             1     0\A  0          1          0\A       1              0\A 1             0       1\A          0       1"; }
+            50%,100% { content:"1      0             1\A   0          1       0\A             0     1\A  1          0          1\A       0              1\A 0             1       0\A          1       0"; }
+        }
+        .member-card.decor-frost-relic::after,.card-box.decor-frost-relic::after {
+            background-image:radial-gradient(circle at 7% 43%,#fff 0 1.5px,transparent 4px),radial-gradient(circle at 18% 77%,#bae6fd 0 2px,transparent 5px),radial-gradient(circle at 29% 23%,#e0f2fe 0 1px,transparent 3px),radial-gradient(circle at 39% 61%,#fff 0 1.5px,transparent 4px),radial-gradient(circle at 51% 35%,#7dd3fc 0 2px,transparent 5px),radial-gradient(circle at 61% 82%,#e0f2fe 0 1px,transparent 3px),radial-gradient(circle at 72% 17%,#fff 0 1.5px,transparent 4px),radial-gradient(circle at 82% 56%,#bae6fd 0 2px,transparent 5px),radial-gradient(circle at 94% 31%,#fff 0 1.5px,transparent 4px),radial-gradient(circle at 43% 11%,#7dd3fc 0 1px,transparent 3px),radial-gradient(circle at 12% 12%,#fff 0 1px,transparent 3px),radial-gradient(circle at 88% 88%,#e0f2fe 0 1.5px,transparent 4px) !important;
+            animation:rmFrostInterior 5.3s ease-in-out infinite alternate !important;
+        }
+        .member-card.decor-desert-mirage::after,.card-box.decor-desert-mirage::after {
+            background-image:radial-gradient(circle at 8% 65%,#fef3c7 0 1.5px,transparent 4px),radial-gradient(circle at 18% 31%,#fbbf24 0 2px,transparent 5px),radial-gradient(circle at 29% 82%,#fff7ae 0 1.5px,transparent 4px),radial-gradient(circle at 39% 47%,#d97706 0 2px,transparent 5px),radial-gradient(circle at 48% 18%,#fde68a 0 1px,transparent 3px),radial-gradient(circle at 59% 68%,#fbbf24 0 1.5px,transparent 4px),radial-gradient(circle at 70% 35%,#fff7ae 0 2px,transparent 5px),radial-gradient(circle at 81% 76%,#d97706 0 1.5px,transparent 4px),radial-gradient(circle at 92% 49%,#fde68a 0 1px,transparent 3px),radial-gradient(circle at 33% 12%,#fff7ae 0 1px,transparent 3px),radial-gradient(circle at 67% 89%,#fbbf24 0 1px,transparent 3px),radial-gradient(circle at 96% 14%,#fef3c7 0 1.5px,transparent 4px) !important;
+            animation:rmDesertInterior 6.2s ease-in-out infinite alternate !important;
+        }
+        .member-card.decor-deep-space::after,.card-box.decor-deep-space::after {
+            background-image:radial-gradient(circle at 7% 24%,#fff 0 1.5px,transparent 4px),radial-gradient(circle at 17% 72%,#c4b5fd 0 2px,transparent 5px),radial-gradient(circle at 28% 44%,#e9d5ff 0 1px,transparent 3px),radial-gradient(circle at 38% 15%,#818cf8 0 2px,transparent 5px),radial-gradient(circle at 49% 78%,#ddd6fe 0 1.5px,transparent 4px),radial-gradient(circle at 59% 39%,#a78bfa 0 1px,transparent 3px),radial-gradient(circle at 70% 61%,#fff 0 2px,transparent 5px),radial-gradient(circle at 81% 27%,#c4b5fd 0 1.5px,transparent 4px),radial-gradient(circle at 93% 83%,#ddd6fe 0 2px,transparent 5px),radial-gradient(circle at 31% 91%,#fff 0 1px,transparent 3px),radial-gradient(circle at 65% 11%,#a78bfa 0 1.5px,transparent 4px),radial-gradient(circle at 90% 12%,#e9d5ff 0 1px,transparent 3px) !important;
+            animation:rmSpaceInterior 7s linear infinite !important;
+        }
+        /* Kilau berputar hanya pada bingkai/border kotak statistik, tidak menimpa isinya. */
+        .member-card.decor-phoenix-ember .stats-grid::before,.card-box.decor-phoenix-ember .stats-grid::before,
+        .member-card.decor-neon-matrix .stats-grid::before,.card-box.decor-neon-matrix .stats-grid::before,
+        .member-card.decor-frost-relic .stats-grid::before,.card-box.decor-frost-relic .stats-grid::before,
+        .member-card.decor-desert-mirage .stats-grid::before,.card-box.decor-desert-mirage .stats-grid::before,
+        .member-card.decor-deep-space .stats-grid::before,.card-box.decor-deep-space .stats-grid::before {
+            inset:0 !important; z-index:2 !important; border-radius:inherit !important;
+            padding:2px !important; background:conic-gradient(from 0deg,transparent 0 72%,rgba(255,255,255,.15) 76%,#fff 79%,rgba(255,255,255,.15) 82%,transparent 86% 100%) !important;
+            -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0) !important;
+            -webkit-mask-composite:xor !important;
+            mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0) !important;
+            mask-composite:exclude !important;
+            animation:rmStatsOrbit 3.1s linear infinite !important;
+            opacity:.95 !important; filter:none !important;
+        }
+        .member-card.decor-phoenix-ember .stats-grid::before,.card-box.decor-phoenix-ember .stats-grid::before { box-shadow:0 0 8px #fb923c; }
+        .member-card.decor-neon-matrix .stats-grid::before,.card-box.decor-neon-matrix .stats-grid::before { box-shadow:0 0 8px #4ade80; }
+        .member-card.decor-frost-relic .stats-grid::before,.card-box.decor-frost-relic .stats-grid::before { box-shadow:0 0 8px #7dd3fc; }
+        .member-card.decor-desert-mirage .stats-grid::before,.card-box.decor-desert-mirage .stats-grid::before { box-shadow:0 0 8px #fbbf24; }
+        .member-card.decor-deep-space .stats-grid::before,.card-box.decor-deep-space .stats-grid::before { box-shadow:0 0 8px #a78bfa; }
+        @keyframes rmEmberInterior { 0%{transform:translate(0,7px);opacity:.65;filter:brightness(.9)} 100%{transform:translate(2px,-7px);opacity:1;filter:brightness(1.35)} }
+        @keyframes rmMatrixInterior { 0%,100%{transform:translate(0,0);opacity:.7;filter:brightness(.9)} 50%{transform:translate(2px,-3px);opacity:1;filter:brightness(1.5)} }
+        @keyframes rmFrostInterior { 0%{transform:translate(-2px,5px);opacity:.65;filter:brightness(1)} 100%{transform:translate(3px,-5px);opacity:1;filter:brightness(1.4)} }
+        @keyframes rmDesertInterior { 0%{transform:translate(-2px,3px);opacity:.6;filter:brightness(.9)} 100%{transform:translate(2px,-4px);opacity:1;filter:brightness(1.45)} }
+        @keyframes rmSpaceInterior { 0%{transform:translate(-2px,4px);opacity:.7;filter:brightness(.9)} 50%{transform:translate(3px,-2px);opacity:1;filter:brightness(1.4)} 100%{transform:translate(-2px,4px);opacity:.7;filter:brightness(.9)} }
+
+
+        /* Lencana profil pilihan admin: kilau hanya berada pada lencana. */
+        .profile-badges-row { display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-top:5px; position:relative; z-index:4; }
+        .profile-badge { position:relative; display:inline-flex; align-items:center; gap:4px; width:max-content; max-width:100%; overflow:hidden; padding:3px 9px; border-radius:999px; font-size:.7rem; line-height:1.25; font-weight:800; color:#fff; isolation:isolate; }
+        .profile-badge::after { content:""; position:absolute; inset:-20% auto -20% -45%; width:32%; transform:skewX(-22deg); background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),rgba(255,255,255,.25),transparent); animation:profileBadgeShine 2.6s ease-in-out infinite; pointer-events:none; z-index:1; }
+        .profile-badge > span { position:relative; z-index:2; }
+        .profile-badge.immortal { background:linear-gradient(135deg,#b45309,#f59e0b,#78350f); border:1px solid #fde68a; box-shadow:0 0 9px rgba(245,158,11,.55); }
+        .profile-badge.demon-king { background:linear-gradient(135deg,#190712,#7f1d1d,#dc2626,#450a0a); border:1px solid #fca5a5; box-shadow:0 0 10px rgba(239,68,68,.65),inset 0 0 7px rgba(255,255,255,.2); }
+        .profile-badge.first-season { background:linear-gradient(135deg,#082f49,#2563eb,#7c3aed); border:1px solid #bfdbfe; box-shadow:0 0 10px rgba(96,165,250,.65),inset 0 0 7px rgba(255,255,255,.18); }
+        @keyframes profileBadgeShine { 0%,15% { left:-45%; opacity:0; } 30% { opacity:1; } 65% { left:125%; opacity:1; } 80%,100% { left:125%; opacity:0; } }
+
+        /* Retakan kristal berbeda warna untuk lima hiasan baru; partikel tetap di dalam kartu. */
+        .member-card.decor-phoenix-ember::before,.card-box.decor-phoenix-ember::before,
+        .member-card.decor-neon-matrix::before,.card-box.decor-neon-matrix::before,
+        .member-card.decor-frost-relic::before,.card-box.decor-frost-relic::before,
+        .member-card.decor-desert-mirage::before,.card-box.decor-desert-mirage::before,
+        .member-card.decor-deep-space::before,.card-box.decor-deep-space::before {
+            content:"" !important; inset:0 !important; right:auto !important; top:0 !important; z-index:1 !important;
+            display:block !important; opacity:.62; pointer-events:none; letter-spacing:normal !important;
+            background-repeat:no-repeat !important; background-size:100% 100% !important;
+            animation:rmDistinctCracks 3.4s ease-in-out infinite !important;
+        }
+        .member-card.decor-phoenix-ember::before,.card-box.decor-phoenix-ember::before {
+            background-image:linear-gradient(132deg,transparent 0 18%,rgba(255,210,150,.9) 18.3%,transparent 18.8% 100%),linear-gradient(42deg,transparent 0 39%,rgba(249,115,22,.95) 39.3%,transparent 39.8% 100%),linear-gradient(166deg,transparent 0 66%,rgba(255,237,213,.75) 66.3%,transparent 66.8% 100%),linear-gradient(78deg,transparent 0 83%,rgba(239,68,68,.9) 83.3%,transparent 83.8% 100%) !important;
+            filter:drop-shadow(0 0 3px #f97316);
+        }
+        .member-card.decor-neon-matrix::before,.card-box.decor-neon-matrix::before {
+            background-image:linear-gradient(115deg,transparent 0 23%,rgba(190,242,100,.95) 23.3%,transparent 23.8% 100%),linear-gradient(58deg,transparent 0 47%,rgba(74,222,128,.95) 47.3%,transparent 47.8% 100%),linear-gradient(170deg,transparent 0 71%,rgba(217,249,157,.8) 71.3%,transparent 71.8% 100%),linear-gradient(25deg,transparent 0 86%,rgba(34,197,94,.95) 86.3%,transparent 86.8% 100%) !important;
+            filter:drop-shadow(0 0 3px #22c55e);
+        }
+        .member-card.decor-frost-relic::before,.card-box.decor-frost-relic::before {
+            background-image:linear-gradient(128deg,transparent 0 20%,rgba(255,255,255,.98) 20.3%,transparent 20.8% 100%),linear-gradient(48deg,transparent 0 43%,rgba(125,211,252,.98) 43.3%,transparent 43.8% 100%),linear-gradient(163deg,transparent 0 63%,rgba(255,255,255,.92) 63.3%,transparent 63.8% 100%),linear-gradient(92deg,transparent 0 82%,rgba(186,230,253,.95) 82.3%,transparent 82.8% 100%) !important;
+            filter:drop-shadow(0 0 3px #7dd3fc);
+        }
+        .member-card.decor-desert-mirage::before,.card-box.decor-desert-mirage::before {
+            background-image:linear-gradient(138deg,transparent 0 16%,rgba(255,247,174,.95) 16.3%,transparent 16.8% 100%),linear-gradient(54deg,transparent 0 37%,rgba(251,191,36,.98) 37.3%,transparent 37.8% 100%),linear-gradient(168deg,transparent 0 69%,rgba(254,243,199,.9) 69.3%,transparent 69.8% 100%),linear-gradient(96deg,transparent 0 88%,rgba(217,119,6,.95) 88.3%,transparent 88.8% 100%) !important;
+            filter:drop-shadow(0 0 3px #fbbf24);
+        }
+        .member-card.decor-deep-space::before,.card-box.decor-deep-space::before {
+            background-image:linear-gradient(125deg,transparent 0 21%,rgba(221,214,254,.98) 21.3%,transparent 21.8% 100%),linear-gradient(45deg,transparent 0 42%,rgba(167,139,250,.98) 42.3%,transparent 42.8% 100%),linear-gradient(160deg,transparent 0 64%,rgba(103,232,249,.9) 64.3%,transparent 64.8% 100%),linear-gradient(88deg,transparent 0 79%,rgba(233,213,255,.95) 79.3%,transparent 79.8% 100%) !important;
+            filter:drop-shadow(0 0 3px #a78bfa);
+        }
+        @keyframes rmDistinctCracks { 0%,100% { opacity:.42; filter:brightness(.9) drop-shadow(0 0 2px currentColor); } 48% { opacity:.88; filter:brightness(1.45) drop-shadow(0 0 6px currentColor); } }
+        /* Nonaktifkan kilau berputar pada kotak statistik sesuai permintaan. */
+        .member-card.decor-phoenix-ember .stats-grid::before,.card-box.decor-phoenix-ember .stats-grid::before,
+        .member-card.decor-neon-matrix .stats-grid::before,.card-box.decor-neon-matrix .stats-grid::before,
+        .member-card.decor-frost-relic .stats-grid::before,.card-box.decor-frost-relic .stats-grid::before,
+        .member-card.decor-desert-mirage .stats-grid::before,.card-box.decor-desert-mirage .stats-grid::before,
+        .member-card.decor-deep-space .stats-grid::before,.card-box.decor-deep-space .stats-grid::before { content:none !important; display:none !important; animation:none !important; }
+
+        /* Revisi khusus: retakan Relik Es dibuat lebih redup agar tidak bertumpuk dengan teks/statistik. */
+        @keyframes rmFrostCrackShine {
+            0%,100% { opacity:.22; filter:brightness(.92) drop-shadow(0 0 1px rgba(125,211,252,.45)); }
+            50% { opacity:.38; filter:brightness(1.08) drop-shadow(0 0 2px rgba(125,211,252,.55)); }
+        }
+        /* Border kontras untuk beberapa hiasan profil baru, tetap terpisah dari glow luarnya. */
+        .member-card.decor-phoenix-ember,.card-box.decor-phoenix-ember { border:2px solid #ffedd5 !important; }
+        .member-card.decor-neon-matrix,.card-box.decor-neon-matrix { border:2px solid #bbf7d0 !important; }
+        .member-card.decor-desert-mirage,.card-box.decor-desert-mirage { border:2px solid #fef3c7 !important; }
+        .member-card.decor-deep-space,.card-box.decor-deep-space { border:2px solid #c4b5fd !important; }
+
+
+        /* Perbaikan khusus Neon Matrix: angka hacker terlihat, tanpa titik tepi, shiny diagonal. */
+        .member-card.decor-neon-matrix::after,
+        .card-box.decor-neon-matrix::after {
+            content:"1 0 1 1 0 1 0 0 1 0 1 1 0 1 0 1 0 0 1 1 0 1 0 1\A0 1 0 1 1 0 0 1 0 1 1 0 1 0 1 0 1 0 0 1 1 0 1\A1 1 0 0 1 0 1 1 0 1 0 0 1 0 1 1 0 1 0 1 0 1 0\A0 1 1 0 1 0 0 1 1 0 1 0 1 1 0 0 1 0 1 1 0 1 0" !important;
+            position:absolute !important; inset:0 !important; z-index:2 !important;
+            display:block !important; overflow:hidden !important; box-sizing:border-box !important;
+            padding:10px 8px !important; white-space:pre-wrap !important; overflow-wrap:anywhere !important;
+            color:rgba(74,222,128,.58) !important; font:700 11px/2.2 monospace !important;
+            letter-spacing:4px !important; text-shadow:0 0 5px rgba(34,197,94,.9),0 0 10px rgba(34,197,94,.45) !important;
+            background-image:linear-gradient(135deg,transparent 38%,rgba(220,252,231,0) 44%,rgba(220,252,231,.16) 47%,rgba(255,255,255,.82) 50%,rgba(134,239,172,.28) 53%,rgba(220,252,231,0) 58%,transparent 64%) !important;
+            background-repeat:no-repeat !important; background-size:250% 250% !important;
+            background-position:-120% -120% !important;
+            animation:neonMatrixDigitsShine 3.5s linear infinite !important;
+            opacity:1 !important; pointer-events:none !important;
+        }
+        @keyframes neonMatrixDigitsShine {
+            0% { background-position:-120% -120%; }
+            100% { background-position:120% 120%; }
+        }
+
+
+        .personal-subtabs{display:flex;gap:10px;margin:0 0 16px;padding:8px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:14px;}
+        .personal-subtab{flex:1;min-width:0;min-height:46px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:#334155;font-size:1.35rem;cursor:pointer;transition:background .15s,border-color .15s,transform .15s;}
+        .personal-subtab.active{background:#dbeafe;border-color:#3b82f6;color:#1d4ed8;box-shadow:0 2px 8px #2563eb20;}
+        .personal-subtab:active{transform:scale(.97)}
+        .personal-panel{display:none;}
+        .personal-panel.active{display:block;}
+        .personal-panel-actions{display:none;margin-top:18px;padding-top:14px;border-top:1px solid #e2e8f0;}
+        .personal-panel-actions.active{display:block;}
+        .loan-inline-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;padding:4px 0 12px;border-bottom:1px solid #e2e8f0;}
+        .loan-inline-heading h2{margin:0;color:#0f172a;font-size:1.2rem;}
+        .loan-inline-heading .btn-close{position:static;flex:0 0 auto;}
+
+
+        /* Kotak Nama menjadi lapisan luar; efek Hiasan Nama dan teks tetap berada di atasnya. */
+        .member-name-box-frame{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;padding:3px 5px;border:1px solid;border-radius:6px;box-sizing:border-box;line-height:1.15;white-space:nowrap;z-index:1;}
+        .member-name-box-frame > .member-name{position:relative;z-index:2;display:inline-block;padding:0;margin:0;}
+        .member-name-box-frame.name-box-royal{border-color:#fbbf24;background:linear-gradient(135deg,rgba(69,26,3,.28),rgba(146,64,14,.32) 52%,rgba(245,158,11,.25));box-shadow:0 0 6px rgba(245,158,11,.22);}
+        .member-name-box-frame.name-box-neon{border-color:#22d3ee;border-radius:4px;background:linear-gradient(135deg,rgba(8,47,73,.28),rgba(22,78,99,.3));box-shadow:0 0 6px rgba(34,211,238,.22);}
+        .member-name-box-frame.name-box-frost{border-color:#bae6fd;border-radius:8px;background:linear-gradient(135deg,rgba(12,74,110,.26),rgba(100,116,139,.3));box-shadow:inset 0 0 6px rgba(224,242,254,.12);}
+        .member-name-box-frame.name-box-nature{border-color:#86efac;background:linear-gradient(135deg,rgba(20,83,45,.27),rgba(22,101,52,.3) 55%,rgba(54,83,20,.26));}
+        .member-name-box-frame.name-box-cosmic{border-color:#c4b5fd;background:linear-gradient(135deg,rgba(30,27,75,.28),rgba(88,28,135,.3),rgba(49,46,129,.28));box-shadow:0 0 6px rgba(167,139,250,.22);}
+        @keyframes rmNewNameBoxShiny{0%{transform:translateX(-75%)}100%{transform:translateX(75%)}}
+
+
+/* Off-screen chat cards: skip unnecessary layout/paint while preserving their original style. */
+#chat-list > .chat-list-card {
+  content-visibility:auto;
+  contain-intrinsic-size:auto 140px;
+}
+/* Decorative animations pause only while a chat card is far outside the viewport. */
+#chat-list > .chat-list-card.chat-decoration-paused,
+#chat-list > .chat-list-card.chat-decoration-paused::before,
+#chat-list > .chat-list-card.chat-decoration-paused::after,
+#chat-list > .chat-list-card.chat-decoration-paused *,
+#chat-list > .chat-list-card.chat-decoration-paused *::before,
+#chat-list > .chat-list-card.chat-decoration-paused *::after {
+  animation-play-state:paused !important;
+}
