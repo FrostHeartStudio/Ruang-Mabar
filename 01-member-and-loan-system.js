@@ -44,8 +44,8 @@
             categories.style.display = view === 'categories' ? '' : 'none';
             player.style.display = view === 'player' ? '' : 'none';
             bank.style.display = view === 'bank' ? '' : 'none';
-            if (playerTitle) playerTitle.textContent = '🤝 Pinjaman Player';
-            if (bankTitle) bankTitle.textContent = '🏦 Pinjaman Bank';
+            if (playerTitle) playerTitle.textContent = '🤝 Penawaran Antar-Player';
+            if (bankTitle) bankTitle.textContent = '🏦 Pinjaman Bank Resmi';
             if (view === 'player' || view === 'bank') refreshLoanOffers();
         }
 
@@ -97,7 +97,7 @@
             const banks = Object.entries(globalBankLoanOffers);
             const players = Object.entries(globalPlayerLoanOffers);
             const allContracts = [...Object.values(globalPlayerLoanContracts), ...Object.values(globalBankLoanContracts)];
-            const hasActive = key => !!key && allContracts.some(c => (c.borrowerKey === key || c.lenderKey === key) && c.status === 'Aktif');
+            const hasActive = key => !!key && allContracts.some(c => (c.borrowerKey === key || c.lenderKey === key) && ['Aktif','Memproses jatuh tempo','Tidak mampu membayar'].includes(c.status));
             if (official) {
                 const cards = banks.map(([id,o]) => {
                     const contractEntry = Object.entries(globalBankLoanContracts).filter(([,c]) => c.offerId === id).sort((a,b) => (b[1].status === 'Aktif') - (a[1].status === 'Aktif') || Number(b[1].startedAt||0) - Number(a[1].startedAt||0))[0];
@@ -118,7 +118,7 @@
                     const isOwner = activeLoggedInMemberKey === o.memberKey;
                     const total = Math.ceil(Number(o.amount||0)*(1+Number(o.interest||0)/100));
                     const refund = isOwner ? `<button class="loan-refund-x" title="Refund penawaran" aria-label="Refund penawaran" onclick="refundPlayerLoanOffer('${id}')">×</button>` : '';
-                    return `<div class="loan-offer-card">${refund}<strong>💎 ${Number(o.amount||0).toLocaleString('id-ID')} Diamond</strong><div class="loan-meta">Status pinjaman: <b>Menunggu</b></div><div class="loan-meta">Bunga: ${Number(o.interest||0)}%</div><div class="loan-meta">Tenggang waktu: ${Number(o.days||5)} hari</div><div class="loan-meta">Total yang harus dibayar: 💎 ${total.toLocaleString('id-ID')}</div><div class="loan-meta">Pemberi: ${escapeLoanText(o.memberName||'Player')}</div><div class="loan-meta">Peminjam: -</div>${isOwner ? '' : `<button class="btn-action" onclick="borrowPlayerLoan('${id}')">🤝 Ajukan Pinjaman</button>`}</div>`;
+                    return `<div class="loan-offer-card">${refund}<strong>💎 ${Number(o.amount||0).toLocaleString('id-ID')} Diamond</strong><div class="loan-meta">Status pinjaman: <b>Menunggu</b></div><div class="loan-meta">Bunga: ${Number(o.interest||0)}%</div><div class="loan-meta">Tenggang waktu: ${Number(o.days||5)} hari</div><div class="loan-meta">Total yang harus dibayar: 💎 ${total.toLocaleString('id-ID')}</div><div class="loan-meta">Pemberi: ${escapeLoanText(o.memberName||'Player')}</div><div class="loan-meta">Peminjam: -</div>${isOwner || hasActive(activeLoggedInMemberKey) ? '' : `<button class="btn-action" onclick="borrowPlayerLoan('${id}')">🤝 Ajukan Pinjaman</button>`}</div>`;
                 }).join('');
                 const orphanContracts = Object.entries(globalPlayerLoanContracts).filter(([,c]) => !globalPlayerLoanOffers[c.offerId]).map(([id,c])=>renderLoanContractCard(id,c,'player')).join('');
                 player.innerHTML = cards + orphanContracts || '<p>Belum ada penawaran atau kontrak pinjaman player.</p>';
@@ -130,14 +130,22 @@
             const borrower = activeLoggedInMemberKey === c.borrowerKey;
             const isOwner = type === 'player' && activeLoggedInMemberKey === (offer?.memberKey || c.lenderKey);
             const total = Number(c.totalDue||0), paid = Number(c.paidAmount||0), remain = Math.max(0,total-paid);
-            const status = c.status === 'Aktif' && !borrower ? 'Pinjaman aktif' : (c.status||'Menunggu');
+            const status = c.status === 'Aktif' && !borrower ? 'Pinjaman aktif' : (c.status === 'Tidak mampu membayar' ? 'Belum Lunas' : (c.status||'Menunggu'));
             const title = `💎 ${Number(c.amount||0).toLocaleString('id-ID')} Diamond`;
             const payButton = borrower && c.status === 'Aktif' ? `<button class="btn-action" onclick="${type==='bank'?'payBankLoanInstallment':'payPlayerLoanInstallment'}('${id}')">💎 Bayar Cicilan</button>` : '';
             const refundButton = ''; // Refund hanya tersedia pada penawaran yang belum dipinjam.
             const dueLabel = type === 'player' && c.dueAt ? `<div class="loan-meta">Jatuh tempo: ${new Date(Number(c.dueAt)).toLocaleDateString('id-ID')}</div>` : '';
             const lenderName = type === 'bank' ? 'Bank Resmi' : (c.lenderName||'Player');
-            return `<div class="loan-offer-card">${refundButton}<strong>${title}</strong><div class="loan-meta">Status pinjaman: <b>${escapeLoanText(status)}</b></div><div class="loan-meta">Bunga: ${Number(c.interest||0)}%</div>${type === 'player' ? `<div class="loan-meta">Tenggang waktu: ${Number(c.days||5)} hari</div>` : ''}${dueLabel}<div class="loan-meta">Total yang harus dibayar: 💎 ${total.toLocaleString('id-ID')}</div><div class="loan-meta">Sisa utang: 💎 ${remain.toLocaleString('id-ID')}</div><div class="loan-meta">Pemberi: ${escapeLoanText(lenderName)}</div><div class="loan-meta">Peminjam: ${escapeLoanText(c.borrowerName||'-')}</div>${payButton}</div>`;
+            const history = Object.values(c.paymentHistory || {}).sort((a,b) => Number(b.at||0) - Number(a.at||0));
+            const activity = history.length ? `<div class="loan-activity"><b>Aktivitas pembayaran</b>${history.map(item => `<div class="loan-meta">${new Date(Number(item.at||0)).toLocaleString('id-ID')} · ${escapeLoanText(item.memberName||c.borrowerName||'Peminjam')} membayar 💎 ${Number(item.amount||0).toLocaleString('id-ID')}</div>`).join('')}</div>` : '<div class="loan-meta">Aktivitas pembayaran: Belum ada setoran.</div>';
+            const defaultActivity = c.status === 'Tidak mampu membayar' ? `<div class="loan-meta loan-default-note">Pinjaman melewati jatuh tempo dan dinyatakan belum lunas.</div>` : '';
+            return `<div class="loan-offer-card">${refundButton}<strong>${title}</strong><div class="loan-meta">Status pinjaman: <b>${escapeLoanText(status)}</b></div><div class="loan-meta">Bunga: ${Number(c.interest||0)}%</div>${type === 'player' ? `<div class="loan-meta">Tenggang waktu: ${Number(c.days||5)} hari</div>` : ''}${dueLabel}<div class="loan-meta">Total yang harus dibayar: 💎 ${total.toLocaleString('id-ID')}</div><div class="loan-meta">Sudah dibayar: 💎 ${paid.toLocaleString('id-ID')}</div><div class="loan-meta">Sisa utang: 💎 ${remain.toLocaleString('id-ID')}</div><div class="loan-meta">Pemberi: ${escapeLoanText(lenderName)}</div><div class="loan-meta">Peminjam: ${escapeLoanText(c.borrowerName||'-')}</div>${activity}${defaultActivity}${payButton}</div>`;
         }
+        function openPlayerLoanFaq() {
+            const dialog = document.getElementById('playerLoanFaqDialog');
+            if (dialog && !dialog.open) dialog.showModal();
+        }
+
         function openPlayerLoanEditor() {
             const key = activeLoggedInMemberKey;
             if (!key) return showResultPopup('Login dulu untuk mengatur penawaran pinjaman player.');
@@ -160,9 +168,33 @@
         }
         async function refundPlayerLoanOffer(id) { const o=globalPlayerLoanOffers[id]; if(!o || o.memberKey!==activeLoggedInMemberKey) return showResultPopup('Penawaran ini bukan milik akun kamu.'); const active=Object.values(globalPlayerLoanContracts).some(c=>c.offerId===id && c.status==='Aktif'); if(active) return showResultPopup('Refund tidak tersedia selama pinjaman aktif.'); if(!confirm('Refund penawaran ini? Diamond yang ditahan akan dikembalikan 100%.')) return; try { if(Number(o.escrowAmount||0)>0) { const ref=database.ref(`members/${o.memberKey}/diamond`); await ref.transaction(v=>Number(v||0)+Number(o.escrowAmount||0)); } await playerLoanOffersRef.child(id).remove(); await refreshLoanOffers(); showResultPopup('Refund 100% berhasil.'); } catch(e) { showResultPopup('Refund gagal diproses.'); } }
         async function processLoanDefaults() {
-            const now=Date.now(); const updates={};
-            for(const [id,c] of Object.entries(globalPlayerLoanContracts)) { if(c.status==='Aktif' && c.dueAt && now>=Number(c.dueAt)) { const remain=Math.max(0,Number(c.totalDue||0)-Number(c.paidAmount||0)); const lenderSnap=await database.ref(`members/${c.lenderKey}`).once('value'); const borrowerSnap=await database.ref(`members/${c.borrowerKey}`).once('value'); const lender=lenderSnap.val(), borrower=borrowerSnap.val(); if(!lender||!borrower) continue; updates[`members/${c.lenderKey}/diamond`]=Number(lender.diamond||0)+remain; updates[`members/${c.borrowerKey}/diamond`]=Number(borrower.diamond||0)-remain; updates[`loanPlayerContracts/${id}/status`]='Tidak mampu membayar'; updates[`loanPlayerContracts/${id}/defaultedAt`]=now; updates[`loanPlayerContracts/${id}/paidAmount`]=Number(c.paidAmount||0); } }
-            if(Object.keys(updates).length) await database.ref().update(updates);
+            const now = Date.now();
+            for (const [id, contract] of Object.entries(globalPlayerLoanContracts)) {
+                if (contract.status !== 'Aktif' || !contract.dueAt || now < Number(contract.dueAt)) continue;
+                const contractRef = playerLoanContractsRef.child(id);
+                const claim = await contractRef.child('status').transaction(current => current === 'Aktif' ? 'Memproses jatuh tempo' : undefined);
+                if (!claim.committed) continue;
+                try {
+                    const [lenderSnap, borrowerSnap] = await Promise.all([
+                        database.ref(`members/${contract.lenderKey}`).once('value'),
+                        database.ref(`members/${contract.borrowerKey}`).once('value')
+                    ]);
+                    const lender = lenderSnap.val();
+                    const borrower = borrowerSnap.val();
+                    if (!lender || !borrower) throw new Error('Akun pemberi atau peminjam tidak ditemukan.');
+                    const remain = Math.max(0, Number(contract.totalDue || 0) - Number(contract.paidAmount || 0));
+                    await database.ref().update({
+                        [`members/${contract.lenderKey}/diamond`]: Number(lender.diamond || 0) + remain,
+                        [`members/${contract.borrowerKey}/diamond`]: Number(borrower.diamond || 0) - remain,
+                        [`loanPlayerContracts/${id}/status`]: 'Tidak mampu membayar',
+                        [`loanPlayerContracts/${id}/defaultedAt`]: now,
+                        [`loanPlayerContracts/${id}/defaultedAmount`]: remain
+                    });
+                } catch (error) {
+                    await contractRef.child('status').transaction(current => current === 'Memproses jatuh tempo' ? 'Aktif' : current);
+                    throw error;
+                }
+            }
         }
         async function savePlayerLoanOffer() {
             const key = activeLoggedInMemberKey;
@@ -173,33 +205,38 @@
             const amount = Number(amountInput?.value);
             const interest = Number(interestInput?.value || 0);
             const days = Number(daysInput?.value || 5);
-            if (!Number.isSafeInteger(amount) || amount < 1 || !Number.isFinite(interest) || interest < 0 || interest > 1000 || !Number.isInteger(days) || days < 5 || days > 60) return showResultPopup('Nominal harus lebih dari 0, bunga harus 0–1000%, dan tenggang waktu harus 5–60 hari.');
+            if (!Number.isSafeInteger(amount) || amount < 1 || !Number.isFinite(interest) || interest < 0 || interest > 1000 || !Number.isInteger(days) || days < 5 || days > 30) return showResultPopup('Nominal harus lebih dari 0, bunga harus 0–1000%, dan tenggang waktu harus 5–30 hari.');
+            let escrowDeducted = false;
             try {
-                // Hanya pinjaman aktif sebagai PEMINJAM yang melarang membuat penawaran.
-                const activeAsBorrower = [...Object.values(globalPlayerLoanContracts), ...Object.values(globalBankLoanContracts)].some(c => c.borrowerKey === key && c.status === 'Aktif');
+                const activeAsBorrower = [...Object.values(globalPlayerLoanContracts), ...Object.values(globalBankLoanContracts)].some(c => c.borrowerKey === key && ['Aktif','Memproses jatuh tempo','Tidak mampu membayar'].includes(c.status));
                 if (activeAsBorrower) return showResultPopup('Kamu tidak bisa membuat penawaran saat masih memiliki pinjaman aktif sebagai peminjam.');
                 const memberSnap = await database.ref(`members/${key}`).once('value');
                 const freshMember = memberSnap.val() || {};
-                if (Number(freshMember.diamond || 0) < amount) return showResultPopup('Diamond kamu tidak cukup untuk menahan nominal pinjaman.');
                 const transaction = await database.ref(`members/${key}/diamond`).transaction(v => {
                     const current = Number(v || 0);
                     if (current < amount) return;
                     return current - amount;
                 });
                 if (!transaction.committed) return showResultPopup('Diamond kamu tidak cukup untuk menahan nominal pinjaman.');
-                // Selalu buat ID baru agar penawaran menunggu/aktif yang lama tidak menimpa penawaran baru.
+                escrowDeducted = true;
                 const offerId = playerLoanOffersRef.push().key;
                 const member = globalMembersData[key] || freshMember;
                 await playerLoanOffersRef.child(offerId).set({memberKey:key, memberName:member.nama || member.username || 'Player', amount, escrowAmount:amount, interest, days, createdAt:Date.now(), updatedAt:Date.now()});
+                escrowDeducted = false;
                 if (amountInput) amountInput.value = '';
                 if (interestInput) interestInput.value = '';
                 if (daysInput) daysInput.value = '5';
                 closeModal('playerLoanEditorModal');
-                await refreshLoanOffers();
-                showResultPopup('Penawaran pinjaman player berhasil dibuat. Form telah dikosongkan.');
+                try { await refreshLoanOffers(); }
+                catch (refreshError) { console.error('Penawaran tersimpan, tetapi daftar pinjaman gagal diperbarui:', refreshError); }
+                showResultPopup('Penawaran pinjaman player berhasil dibuat. Diamond telah ditahan dan form ditutup.');
             } catch(err) {
+                if (escrowDeducted) {
+                    try { await database.ref(`members/${key}/diamond`).transaction(v => Number(v || 0) + amount); }
+                    catch (rollbackError) { console.error('Pengembalian escrow gagal:', rollbackError); }
+                }
                 console.error('Gagal menyimpan penawaran pinjaman player:', err);
-                showResultPopup('Gagal menyimpan ketentuan pinjaman. Periksa koneksi lalu coba lagi.');
+                showResultPopup('Gagal menyimpan penawaran. Jika Diamond sempat ditahan, sistem akan mencoba mengembalikannya.');
             }
         }
 
@@ -208,27 +245,39 @@
             if (!borrowerKey) return showResultPopup('Login dulu untuk mengajukan pinjaman.');
             const offer = globalPlayerLoanOffers[offerId];
             if (!offer || offer.memberKey === borrowerKey) return showResultPopup('Penawaran pinjaman tidak valid.');
-            const active = [...Object.values(globalPlayerLoanContracts), ...Object.values(globalBankLoanContracts)].some(c => c.borrowerKey === borrowerKey && c.status === 'Aktif');
-            if (active) return showResultPopup('Selesaikan pinjaman aktif terlebih dahulu.');
+            const active = [...Object.values(globalPlayerLoanContracts), ...Object.values(globalBankLoanContracts)].some(c => (c.borrowerKey === borrowerKey || c.lenderKey === borrowerKey) && ['Aktif','Memproses jatuh tempo','Tidak mampu membayar'].includes(c.status));
+            if (active) return showResultPopup('Kamu harus menyelesaikan pinjaman aktif dan tidak boleh sedang menjadi pemberi pinjaman.');
             const lender = globalMembersData[offer.memberKey];
             const borrower = globalMembersData[borrowerKey];
             if (!lender || !borrower) return showResultPopup('Data akun pemberi atau peminjam tidak ditemukan.');
             const amount = Number(offer.amount || 0);
-            if (Number(offer.escrowAmount || 0) < amount) return showResultPopup('Diamond penawaran belum ditahan oleh sistem. Edit dan simpan ulang penawaran.');
+            if (!Number.isSafeInteger(amount) || amount < 1 || Number(offer.escrowAmount || 0) < amount) return showResultPopup('Diamond penawaran belum tersedia atau belum ditahan dengan benar.');
             if (!confirm(`Ambil pinjaman ${amount.toLocaleString('id-ID')} diamond dari ${offer.memberName}? Bunga ${offer.interest}% dan total pelunasan ${Math.ceil(amount*(1+Number(offer.interest||0)/100)).toLocaleString('id-ID')} diamond.`)) return;
+            let offerClaimed = false;
             try {
-                const fresh = await database.ref('members').once('value');
-                const members = fresh.val() || {};
-                const updates = {};
-                updates[`members/${borrowerKey}/diamond`] = Number(members[borrowerKey]?.diamond || 0) + amount;
-                updates[`loanPlayerOffers/${offerId}/escrowAmount`] = 0;
-                const contract = { offerId, lenderKey: offer.memberKey, lenderName: offer.memberName || 'Player', borrowerKey, borrowerName: borrower.nama || borrower.username || 'Player', amount, interest: Number(offer.interest || 0), totalDue: Math.ceil(amount * (1 + Number(offer.interest || 0) / 100)), paidAmount: 0, days: Number(offer.days || 5), startedAt: Date.now(), dueAt: Date.now() + Number(offer.days || 5) * 86400000, status: 'Aktif' };
+                const claim = await playerLoanOffersRef.child(offerId).child('escrowAmount').transaction(value => Number(value || 0) >= amount ? 0 : undefined);
+                if (!claim.committed) return showResultPopup('Penawaran sudah diambil atau tidak lagi tersedia.');
+                offerClaimed = true;
+                const freshBorrowerSnap = await database.ref(`members/${borrowerKey}`).once('value');
+                const freshBorrower = freshBorrowerSnap.val() || {};
+                const contract = { offerId, lenderKey: offer.memberKey, lenderName: offer.memberName || 'Player', borrowerKey, borrowerName: freshBorrower.nama || freshBorrower.username || 'Player', amount, interest: Number(offer.interest || 0), totalDue: Math.ceil(amount * (1 + Number(offer.interest || 0) / 100)), paidAmount: 0, days: Number(offer.days || 5), startedAt: Date.now(), dueAt: Date.now() + Number(offer.days || 5) * 86400000, status: 'Aktif' };
                 const contractRef = playerLoanContractsRef.push();
-                updates[`loanPlayerContracts/${contractRef.key}`] = contract;
-                await database.ref().update(updates);
-                await refreshLoanOffers();
-                showResultPopup('Pinjaman aktif. Diamond sudah dikirim ke akun peminjam.');
-            } catch (e) { showResultPopup('Pinjaman gagal diproses.'); }
+                await database.ref().update({
+                    [`members/${borrowerKey}/diamond`]: Number(freshBorrower.diamond || 0) + amount,
+                    [`loanPlayerContracts/${contractRef.key}`]: contract
+                });
+                offerClaimed = false;
+                try { await refreshLoanOffers(); }
+                catch (refreshError) { console.error('Pinjaman aktif, tetapi daftar gagal diperbarui:', refreshError); }
+                showResultPopup('Pinjaman aktif. Diamond sudah masuk ke dompet peminjam.');
+            } catch (e) {
+                if (offerClaimed) {
+                    try { await playerLoanOffersRef.child(offerId).child('escrowAmount').transaction(value => Number(value || 0) === 0 ? amount : value); }
+                    catch (rollbackError) { console.error('Pemulihan penawaran pinjaman gagal:', rollbackError); }
+                }
+                console.error('Pinjaman player gagal diproses:', e);
+                showResultPopup('Pinjaman gagal diproses. Penawaran akan dipulihkan jika transaksi belum selesai.');
+            }
         }
 
         async function payPlayerLoanInstallment(contractId) {
@@ -257,10 +306,13 @@
                 updates[`members/${borrowerKey}/diamond`] = Number(member.diamond || 0) - payment;
                 updates[`members/${c.lenderKey}/diamond`] = Number(lender.diamond || 0) + payment;
                 updates[`loanPlayerContracts/${contractId}/paidAmount`] = paidAmount;
-                updates[`loanPlayerContracts/${contractId}/lastPaymentAt`] = Date.now();
+                const paymentAt = Date.now();
+                const paymentId = playerLoanContractsRef.child(contractId).child('paymentHistory').push().key;
+                updates[`loanPlayerContracts/${contractId}/lastPaymentAt`] = paymentAt;
+                updates[`loanPlayerContracts/${contractId}/paymentHistory/${paymentId}`] = { amount: payment, at: paymentAt, memberName: member.nama || member.username || 'Peminjam' };
                 if (isPaid) { updates[`loanPlayerContracts/${contractId}/status`] = 'Lunas'; updates[`loanPlayerContracts/${contractId}/paidAt`] = Date.now(); }
                 await database.ref().update(updates);
-                await refreshLoanOffers();
+                try { await refreshLoanOffers(); } catch (refreshError) { console.error('Cicilan tersimpan, tetapi daftar pinjaman gagal diperbarui:', refreshError); }
                 showResultPopup(isPaid ? 'Pinjaman lunas! Card akan dihapus setelah 1 hari.' : `Cicilan berhasil dibayar. Sisa ${ (Number(c.totalDue||0)-paidAmount).toLocaleString('id-ID') } diamond.`);
             } catch (e) { showResultPopup('Pembayaran cicilan gagal.'); }
         }

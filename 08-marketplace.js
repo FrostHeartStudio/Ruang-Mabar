@@ -94,6 +94,10 @@
             if (searchText && !list.children.length) list.innerHTML = '<div class="empty-notice" style="padding:16px;">Barang tidak ditemukan.</div>';
         }
 
+        function openMarketplaceSellFaq() {
+            openModal('marketplaceSellFaqModal');
+        }
+
         function openSellItemModal() {
             if (!activeLoggedInMemberKey) {
                 alert("Silakan login terlebih dahulu di tab Personalisasi sebelum menjual item!");
@@ -276,45 +280,62 @@
                 switchTab('personal');
                 return;
             }
-
             const marketItem = globalMarketplaceData[marketKey];
             if (!marketItem) return;
             if (marketItem.sellerKey === activeLoggedInMemberKey) {
                 alert("Kamu tidak bisa membeli item yang kamu jual sendiri!");
                 return;
             }
-
-            const buyerKey = activeLoggedInMemberKey;
-            const buyer = globalMembersData[buyerKey];
+            const buyer = globalMembersData[activeLoggedInMemberKey];
             if (!buyer) return;
             const price = Number(marketItem.harga || 0);
             const stock = Math.floor(Number(marketItem.stok || 0));
+            if (stock < 1) { marketplaceRef.child(marketKey).remove(); alert("Stok item sudah habis."); return; }
+            if (Number(buyer.diamond || 0) < price) { alert("Diamond kamu tidak cukup!"); return; }
+            const itemName = hiasanNamaMap[marketItem.itemId] || hiasanProfilMap[marketItem.itemId] || hiasanDetailProfilMap[marketItem.itemId] || marketItem.itemId || 'Item';
+            openPurchaseConfirmation({
+                name: itemName,
+                type: marketItem.tipe || 'Hiasan',
+                description: `Item dari ${marketItem.sellerName || 'Member'} di Marketplace. Stok tersedia: ${stock}. Item akan masuk ke Inventory setelah pembayaran berhasil.`,
+                price
+            }, () => processMarketplacePurchase(marketKey));
+        }
+
+        async function processMarketplacePurchase(marketKey) {
+            const marketItem = globalMarketplaceData[marketKey];
+            const buyerKey = activeLoggedInMemberKey;
+            const buyer = buyerKey && globalMembersData[buyerKey];
+            if (!marketItem || !buyer) return;
+            if (marketItem.sellerKey === buyerKey) { alert("Kamu tidak bisa membeli item yang kamu jual sendiri!"); return; }
+            const price = Number(marketItem.harga || 0);
+            const stock = Math.floor(Number(marketItem.stok || 0));
             const buyerDiamond = Number(buyer.diamond || 0);
-            if (stock < 1) {
-                marketplaceRef.child(marketKey).remove();
-                alert("Stok item sudah habis.");
-                return;
-            }
-            if (buyerDiamond < price) {
-                alert("Diamond kamu tidak cukup!");
-                return;
-            }
+            if (stock < 1) { marketplaceRef.child(marketKey).remove(); alert("Stok item sudah habis."); return; }
+            if (buyerDiamond < price) { alert("Diamond kamu tidak cukup!"); return; }
 
             const sellerKey = marketItem.sellerKey;
             const seller = globalMembersData[sellerKey] || {};
             const updates = {};
             updates[`members/${buyerKey}/diamond`] = buyerDiamond - price;
             if (globalMembersData[sellerKey]) updates[`members/${sellerKey}/diamond`] = Number(seller.diamond || 0) + price;
-
             const type = marketItem.tipe;
             const field = type === 'Hiasan Nama' ? 'unlockedHiasan' : type === 'Hiasan Profil' ? 'unlockedHiasanProfil' : 'unlockedHiasanDetailProfil';
             const buyerUnlocked = getItemArray(buyer[field]);
             buyerUnlocked.push(marketItem.itemId);
             updates[`members/${buyerKey}/${field}`] = buyerUnlocked;
-
             if (stock <= 1) updates[`marketplace/${marketKey}`] = null;
             else updates[`marketplace/${marketKey}/stok`] = stock - 1;
 
-            alert("Berhasil membeli 1 item dari Marketplace!");
-            database.ref().update(updates).catch(err => alert('Pembelian gagal: ' + (err.message || 'coba lagi')));
+            try {
+                await database.ref().update(updates);
+                buyer.diamond = buyerDiamond - price;
+                if (globalMembersData[sellerKey]) seller.diamond = Number(seller.diamond || 0) + price;
+                refreshMarketplaceDiamond();
+                updateShopDiamondDisplay();
+                renderMarketplace();
+                alert("Berhasil membeli 1 item dari Marketplace!");
+            } catch (err) {
+                console.error('Pembelian Marketplace gagal:', err);
+                alert('Pembelian gagal: ' + (err.message || 'coba lagi'));
+            }
         }

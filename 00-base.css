@@ -1666,96 +1666,140 @@
         .decor-debu-kosmik::after { content:'✦  ✧' !important; color:#a78bfa !important; }
 
 
-        /* Quest layout: rapikan tab dan pisahkan setiap misi dalam card tersendiri. */
+        /* Quest: tampilan mandiri tanpa kotak pembungkus di belakang daftar misi. */
+        #tab-quest .quest-page {
+            width:100%; min-width:0; padding:2px 0 8px; background:transparent;
+            border:0; border-radius:0; box-shadow:none;
+        }
+        #tab-quest .quest-page-heading {
+            margin:0 0 18px; padding:2px 1px 0;
+        }
+        #tab-quest .quest-page-heading h3 {
+            display:flex; align-items:center; gap:9px; margin:0 0 7px;
+            color:#0f172a; font-size:clamp(1.16rem, 1.05rem + .45vw, 1.38rem);
+            font-weight:850; line-height:1.3; letter-spacing:-.025em;
+        }
+        #tab-quest .quest-page-heading p {
+            max-width:620px; margin:0; color:#64748b; font-size:.88rem;
+            line-height:1.6; overflow-wrap:anywhere;
+        }
         #tab-quest .quest-subtabs {
-            display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px;
-            margin:16px 0; padding:6px; background:#eef2f7; border:1px solid #dbe3ee;
-            border-radius:14px;
+            display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px;
+            margin:0 0 16px; padding:5px; background:#e9eff8;
+            border:1px solid #d9e3f1; border-radius:13px;
         }
         #tab-quest .quest-subtab {
-            min-width:0; border:1px solid transparent; border-radius:10px;
-            padding:11px 8px; background:transparent; color:#475569;
-            font-size:.88rem; font-weight:700; line-height:1.35; cursor:pointer;
-            transition:background .18s ease, color .18s ease, box-shadow .18s ease;
+            display:flex; align-items:center; justify-content:center; min-width:0;
+            min-height:42px; padding:9px 7px; border:1px solid transparent;
+            border-radius:9px; background:transparent; color:#526176;
+            font-size:.84rem; font-weight:750; line-height:1.3; cursor:pointer;
+            transition:background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
         }
+        #tab-quest .quest-subtab:hover:not(.active) { background:rgba(255,255,255,.65); color:#1e40af; }
         #tab-quest .quest-subtab.active {
-            background:#fff; color:#1d4ed8; border-color:#cbdcfb;
-            box-shadow:0 2px 7px rgba(15,23,42,.08);
+            background:#fff; color:#1d4ed8; border-color:#c9d9f4;
+            box-shadow:0 2px 6px rgba(30,64,175,.10);
         }
-        #tab-quest .quest-panel { display:none; }
-        #tab-quest .quest-panel.active { display:flex; flex-direction:column; gap:12px; }
+        #tab-quest .quest-panel { display:none; min-width:0; }
+        #tab-quest .quest-panel.active { display:flex; flex-direction:column; gap:11px; }
         #tab-quest .quest-top-note {
-            padding:11px 13px; border:1px solid #dbeafe; border-left:4px solid #3b82f6;
-            border-radius:10px; background:#eff6ff; color:#334155; font-size:.86rem;
+            padding:10px 13px; border:1px solid #dbeafe; border-left:3px solid #3b82f6;
+            border-radius:10px; background:#f5f9ff; color:#475569; font-size:.83rem;
             line-height:1.55; overflow-wrap:anywhere;
         }
         #tab-quest .quest-card {
-            display:flex; flex-direction:column; gap:12px; min-width:0;
-            padding:15px; background:#fff; border:1px solid #dbe3ee; border-radius:14px;
-            box-shadow:0 3px 10px rgba(15,23,42,.045); overflow:hidden;
+            display:flex; flex-direction:column; gap:13px; min-width:0;
+            padding:15px 16px; background:#fff; border:1px solid #dce5f0;
+            border-radius:14px; box-shadow:0 2px 8px rgba(15,23,42,.045);
+            overflow:hidden; transition:border-color .18s ease, box-shadow .18s ease;
+        }
+        #tab-quest .quest-card:hover {
+            border-color:#bfd3f4; box-shadow:0 4px 12px rgba(37,99,235,.075);
         }
         #tab-quest .quest-card-head {
-            display:flex; align-items:flex-start; gap:12px; min-width:0;
+            display:grid; grid-template-columns:46px minmax(0,1fr); align-items:start;
+            column-gap:12px; min-width:0;
         }
         #tab-quest .quest-card-icon {
-            display:flex; align-items:center; justify-content:center; flex:0 0 44px;
-            width:44px; height:44px; border-radius:12px; background:#eff6ff;
-            border:1px solid #dbeafe; font-size:1.35rem;
+            display:flex; align-items:center; justify-content:center;
+            width:46px; height:46px; margin-top:1px; border-radius:12px;
+            background:linear-gradient(145deg,#eff6ff,#e4edff);
+            border:1px solid #d5e4ff; color:#1d4ed8; font-size:1.35rem;
+            line-height:1; flex-shrink:0;
         }
+        #tab-quest .quest-card-copy { min-width:0; }
         #tab-quest .quest-card-head h4 {
-            margin:1px 0 6px; color:#0f172a; font-size:1rem; font-weight:800;
+            margin:0 0 5px; color:#172554; font-size:.98rem; font-weight:800;
             line-height:1.4; overflow-wrap:anywhere;
         }
         #tab-quest .quest-card-head p {
-            margin:0; color:#475569; font-size:.9rem; line-height:1.55;
+            margin:0; color:#58677d; font-size:.86rem; line-height:1.55;
             overflow-wrap:anywhere;
         }
         #tab-quest .quest-reward {
             display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px;
-            margin-top:9px; padding:6px 9px; border:1px solid #bbf7d0;
-            border-radius:8px; background:#f0fdf4; color:#166534;
-            font-size:.84rem; font-weight:750; line-height:1.4; overflow-wrap:anywhere;
+            max-width:100%; margin-top:9px; padding:5px 9px;
+            border:1px solid #c9ead7; border-radius:8px; background:#f0faf4;
+            color:#166534; font-size:.81rem; font-weight:750; line-height:1.4;
+            overflow-wrap:anywhere;
         }
         #tab-quest .quest-progress {
-            height:8px; width:100%; overflow:hidden; border-radius:999px;
-            background:#e2e8f0; border:1px solid #e2e8f0;
+            width:100%; height:7px; overflow:hidden; border-radius:999px;
+            background:#e8edf5; border:0;
         }
         #tab-quest .quest-progress span {
             display:block; height:100%; border-radius:999px;
-            background:linear-gradient(90deg,#3b82f6,#6366f1); transition:width .25s ease;
+            background:linear-gradient(90deg,#3b82f6,#6366f1);
+            transition:width .25s ease;
         }
         #tab-quest .quest-card-foot {
-            display:flex; align-items:center; justify-content:space-between; gap:10px;
-            flex-wrap:wrap; padding-top:11px; border-top:1px solid #e2e8f0;
+            display:flex; align-items:center; justify-content:space-between;
+            gap:10px; flex-wrap:wrap; padding-top:11px;
+            border-top:1px solid #edf1f6;
         }
         #tab-quest .quest-progress-label {
-            color:#64748b; font-size:.82rem; line-height:1.45; font-weight:600;
-            overflow-wrap:anywhere; flex:1 1 145px;
+            min-width:0; flex:1 1 145px; color:#64748b;
+            font-size:.81rem; line-height:1.45; font-weight:650;
+            overflow-wrap:anywhere;
         }
         #tab-quest .quest-claim-btn {
-            flex:0 0 auto; max-width:100%; padding:9px 13px; border:0;
-            border-radius:9px; background:#2563eb; color:#fff; font-size:.84rem;
-            font-weight:750; line-height:1.35; cursor:pointer; white-space:normal;
-            transition:background .18s ease, opacity .18s ease;
+            flex:0 0 auto; min-width:118px; max-width:100%; padding:9px 13px;
+            border:0; border-radius:9px; background:#2563eb; color:#fff;
+            font-size:.83rem; font-weight:750; line-height:1.35; cursor:pointer;
+            white-space:normal; transition:background .18s ease, opacity .18s ease;
         }
         #tab-quest .quest-claim-btn:not(:disabled):hover { background:#1d4ed8; }
-        #tab-quest .quest-claim-btn:disabled { background:#e2e8f0; color:#64748b; cursor:not-allowed; }
+        #tab-quest .quest-claim-btn:focus-visible,
+        #tab-quest .quest-subtab:focus-visible {
+            outline:3px solid rgba(59,130,246,.35); outline-offset:2px;
+        }
+        #tab-quest .quest-claim-btn:disabled {
+            background:#e8edf4; color:#64748b; cursor:not-allowed;
+        }
         #tab-quest .quest-login-required {
-            padding:12px 14px; border:1px solid #fde68a; border-radius:10px;
-            background:#fffbeb; color:#92400e; font-size:.9rem; line-height:1.5;
+            padding:12px 14px; border:1px solid #f5d98b; border-radius:10px;
+            background:#fffbeb; color:#92400e; font-size:.88rem; line-height:1.55;
         }
         @media (max-width:480px) {
-            #tab-quest .quest-subtabs { gap:5px; padding:4px; }
-            #tab-quest .quest-subtab { padding:9px 4px; font-size:.76rem; }
-            #tab-quest .quest-card { padding:12px; gap:10px; }
-            #tab-quest .quest-card-head { gap:9px; }
-            #tab-quest .quest-card-icon { flex-basis:38px; width:38px; height:38px; font-size:1.15rem; }
-            #tab-quest .quest-card-head h4 { font-size:.94rem; }
-            #tab-quest .quest-card-head p { font-size:.84rem; }
-            #tab-quest .quest-card-foot { align-items:stretch; }
-            #tab-quest .quest-claim-btn { width:100%; }
+            #tab-quest .quest-page-heading { margin-bottom:15px; }
+            #tab-quest .quest-page-heading p { font-size:.84rem; }
+            #tab-quest .quest-subtabs { gap:4px; padding:4px; margin-bottom:13px; }
+            #tab-quest .quest-subtab { min-height:40px; padding:8px 3px; font-size:.75rem; }
+            #tab-quest .quest-panel.active { gap:10px; }
+            #tab-quest .quest-card { gap:11px; padding:13px 12px; border-radius:12px; }
+            #tab-quest .quest-card-head { grid-template-columns:40px minmax(0,1fr); column-gap:10px; }
+            #tab-quest .quest-card-icon { width:40px; height:40px; font-size:1.18rem; border-radius:11px; }
+            #tab-quest .quest-card-head h4 { font-size:.92rem; margin-bottom:4px; }
+            #tab-quest .quest-card-head p { font-size:.82rem; line-height:1.5; }
+            #tab-quest .quest-reward { margin-top:8px; padding:5px 8px; font-size:.78rem; }
+            #tab-quest .quest-card-foot { align-items:center; gap:8px; }
+            #tab-quest .quest-progress-label { flex-basis:110px; font-size:.78rem; }
+            #tab-quest .quest-claim-btn { min-width:108px; padding:8px 10px; font-size:.79rem; }
         }
-
+        @media (prefers-reduced-motion:reduce) {
+            #tab-quest .quest-subtab, #tab-quest .quest-card, #tab-quest .quest-progress span,
+            #tab-quest .quest-claim-btn { transition:none; }
+        }
 
         /* Upgrade efek 5 hiasan profil baru: glow berlapis, partikel, dan statistik berwarna */
         .member-card.decor-phoenix-ember::after,.card-box.decor-phoenix-ember::after,

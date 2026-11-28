@@ -491,6 +491,7 @@
                 clearExpiredVipPlusState(expiredVipUpdates, memberKey, m);
                 if (Object.keys(expiredVipUpdates).length) database.ref().update(expiredVipUpdates);
                 activeLoggedInMemberKey = memberKey;
+                if (typeof renderChats === 'function') renderChats();
                 localStorage.setItem('ruangMabarLoggedInMemberKey', memberKey);
                 setMemberOnlineStatus(memberKey, true);
                 lastKnownMemberStars[memberKey] = Number(m.bintang || 0);
@@ -514,6 +515,7 @@
             if (questTimeTicker) { clearInterval(questTimeTicker); questTimeTicker = null; }
             localStorage.removeItem('ruangMabarLoggedInMemberKey');
             activeLoggedInMemberKey = null;
+            if (typeof renderChats === 'function') renderChats();
             updateShopDiamondDisplay();
             document.getElementById('member-login-box').style.display = 'block';
             document.getElementById('member-edit-box').style.display = 'none';

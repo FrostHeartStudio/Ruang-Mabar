@@ -75,6 +75,8 @@
                     decorClass += " decor-desert-mirage";
                 } else if (item.hiasanProfil === 'deep_space') {
                     decorClass += " decor-deep-space";
+                } else if (item.hiasanProfil === 'halloween_haunted_profile') {
+                    decorClass += " decor-halloween-haunted";
                 }
 
                 let nameClass = "member-name";

@@ -152,7 +152,7 @@
             'mint_shiny':'name-mint-shiny','sakura_shiny':'name-sakura-shiny',
             'sunset_shiny':'name-sunset-shiny','ocean_shiny':'name-ocean-shiny',
             'aurora_shiny':'name-aurora-shiny','obsidian_shiny':'name-obsidian-shiny',
-            'golden_sky_shiny':'name-golden-sky-shiny','void_shiny':'name-void-shiny'
+            'golden_sky_shiny':'name-golden-sky-shiny','void_shiny':'name-void-shiny','halloween_pumpkin_name':'name-halloween-pumpkin'
         };
         const hiasanDetailClassMap = {
             'vip_plus_gold':'profile-detail-vip-plus-card','detail_aurora':'profile-detail-aurora',
@@ -160,7 +160,7 @@
             'detail_prism':'profile-detail-prism','detail_galaxy':'profile-detail-galaxy',
             'detail_solar':'profile-detail-solar','detail_frost':'profile-detail-frost',
             'detail_emerald':'profile-detail-emerald','detail_crimson':'profile-detail-crimson',
-            'detail_celestial':'profile-detail-celestial'
+            'detail_celestial':'profile-detail-celestial','halloween_dark_detail':'profile-detail-halloween-haunt'
         };
 
         // PEMETAAN EMOJI KHUSUS UNTUK MASA AKTIF ITEM
@@ -297,6 +297,13 @@
         });
 
         window.addEventListener('popstate', (e) => {
+            const chatMessageInput = document.getElementById('inputChatMessage');
+            if (chatMessageInput && document.activeElement === chatMessageInput) {
+                chatMessageInput.blur();
+                history.pushState({ tab: getCurrentActiveTab(), modal: null }, '');
+                return;
+            }
+
             const openModals = document.querySelectorAll('.modal-overlay');
             let modalClosed = false;
             openModals.forEach(modal => {
@@ -473,7 +480,7 @@
         }
 
         function selectLeaderboardCategory(category) {
-            if (!['diamond','star','level'].includes(category)) return;
+            if (!['diamond','star','level','collection'].includes(category)) return;
             activeLeaderboardCategory = category;
             document.querySelectorAll('.leaderboard-category-btn').forEach(button => button.classList.toggle('active', button.dataset.leaderboardCategory === category));
             renderLeaderboard();
@@ -490,7 +497,16 @@
             const status = document.getElementById('leaderboard-status');
             const list = document.getElementById('leaderboard-list');
             const claimPanel = document.getElementById('leaderboard-claim-panel');
+            const collectionPanel = document.getElementById('leaderboard-collection-panel');
+            const footnote = document.getElementById('leaderboard-footnote');
             if (!status || !list || !claimPanel) return;
+            const showingCollection = activeLeaderboardCategory === 'collection';
+            if (collectionPanel) collectionPanel.hidden = !showingCollection;
+            claimPanel.hidden = showingCollection;
+            status.hidden = showingCollection;
+            list.hidden = showingCollection;
+            if (footnote) footnote.hidden = showingCollection;
+            if (showingCollection) return;
             const weekKey = cachedLeaderboardSnapshot && cachedLeaderboardSnapshot.weekKey || getLeaderboardWeekKey();
             const entries = makeLeaderboardCategory(activeLeaderboardCategory, globalMembersData || {});
             const selfKey = activeLoggedInMemberKey;

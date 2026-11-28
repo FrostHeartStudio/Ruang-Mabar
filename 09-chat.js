@@ -71,8 +71,10 @@
             const gelarHTML = (gelar && gelar !== '-') ? `<span class="${gelarClass}" style="font-size:0.7rem; padding:1px 8px;">${escapeHTML(gelar)}</span>` : '';
             const senderName = chat.sender || chat.nama || chat.username || 'Member';
 
+            const canDeleteOwnMessage = !!activeLoggedInMemberKey && chat.senderKey === activeLoggedInMemberKey;
             chatCard.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                ${canDeleteOwnMessage ? `<button type="button" class="chat-message-delete" onclick="deleteOwnChatMessage('${key}')" aria-label="Hapus pesan ini untuk semua member" title="Hapus pesan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg></button>` : ''}
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; padding-right:${canDeleteOwnMessage ? '28px' : '0'};">
                     ${renderPlayerNameWithBox(chat, nameClass, senderName, 'font-size:1.05rem;')}
                     ${gelarHTML}
                 </div>
@@ -98,7 +100,7 @@
 
             sortedKeys.forEach((key, index) => {
                 const chat = chatData[key] || {};
-                const signature = JSON.stringify(chat);
+                const signature = JSON.stringify({ ...chat, _viewer: activeLoggedInMemberKey || '' });
                 let card = existingCards.get(key);
                 if (!card || card.dataset.chatSignature !== signature) {
                     if (card) {
@@ -153,6 +155,65 @@
             playUiSound('click');
         });
 
+        function getChatDeleteDialog() {
+            let dialog = document.getElementById('chat-delete-confirm-dialog');
+            if (dialog) return dialog;
+
+            dialog = document.createElement('dialog');
+            dialog.id = 'chat-delete-confirm-dialog';
+            dialog.className = 'chat-delete-confirm-dialog';
+            dialog.setAttribute('aria-labelledby', 'chat-delete-confirm-title');
+            dialog.setAttribute('closedby', 'closerequest');
+            dialog.innerHTML = `
+                <h3 id="chat-delete-confirm-title">Hapus pesan?</h3>
+                <p>Pesan ini akan dihapus secara permanen untuk semua member.</p>
+                <form method="dialog" class="chat-delete-confirm-actions">
+                    <button type="submit" value="cancel" class="chat-delete-cancel" autofocus>Batal</button>
+                    <button type="submit" value="delete" class="chat-delete-accept">Hapus</button>
+                </form>`;
+            document.body.appendChild(dialog);
+            dialog.addEventListener('close', () => {
+                const result = dialog.returnValue;
+                dialog.returnValue = '';
+                const chatKey = dialog.dataset.chatKey;
+                dialog.dataset.chatKey = '';
+                if (result !== 'delete' || !chatKey) return;
+                const currentChat = globalChatsData && globalChatsData[chatKey];
+                if (!activeLoggedInMemberKey || !currentChat || currentChat.senderKey !== activeLoggedInMemberKey) return;
+                chatsRef.child(chatKey).remove()
+                    .catch(error => alert('Pesan gagal dihapus: ' + (error.message || 'Terjadi kesalahan.')));
+            });
+            return dialog;
+        }
+
+        function deleteOwnChatMessage(chatKey) {
+            if (!activeLoggedInMemberKey || !chatKey || !globalChatsData || !globalChatsData[chatKey]) return;
+            const chat = globalChatsData[chatKey];
+            if (chat.senderKey !== activeLoggedInMemberKey) {
+                alert('Kamu hanya bisa menghapus pesan milikmu sendiri.');
+                return;
+            }
+            const dialog = getChatDeleteDialog();
+            dialog.dataset.chatKey = chatKey;
+            if (typeof dialog.showModal === 'function') {
+                dialog.showModal();
+            } else if (window.confirm('Hapus pesan ini secara permanen untuk semua member?')) {
+                dialog.dataset.chatKey = '';
+                chatsRef.child(chatKey).remove()
+                    .catch(error => alert('Pesan gagal dihapus: ' + (error.message || 'Terjadi kesalahan.')));
+            } else {
+                dialog.dataset.chatKey = '';
+            }
+        }
+
+
+        const chatMessageInput = document.getElementById('inputChatMessage');
+        if (chatMessageInput) {
+            chatMessageInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') chatMessageInput.blur();
+            });
+        }
+
         function sendChatMessage() {
             playUiSound('chat');
             if (!activeLoggedInMemberKey) {
@@ -171,6 +232,7 @@
             const newChatRef = chatsRef.push();
             newChatRef.set({
                 sender: member.nama || 'Member',
+                senderKey: activeLoggedInMemberKey,
                 gelar: member.gelar || '-',
                 hiasanNama: member.hiasanNama || 'default',
                 kotakNama: member.kotakNama || 'default',

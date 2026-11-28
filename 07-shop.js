@@ -30,7 +30,42 @@
             });
         }
 
-        // Kategori Shop Resmi; setiap tipe tetap memakai data dan alur pembelian lama.
+// Konfirmasi pembelian bersama untuk Shop Resmi dan Marketplace.
+        let pendingPurchaseAction = null;
+        function openPurchaseConfirmation(details, onConfirm) {
+            const dialog = document.getElementById('purchaseConfirmDialog');
+            if (!dialog) return;
+            document.getElementById('purchaseConfirmName').textContent = details.name || 'Item';
+            document.getElementById('purchaseConfirmType').textContent = details.type || 'Item';
+            document.getElementById('purchaseConfirmDescription').textContent = details.description || 'Item akan ditambahkan ke Inventory setelah pembelian berhasil.';
+            document.getElementById('purchaseConfirmPrice').textContent = `💎 ${Number(details.price || 0).toLocaleString('id-ID')} Diamond`;
+            pendingPurchaseAction = onConfirm;
+            if (!dialog.dataset.confirmHandlerReady) {
+                dialog.addEventListener('close', () => {
+                    const action = pendingPurchaseAction;
+                    pendingPurchaseAction = null;
+                    if (dialog.returnValue === 'confirm' && typeof action === 'function') action();
+                });
+                dialog.dataset.confirmHandlerReady = '1';
+            }
+            if (!dialog.open) dialog.showModal();
+        }
+
+        function getShopPurchaseDescription(item) {
+            const duration = item.masaBerlakuTipe === 'custom'
+                ? `Masa berlaku ${Math.max(0, Number(item.masaBerlakuHari || 0))} hari.`
+                : 'Masa berlaku permanen.';
+            const benefit = item.tipe === 'VIP'
+                ? 'Termasuk gelar VIP Member, boost 2x, dan hiasan nama VIP.'
+                : item.tipe === 'VIP Plus'
+                    ? 'Termasuk gelar VIP Plus Member, boost 3x, serta hiasan VIP Plus.'
+                    : item.tipe === 'Tiket'
+                        ? `Berisi ${Math.max(1, Number(item.ticketCount || 1))} tiket.`
+                        : (item.deskripsi || item.keterangan || item.description || `Item ${item.tipe || 'khusus'} untuk koleksi dan personalisasi profil.`);
+            return `${benefit} ${duration}`;
+        }
+
+                // Kategori Shop Resmi; setiap tipe tetap memakai data dan alur pembelian lama.
         let activeShopCategory = 'hiasan-nama';
         const shopCategoryMeta = {
             'hiasan-nama': { label: 'Hiasan Nama', icon: '✨', description: 'Percantik nama profil dengan berbagai efek dan warna.', types: ['Hiasan Nama'] },
@@ -124,135 +159,147 @@
                 switchTab('personal');
                 return;
             }
-
             const item = globalShopData[shopKey];
             if (!item) return;
-
             const member = globalMembersData[activeLoggedInMemberKey];
+            if (!member) return;
             const tipePembelian = item.tipePembelian || 'bebas';
-            const purchasedShopItems = member.shopPurchases || {};
-            if (tipePembelian === '1x' && purchasedShopItems[shopKey]) {
+            if (tipePembelian === '1x' && member.shopPurchases && member.shopPurchases[shopKey]) {
                 alert(" Item ini hanya dapat dibeli 1x!");
                 return;
             }
-
-            const currentDiamond = Number(member.diamond || 0);
             const price = Number(item.harga || 0);
-            const stock = Number(item.stok || 0);
-
-            if (stock <= 0) {
+            if (Number(item.stok || 0) <= 0) {
                 alert(" Stok item ini sudah habis!");
                 return;
             }
-
-            if (currentDiamond < price) {
+            if (Number(member.diamond || 0) < price) {
                 alert(" Diamond kamu tidak cukup untuk membeli item ini!");
                 return;
             }
+            openPurchaseConfirmation({
+                name: item.nama || 'Item Shop',
+                type: item.tipe || 'Item',
+                description: getShopPurchaseDescription(item),
+                price
+            }, () => processShopItemPurchase(shopKey));
+        }
+
+        function processShopItemPurchase(shopKey) {
+            const item = globalShopData[shopKey];
+            const memberKey = activeLoggedInMemberKey;
+            const member = memberKey && globalMembersData[memberKey];
+            if (!item || !member) return;
+            const tipePembelian = item.tipePembelian || 'bebas';
+            if (tipePembelian === '1x' && member.shopPurchases && member.shopPurchases[shopKey]) {
+                alert(" Item ini hanya dapat dibeli 1x!");
+                return;
+            }
+            const currentDiamond = Number(member.diamond || 0);
+            const price = Number(item.harga || 0);
+            const stock = Number(item.stok || 0);
+            if (stock <= 0) { alert(" Stok item ini sudah habis!"); return; }
+            if (currentDiamond < price) { alert(" Diamond kamu tidak cukup untuk membeli item ini!"); return; }
 
             const updates = {};
-            updates[`members/${activeLoggedInMemberKey}/diamond`] = currentDiamond - price;
+            updates[`members/${memberKey}/diamond`] = currentDiamond - price;
             updates[`shop/${shopKey}/stok`] = stock - 1;
-            if (tipePembelian === '1x') {
-                updates[`members/${activeLoggedInMemberKey}/shopPurchases/${shopKey}`] = true;
-            }
-
+            if (tipePembelian === '1x') updates[`members/${memberKey}/shopPurchases/${shopKey}`] = true;
             const addedDays = (item.masaBerlakuTipe === 'custom') ? Number(item.masaBerlakuHari || 0) : 0;
 
             if (item.tipe === 'Hiasan Nama') {
                 let unlockedH = getItemArray(member.unlockedHiasan);
                 unlockedH.push(item.preset);
-                updates[`members/${activeLoggedInMemberKey}/unlockedHiasan`] = unlockedH;
-                updates[`members/${activeLoggedInMemberKey}/hiasanNama`] = item.preset;
-                if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, item.preset, addedDays);
-                else updates[`members/${activeLoggedInMemberKey}/itemExpiries/${item.preset}`] = null;
+                updates[`members/${memberKey}/unlockedHiasan`] = unlockedH;
+                updates[`members/${memberKey}/hiasanNama`] = item.preset;
+                if (addedDays > 0) stackItemDuration(updates, memberKey, member, item.preset, addedDays);
+                else updates[`members/${memberKey}/itemExpiries/${item.preset}`] = null;
             } else if (item.tipe === 'Hiasan Profil') {
                 let unlockedP = getItemArray(member.unlockedHiasanProfil);
                 unlockedP.push(item.preset);
-                updates[`members/${activeLoggedInMemberKey}/unlockedHiasanProfil`] = unlockedP;
-                updates[`members/${activeLoggedInMemberKey}/hiasanProfil`] = item.preset;
-                if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, item.preset, addedDays);
-                else updates[`members/${activeLoggedInMemberKey}/itemExpiries/${item.preset}`] = null;
+                updates[`members/${memberKey}/unlockedHiasanProfil`] = unlockedP;
+                updates[`members/${memberKey}/hiasanProfil`] = item.preset;
+                if (addedDays > 0) stackItemDuration(updates, memberKey, member, item.preset, addedDays);
+                else updates[`members/${memberKey}/itemExpiries/${item.preset}`] = null;
             } else if (item.tipe === 'Hiasan Detail Profil') {
                 let unlockedD = getItemArray(member.unlockedHiasanDetailProfil);
                 unlockedD.push(item.preset);
-                updates[`members/${activeLoggedInMemberKey}/unlockedHiasanDetailProfil`] = unlockedD;
-                updates[`members/${activeLoggedInMemberKey}/hiasanDetailProfil`] = item.preset;
-                if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, item.preset, addedDays);
-                else updates[`members/${activeLoggedInMemberKey}/itemExpiries/${item.preset}`] = null;
+                updates[`members/${memberKey}/unlockedHiasanDetailProfil`] = unlockedD;
+                updates[`members/${memberKey}/hiasanDetailProfil`] = item.preset;
+                if (addedDays > 0) stackItemDuration(updates, memberKey, member, item.preset, addedDays);
+                else updates[`members/${memberKey}/itemExpiries/${item.preset}`] = null;
             } else if (item.tipe === 'Kotak Nama') {
                 const unlockedBoxes = getItemArray(member.unlockedKotakNama);
                 unlockedBoxes.push(item.preset);
-                updates[`members/${activeLoggedInMemberKey}/unlockedKotakNama`] = unlockedBoxes;
-                updates[`members/${activeLoggedInMemberKey}/kotakNama`] = item.preset;
-                if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, item.preset, addedDays);
-                else updates[`members/${activeLoggedInMemberKey}/itemExpiries/${item.preset}`] = null;
+                updates[`members/${memberKey}/unlockedKotakNama`] = unlockedBoxes;
+                updates[`members/${memberKey}/kotakNama`] = item.preset;
+                if (addedDays > 0) stackItemDuration(updates, memberKey, member, item.preset, addedDays);
+                else updates[`members/${memberKey}/itemExpiries/${item.preset}`] = null;
             } else if (item.tipe === 'Gelar') {
                 let unlockedT = getItemArray(member.unlockedTitles);
                 unlockedT.push(item.gelarValue);
-                updates[`members/${activeLoggedInMemberKey}/unlockedTitles`] = unlockedT;
-                updates[`members/${activeLoggedInMemberKey}/gelar`] = item.gelarValue;
-                if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, item.gelarValue, addedDays);
-                else updates[`members/${activeLoggedInMemberKey}/itemExpiries/${item.gelarValue}`] = null;
+                updates[`members/${memberKey}/unlockedTitles`] = unlockedT;
+                updates[`members/${memberKey}/gelar`] = item.gelarValue;
+                if (addedDays > 0) stackItemDuration(updates, memberKey, member, item.gelarValue, addedDays);
+                else updates[`members/${memberKey}/itemExpiries/${item.gelarValue}`] = null;
             } else if (item.tipe === 'Tiket') {
                 const ticketCount = Math.max(1, Number(item.ticketCount || 1));
-                if (item.preset === 'super_ticket') {
-                    updates[`members/${activeLoggedInMemberKey}/superTickets`] = Number(member.superTickets || 0) + ticketCount;
-                } else {
-                    updates[`members/${activeLoggedInMemberKey}/playTickets`] = Number(member.playTickets || 0) + ticketCount;
-                }
+                if (item.preset === 'super_ticket') updates[`members/${memberKey}/superTickets`] = Number(member.superTickets || 0) + ticketCount;
+                else updates[`members/${memberKey}/playTickets`] = Number(member.playTickets || 0) + ticketCount;
             } else if (item.tipe === 'VIP Plus') {
-                updates[`members/${activeLoggedInMemberKey}/isVip`] = true;
-                updates[`members/${activeLoggedInMemberKey}/isVipPlus`] = true;
-                updates[`members/${activeLoggedInMemberKey}/boost`] = Math.max(Number(member.boost || 1), 3);
-
+                updates[`members/${memberKey}/isVip`] = true;
+                updates[`members/${memberKey}/isVipPlus`] = true;
+                updates[`members/${memberKey}/boost`] = Math.max(Number(member.boost || 1), 3);
                 let unlockedH = getItemArray(member.unlockedHiasan);
                 unlockedH.push('vip_plus_gold');
-                updates[`members/${activeLoggedInMemberKey}/unlockedHiasan`] = unlockedH;
-                updates[`members/${activeLoggedInMemberKey}/hiasanNama`] = 'vip_plus_gold';
-
+                updates[`members/${memberKey}/unlockedHiasan`] = unlockedH;
+                updates[`members/${memberKey}/hiasanNama`] = 'vip_plus_gold';
                 let unlockedP = getItemArray(member.unlockedHiasanProfil);
                 unlockedP.push('vip_plus_gold');
-                updates[`members/${activeLoggedInMemberKey}/unlockedHiasanProfil`] = unlockedP;
-                updates[`members/${activeLoggedInMemberKey}/hiasanProfil`] = 'vip_plus_gold';
-                updates[`members/${activeLoggedInMemberKey}/hiasanDetailProfil`] = 'vip_plus_gold';
-
+                updates[`members/${memberKey}/unlockedHiasanProfil`] = unlockedP;
+                updates[`members/${memberKey}/hiasanProfil`] = 'vip_plus_gold';
+                updates[`members/${memberKey}/hiasanDetailProfil`] = 'vip_plus_gold';
                 let unlockedT = getItemArray(member.unlockedTitles);
                 unlockedT.push('VIP Plus Member');
-                updates[`members/${activeLoggedInMemberKey}/unlockedTitles`] = unlockedT;
-                updates[`members/${activeLoggedInMemberKey}/gelar`] = 'VIP Plus Member';
-
-                if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, 'vip_plus_gold', addedDays);
-                else updates[`members/${activeLoggedInMemberKey}/itemExpiries/vip_plus_gold`] = null;
+                updates[`members/${memberKey}/unlockedTitles`] = unlockedT;
+                updates[`members/${memberKey}/gelar`] = 'VIP Plus Member';
+                if (addedDays > 0) stackItemDuration(updates, memberKey, member, 'vip_plus_gold', addedDays);
+                else updates[`members/${memberKey}/itemExpiries/vip_plus_gold`] = null;
             } else if (item.tipe === 'VIP') {
-                updates[`members/${activeLoggedInMemberKey}/isVip`] = true;
-                let boostVal = member.isVipPlus ? Math.max(Number(member.boost || 1), 3) : Math.max(Number(member.boost || 1), 2);
-                updates[`members/${activeLoggedInMemberKey}/boost`] = boostVal;
-
+                updates[`members/${memberKey}/isVip`] = true;
+                const boostVal = member.isVipPlus ? Math.max(Number(member.boost || 1), 3) : Math.max(Number(member.boost || 1), 2);
+                updates[`members/${memberKey}/boost`] = boostVal;
                 let unlockedH = getItemArray(member.unlockedHiasan);
                 unlockedH.push('vip_gold');
-                updates[`members/${activeLoggedInMemberKey}/unlockedHiasan`] = unlockedH;
-                updates[`members/${activeLoggedInMemberKey}/hiasanNama`] = 'vip_gold';
-
+                updates[`members/${memberKey}/unlockedHiasan`] = unlockedH;
+                updates[`members/${memberKey}/hiasanNama`] = 'vip_gold';
                 let unlockedT = getItemArray(member.unlockedTitles);
                 unlockedT.push('VIP Member');
-                updates[`members/${activeLoggedInMemberKey}/unlockedTitles`] = unlockedT;
-                updates[`members/${activeLoggedInMemberKey}/gelar`] = 'VIP Member';
-
-                if (addedDays > 0) stackItemDuration(updates, activeLoggedInMemberKey, member, 'vip_gold', addedDays);
-                else updates[`members/${activeLoggedInMemberKey}/itemExpiries/vip_gold`] = null;
+                updates[`members/${memberKey}/unlockedTitles`] = unlockedT;
+                updates[`members/${memberKey}/gelar`] = 'VIP Member';
+                if (addedDays > 0) stackItemDuration(updates, memberKey, member, 'vip_gold', addedDays);
+                else updates[`members/${memberKey}/itemExpiries/vip_gold`] = null;
             }
 
-            alert(`🎉 Berhasil membeli ${item.nama}!`);
             database.ref().update(updates).then(() => {
                 member.diamond = currentDiamond - price;
                 if (item.tipe === 'Tiket') {
                     const count = Math.max(1, Number(item.ticketCount || 1));
-                    if (item.preset === 'super_ticket') { member.superTickets = Number(member.superTickets || 0) + count; if (typeof updateSuperTicketLabel === 'function') updateSuperTicketLabel(); }
-                    else { member.playTickets = Number(member.playTickets || 0) + count; if (typeof updateMemberPersonalView === 'function') updateMemberPersonalView(member); }
+                    if (item.preset === 'super_ticket') {
+                        member.superTickets = Number(member.superTickets || 0) + count;
+                        if (typeof updateSuperTicketLabel === 'function') updateSuperTicketLabel();
+                    } else {
+                        member.playTickets = Number(member.playTickets || 0) + count;
+                        if (typeof updateMemberPersonalView === 'function') updateMemberPersonalView(member);
+                    }
                 }
                 recordQuestShopPurchase();
                 updateShopDiamondDisplay();
                 refreshMarketplaceDiamond();
-            }).catch(() => alert('Pembelian gagal disimpan. Coba lagi.'));
+                renderShop();
+                showResultPopup(`Berhasil membeli ${item.nama || 'item'}!`);
+            }).catch(err => {
+                console.error('Pembelian Shop gagal:', err);
+                showResultPopup('Pembelian gagal disimpan. Diamond dan item tidak berubah. Coba lagi.');
+            });
         }

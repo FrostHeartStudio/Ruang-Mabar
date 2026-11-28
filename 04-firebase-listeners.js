@@ -59,6 +59,7 @@
             const savedMemberKey = localStorage.getItem('ruangMabarLoggedInMemberKey');
             if (savedMemberKey && globalMembersData[savedMemberKey]) {
                 activeLoggedInMemberKey = savedMemberKey;
+                if (typeof renderChats === 'function') renderChats();
                 const savedMember = globalMembersData[savedMemberKey];
                 const savedSelect = document.getElementById('selectMemberSelf');
                 if (savedSelect) savedSelect.value = savedMember.nama || savedMember.username || '';
@@ -196,7 +197,7 @@
                 api_naga: { particle: '#fdba74', glow: 'rgba(249,115,22,.9)', symbols: ['•','✦','◆'] },
                 petir_neon: { particle: '#a5f3fc', glow: 'rgba(34,211,238,.9)', symbols: ['ϟ','✦','•'] },
                 emerald_venom: { particle: '#a7f3d0', glow: 'rgba(52,211,153,.9)', symbols: ['❖','✧','•'] },
-                debu_kosmik: { particle: '#ddd6fe', glow: 'rgba(167,139,250,.95)', symbols: ['✦','✧','·'] }
+                debu_kosmik: { particle: '#ddd6fe', glow: 'rgba(167,139,250,.95)', symbols: ['✦','✧','·'] },
             };
             const effect = effects[String(decorationId || '')] || (String(decorationId || '') === 'neon_matrix' ? { particle: '#ffffff', glow: 'rgba(255,255,255,.7)', symbols: [] } : null);
             const crackStyles = {

@@ -14,6 +14,14 @@
             const d = new Date(start + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 7); return d.toISOString().slice(0, 10);
         }
         function questDataFor(member) { return (member && member.questData) || {}; }
+        function questSafeInteger(value, fallback = 0) {
+            const number = Number(value);
+            return Number.isSafeInteger(number) && number >= 0 ? number : fallback;
+        }
+        function questEnsureObject(parent, key) {
+            if (!parent[key] || typeof parent[key] !== 'object' || Array.isArray(parent[key])) parent[key] = {};
+            return parent[key];
+        }
         function questDailyFor(member, date = questWibDate()) { return questDataFor(member).daily?.[date] || {}; }
         function questWeeklyFor(member, start = questWeekStart()) { return questDataFor(member).weekly?.[start] || {}; }
         function mutateQuestData(memberKey, mutator) {
@@ -28,7 +36,11 @@
         }
         function questMarkDaily(memberKey, field, value = true) {
             const date = questWibDate();
-            return mutateQuestData(memberKey, q => { q.daily = q.daily || {}; q.daily[date] = q.daily[date] || {}; q.daily[date][field] = value; });
+            return mutateQuestData(memberKey, q => {
+                const daily = questEnsureObject(q, 'daily');
+                const dailyEntry = questEnsureObject(daily, date);
+                dailyEntry[field] = value;
+            });
         }
         function recordQuestChat() {
             if (!activeLoggedInMemberKey) return;
@@ -38,36 +50,45 @@
             if (!activeLoggedInMemberKey) return;
             const date = questWibDate(), week = questWeekStart(date), key = activeLoggedInMemberKey;
             return mutateQuestData(key, q => {
-                q.daily = q.daily || {}; q.daily[date] = q.daily[date] || {};
-                q.daily[date].shopPurchases = Number(q.daily[date].shopPurchases || 0) + 1;
-                q.weekly = q.weekly || {}; q.weekly[week] = q.weekly[week] || {};
-                q.weekly[week].shopPurchases = Number(q.weekly[week].shopPurchases || 0) + 1;
+                const daily = questEnsureObject(q, 'daily');
+                const dailyEntry = questEnsureObject(daily, date);
+                dailyEntry.shopPurchases = questSafeInteger(dailyEntry.shopPurchases) + 1;
+                const weekly = questEnsureObject(q, 'weekly');
+                const weeklyEntry = questEnsureObject(weekly, week);
+                weeklyEntry.shopPurchases = questSafeInteger(weeklyEntry.shopPurchases) + 1;
             });
         }
         function recordQuestStars(amount) {
-            if (!activeLoggedInMemberKey || amount <= 0) return;
+            const safeAmount = Number(amount);
+            if (!activeLoggedInMemberKey || !Number.isSafeInteger(safeAmount) || safeAmount <= 0) return Promise.resolve();
             const date = questWibDate(), week = questWeekStart(date), key = activeLoggedInMemberKey;
             return mutateQuestData(key, q => {
-                q.daily = q.daily || {}; q.daily[date] = q.daily[date] || {};
-                q.daily[date].stars = Number(q.daily[date].stars || 0) + amount;
-                q.weekly = q.weekly || {}; q.weekly[week] = q.weekly[week] || {};
-                q.weekly[week].stars = Number(q.weekly[week].stars || 0) + amount;
+                const daily = questEnsureObject(q, 'daily');
+                const dailyEntry = questEnsureObject(daily, date);
+                const weekly = questEnsureObject(q, 'weekly');
+                const weeklyEntry = questEnsureObject(weekly, week);
+                const dailyStars = questSafeInteger(dailyEntry.stars);
+                const weeklyStars = questSafeInteger(weeklyEntry.stars);
+                if (Number.isSafeInteger(dailyStars + safeAmount)) dailyEntry.stars = dailyStars + safeAmount;
+                if (Number.isSafeInteger(weeklyStars + safeAmount)) weeklyEntry.stars = weeklyStars + safeAmount;
             });
         }
         function recordQuestLogin(memberKey) {
             const date = questWibDate(), week = questWeekStart(date);
             return mutateQuestData(memberKey, q => {
-                q.loginDates = q.loginDates || {};
-                if (!q.loginDates[date]) {
+                const loginDates = questEnsureObject(q, 'loginDates');
+                if (!loginDates[date]) {
                     const yesterday = new Date(date + 'T00:00:00Z'); yesterday.setUTCDate(yesterday.getUTCDate() - 1);
                     const y = yesterday.toISOString().slice(0, 10);
-                    q.loginStreak = q.lastLoginDate === y ? Number(q.loginStreak || 0) + 1 : 1;
-                    q.loginDates[date] = true;
+                    const previousStreak = questSafeInteger(q.loginStreak);
+                    q.loginStreak = q.lastLoginDate === y && Number.isSafeInteger(previousStreak + 1) ? previousStreak + 1 : 1;
+                    loginDates[date] = true;
                     q.lastLoginDate = date;
                 }
-                q.weekly = q.weekly || {}; q.weekly[week] = q.weekly[week] || {};
-                q.weekly[week].loginDates = q.weekly[week].loginDates || {};
-                q.weekly[week].loginDates[date] = true;
+                const weekly = questEnsureObject(q, 'weekly');
+                const weeklyEntry = questEnsureObject(weekly, week);
+                weeklyEntry.loginDates = questEnsureObject(weeklyEntry, 'loginDates');
+                weeklyEntry.loginDates[date] = true;
             });
         }
         function startQuestTimeTracking() {
@@ -77,10 +98,12 @@
                 if (!key || !globalMembersData[key]) return;
                 const date = questWibDate(), week = questWeekStart(date);
                 mutateQuestData(key, q => {
-                    q.daily = q.daily || {}; q.daily[date] = q.daily[date] || {};
-                    q.daily[date].minutes = Number(q.daily[date].minutes || 0) + 1;
-                    q.weekly = q.weekly || {}; q.weekly[week] = q.weekly[week] || {};
-                    q.weekly[week].minutes = Number(q.weekly[week].minutes || 0) + 1;
+                    const daily = questEnsureObject(q, 'daily');
+                    const dailyEntry = questEnsureObject(daily, date);
+                    dailyEntry.minutes = questSafeInteger(dailyEntry.minutes) + 1;
+                    const weekly = questEnsureObject(q, 'weekly');
+                    const weeklyEntry = questEnsureObject(weekly, week);
+                    weeklyEntry.minutes = questSafeInteger(weeklyEntry.minutes) + 1;
                 });
             }, 60000);
         }
@@ -90,11 +113,11 @@
             Object.keys(q.daily || {}).forEach(date => {
                 if (date < start || date >= end) return;
                 const d = q.daily[date] || {};
-                const dailyCoreDone = !!d.chatDone && Number(d.stars || 0) >= 10 && Number(d.shopPurchases || 0) >= 1 && Number(d.minutes || 0) >= 10;
+                const dailyCoreDone = !!d.chatDone && questSafeInteger(d.stars) >= 10 && questSafeInteger(d.shopPurchases) >= 1 && questSafeInteger(d.minutes) >= 10;
                 if (d.chatDone) count++;
-                if (Number(d.stars || 0) >= 10) count++;
-                if (Number(d.shopPurchases || 0) >= 1) count++;
-                if (Number(d.minutes || 0) >= 10) count++;
+                if (questSafeInteger(d.stars) >= 10) count++;
+                if (questSafeInteger(d.shopPurchases) >= 1) count++;
+                if (questSafeInteger(d.minutes) >= 10) count++;
                 if (dailyCoreDone) count++; // bonus penyelesaian semua misi harian
             });
             return count;
@@ -102,24 +125,27 @@
         function questDefinitions(member) {
             const date = questWibDate(), week = questWeekStart(date), d = questDailyFor(member, date), w = questWeeklyFor(member, week), q = questDataFor(member);
             const dailyCount = questDailyCompletedCount(member);
+            const dailyStars = questSafeInteger(d.stars), dailyPurchases = questSafeInteger(d.shopPurchases), dailyMinutes = questSafeInteger(d.minutes);
+            const weeklyStars = questSafeInteger(w.stars), weeklyPurchases = questSafeInteger(w.shopPurchases), weeklyMinutes = questSafeInteger(w.minutes);
+            const memberStars = questSafeInteger(member.bintang), loginStreak = questSafeInteger(q.loginStreak);
             const daily = [
                 {id:'chat', icon:'💬', title:'Aktif Mengobrol', desc:'Kirim minimal 1 chat yang berhasil terkirim hari ini.', reward:'50 diamond', done:!!d.chatDone, diamond:50},
-                {id:'stars', icon:'⭐', title:'Pemburu Bintang', desc:'Dapatkan 10 star baru hari ini.', reward:'200 diamond', progress:Number(d.stars||0), target:10, done:Number(d.stars||0)>=10, diamond:200},
-                {id:'shop', icon:'🛒', title:'Pembeli Aktif', desc:'Beli minimal 1 item dari Shop Resmi hari ini.', reward:'100 diamond', progress:Number(d.shopPurchases||0), target:1, done:Number(d.shopPurchases||0)>=1, diamond:100},
-                {id:'time', icon:'⏱️', title:'Luangkan Waktu', desc:'Berada di website selama 10 menit. Waktu dihitung saat login dan website terbuka, termasuk ketika AFK.', reward:'100 diamond', progress:Number(d.minutes||0), target:10, done:Number(d.minutes||0)>=10, diamond:100},
-                {id:'all', icon:'🎁', title:'Penyelesaian Harian', desc:'Selesaikan keempat misi harian lainnya hari ini.', reward:'200 diamond bonus', done:!!d.chatDone && Number(d.stars||0)>=10 && Number(d.shopPurchases||0)>=1 && Number(d.minutes||0)>=10, diamond:200}
+                {id:'stars', icon:'⭐', title:'Pemburu Bintang', desc:'Dapatkan 10 star baru hari ini.', reward:'200 diamond', progress:dailyStars, target:10, done:dailyStars>=10, diamond:200},
+                {id:'shop', icon:'🛒', title:'Pembeli Aktif', desc:'Beli minimal 1 item dari Shop Resmi hari ini.', reward:'100 diamond', progress:dailyPurchases, target:1, done:dailyPurchases>=1, diamond:100},
+                {id:'time', icon:'⏱️', title:'Luangkan Waktu', desc:'Berada di website selama 10 menit. Waktu dihitung saat login dan website terbuka, termasuk ketika AFK.', reward:'100 diamond', progress:dailyMinutes, target:10, done:dailyMinutes>=10, diamond:100},
+                {id:'all', icon:'🎁', title:'Penyelesaian Harian', desc:'Selesaikan keempat misi harian lainnya hari ini.', reward:'200 diamond bonus', done:!!d.chatDone && dailyStars>=10 && dailyPurchases>=1 && dailyMinutes>=10, diamond:200}
             ];
             const weekly = [
                 {id:'daily10', icon:'📋', title:'Rajin Menyelesaikan Misi', desc:'Selesaikan 10 misi harian selama minggu ini.', reward:'300 diamond', progress:dailyCount, target:10, done:dailyCount>=10, diamond:300},
-                {id:'stars50', icon:'⭐', title:'Kolektor Bintang', desc:'Dapatkan 50 star baru selama minggu ini.', reward:'500 diamond', progress:Number(w.stars||0), target:50, done:Number(w.stars||0)>=50, diamond:500},
-                {id:'time60', icon:'⏱️', title:'Betah di Ruang Mabar', desc:'Habiskan 60 menit di website selama minggu ini, termasuk waktu AFK saat login.', reward:'500 diamond', progress:Number(w.minutes||0), target:60, done:Number(w.minutes||0)>=60, diamond:500},
-                {id:'shop3', icon:'🛍️', title:'Pembeli Mingguan', desc:'Beli 3 item dari Shop Resmi selama minggu ini.', reward:'300 diamond', progress:Number(w.shopPurchases||0), target:3, done:Number(w.shopPurchases||0)>=3, diamond:300},
-                {id:'login7', icon:'📅', title:'Login 7 Hari', desc:'Login selama 7 hari berturut-turut.', reward:'500 diamond + 5 star', progress:Number(q.loginStreak||0), target:7, done:Number(q.loginStreak||0)>=7, diamond:500, star:5}
+                {id:'stars50', icon:'⭐', title:'Kolektor Bintang', desc:'Dapatkan 50 star baru selama minggu ini.', reward:'500 diamond', progress:weeklyStars, target:50, done:weeklyStars>=50, diamond:500},
+                {id:'time60', icon:'⏱️', title:'Betah di Ruang Mabar', desc:'Habiskan 60 menit di website selama minggu ini, termasuk waktu AFK saat login.', reward:'500 diamond', progress:weeklyMinutes, target:60, done:weeklyMinutes>=60, diamond:500},
+                {id:'shop3', icon:'🛍️', title:'Pembeli Mingguan', desc:'Beli 3 item dari Shop Resmi selama minggu ini.', reward:'300 diamond', progress:weeklyPurchases, target:3, done:weeklyPurchases>=3, diamond:300},
+                {id:'login7', icon:'📅', title:'Login 7 Hari', desc:'Login selama 7 hari berturut-turut.', reward:'500 diamond + 5 star', progress:loginStreak, target:7, done:loginStreak>=7, diamond:500, star:5}
             ];
             const special = [
-                {id:'star100', icon:'🥉', title:'Bintang 100', desc:'Capai total 100 star pada akunmu.', reward:'300 diamond', done:Number(member.bintang||0)>=100, diamond:300},
-                {id:'star250', icon:'🥈', title:'Bintang 250', desc:'Capai total 250 star pada akunmu.', reward:'500 diamond', done:Number(member.bintang||0)>=250, diamond:500},
-                {id:'star500', icon:'🥇', title:'Bintang 500', desc:'Capai total 500 star pada akunmu.', reward:'1.000 diamond', done:Number(member.bintang||0)>=500, diamond:1000}
+                {id:'star100', icon:'🥉', title:'Bintang 100', desc:'Capai total 100 star pada akunmu.', reward:'300 diamond', done:memberStars>=100, diamond:300},
+                {id:'star250', icon:'🥈', title:'Bintang 250', desc:'Capai total 250 star pada akunmu.', reward:'500 diamond', done:memberStars>=250, diamond:500},
+                {id:'star500', icon:'🥇', title:'Bintang 500', desc:'Capai total 500 star pada akunmu.', reward:'1.000 diamond', done:memberStars>=500, diamond:1000}
             ];
             const eventActive = !!(globalSeasonEventData && Number(globalSeasonEventData.startAt) <= Date.now() && Date.now() < Number(globalSeasonEventData.endsAt));
             const eventLoginToday = !!(q.loginDates && q.loginDates[date]);
@@ -132,12 +158,14 @@
             return {daily, weekly, special, date, week};
         }
         function renderQuestCard(type, quest, claimed, period) {
-            const hasProgress = Number.isFinite(quest.progress) && quest.target;
-            const progress = hasProgress ? Math.max(0, Math.min(100, quest.progress / quest.target * 100)) : (quest.done ? 100 : 0);
-            const progressText = hasProgress ? `${Math.min(quest.progress, quest.target)}/${quest.target}` : (quest.done ? 'Selesai' : 'Belum selesai');
+            const safeProgress = Number.isFinite(quest.progress) ? Math.max(0, quest.progress) : 0;
+            const safeTarget = Number.isSafeInteger(quest.target) && quest.target > 0 ? quest.target : 0;
+            const hasProgress = safeTarget > 0;
+            const progress = hasProgress ? Math.max(0, Math.min(100, safeProgress / safeTarget * 100)) : (quest.done ? 100 : 0);
+            const progressText = hasProgress ? `${Math.min(safeProgress, safeTarget)}/${safeTarget}` : (quest.done ? 'Selesai' : 'Belum selesai');
             const status = claimed ? 'Sudah diklaim' : (quest.done ? 'Siap diklaim' : 'Belum selesai');
             const disabled = claimed || !quest.done;
-            return `<div class="quest-card"><div class="quest-card-head"><div class="quest-card-icon">${quest.icon}</div><div style="flex:1;min-width:0"><h4>${quest.title}</h4><p>${quest.desc}</p><div class="quest-reward">🎁 Hadiah: ${quest.reward}</div></div></div>${hasProgress ? `<div class="quest-progress"><span style="width:${progress}%"></span></div>` : ''}<div class="quest-card-foot"><span class="quest-progress-label">${progressText} · ${status}</span><button class="quest-claim-btn" ${disabled?'disabled':''} onclick="claimQuest('${type}','${quest.id}','${period}')">${claimed?'Sudah diklaim':(quest.done?'Klaim hadiah':'Belum selesai')}</button></div></div>`;
+            return `<div class="quest-card"><div class="quest-card-head"><div class="quest-card-icon" aria-hidden="true">${quest.icon}</div><div class="quest-card-copy"><h4>${quest.title}</h4><p>${quest.desc}</p><div class="quest-reward">🎁 Hadiah: ${quest.reward}</div></div></div>${hasProgress ? `<div class="quest-progress"><span style="width:${progress}%"></span></div>` : ''}<div class="quest-card-foot"><span class="quest-progress-label">${progressText} · ${status}</span><button class="quest-claim-btn" ${disabled?'disabled':''} onclick="claimQuest('${type}','${quest.id}','${period}')">${claimed?'Sudah diklaim':(quest.done?'Klaim hadiah':'Belum selesai')}</button></div></div>`;
         }
         function renderQuestUI() {
             const required = document.getElementById('quest-login-required');
@@ -164,6 +192,10 @@
         function claimQuest(type, id, period) {
             const key = activeLoggedInMemberKey;
             if (!key) { alert('Silakan login terlebih dahulu!'); switchTab('personal'); return; }
+            if (!['daily', 'weekly', 'special'].includes(type) || typeof id !== 'string' || !id || typeof period !== 'string' || !period) {
+                alert('Data Quest tidak valid. Silakan muat ulang halaman.');
+                return;
+            }
             const memberRef = database.ref(`members/${key}`);
             memberRef.transaction(member => {
                 if (!member) return;
@@ -171,30 +203,47 @@
                 const q = member.questData;
                 let quest = null, claimedObj = null;
                 if (type === 'daily') {
-                    q.daily = q.daily || {}; q.daily[period] = q.daily[period] || {};
-                    const d=q.daily[period]; d.claimed=d.claimed||{}; claimedObj=d.claimed;
+                    const daily = questEnsureObject(q, 'daily');
+                    const d = questEnsureObject(daily, period);
+                    d.claimed = questEnsureObject(d, 'claimed'); claimedObj = d.claimed;
                     const fakeMember={...member,questData:q}; quest=questDefinitions(fakeMember).daily.find(x=>x.id===id);
                     if (period !== questWibDate()) return;
                 } else if (type === 'weekly') {
-                    q.weekly=q.weekly||{}; q.weekly[period]=q.weekly[period]||{};
-                    const w=q.weekly[period]; w.claimed=w.claimed||{}; claimedObj=w.claimed;
+                    const weekly = questEnsureObject(q, 'weekly');
+                    const w = questEnsureObject(weekly, period);
+                    w.claimed = questEnsureObject(w, 'claimed'); claimedObj = w.claimed;
                     const fakeMember={...member,questData:q}; quest=questDefinitions(fakeMember).weekly.find(x=>x.id===id);
                     if (period !== questWeekStart()) return;
                 } else if (type === 'special') {
                     quest=questDefinitions(member).special.find(x=>x.id===id);
                     if (id === 'playTicketDaily') {
                         if (period !== questWibDate() || !quest || !quest.done) return;
-                        q.playTicketClaims=q.playTicketClaims||{}; claimedObj=q.playTicketClaims;
+                        q.playTicketClaims = questEnsureObject(q, 'playTicketClaims'); claimedObj = q.playTicketClaims;
                     } else {
-                        q.specialClaimed=q.specialClaimed||{}; claimedObj=q.specialClaimed;
+                        q.specialClaimed = questEnsureObject(q, 'specialClaimed'); claimedObj = q.specialClaimed;
                     }
                 }
                 const claimKey = type === 'special' && id === 'playTicketDaily' ? period : id;
-                if (!quest || !quest.done || claimedObj[claimKey]) return;
-                claimedObj[claimKey]=true;
-                member.diamond=Number(member.diamond||0)+Number(quest.diamond||0);
-                if (quest.star) member.bintang=Number(member.bintang||0)+Number(quest.star);
-                if (quest.ticketReward) member.playTickets = Number(member.playTickets||0) + Number(quest.ticketReward);
+                if (!claimedObj || !quest || !quest.done || claimedObj[claimKey]) return;
+                const currentDiamond = Number(member.diamond ?? 0);
+                const diamondReward = questSafeInteger(quest.diamond);
+                if (!Number.isSafeInteger(currentDiamond) || currentDiamond < 0 || !Number.isSafeInteger(currentDiamond + diamondReward)) return;
+                let nextStars = null;
+                if (quest.star) {
+                    const currentStars = Number(member.bintang ?? 0), starReward = questSafeInteger(quest.star);
+                    if (!Number.isSafeInteger(currentStars) || currentStars < 0 || !Number.isSafeInteger(currentStars + starReward)) return;
+                    nextStars = currentStars + starReward;
+                }
+                let nextTickets = null;
+                if (quest.ticketReward) {
+                    const currentTickets = Number(member.playTickets ?? 0), ticketReward = questSafeInteger(quest.ticketReward);
+                    if (!Number.isSafeInteger(currentTickets) || currentTickets < 0 || !Number.isSafeInteger(currentTickets + ticketReward)) return;
+                    nextTickets = currentTickets + ticketReward;
+                }
+                claimedObj[claimKey] = true;
+                member.diamond = currentDiamond + diamondReward;
+                if (nextStars !== null) member.bintang = nextStars;
+                if (nextTickets !== null) member.playTickets = nextTickets;
                 return member;
             }, (error, committed) => {
                 if (error) alert('Gagal mengklaim hadiah. Coba lagi.');

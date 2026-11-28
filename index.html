@@ -8,8 +8,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     
-<link rel="stylesheet" href="00-base.css">
-<link rel="stylesheet" href="01-ordered-overrides.css">
+<link rel="stylesheet" href="css/00-base.css">
+<link rel="stylesheet" href="css/01-ordered-overrides.css">
 
 
 
@@ -126,7 +126,7 @@
                     </div>
                     <div class="shop-heading-actions">
                         <button type="button" class="marketplace-sell-button" onclick="openSellItemModal()">
-                            <span aria-hidden="true">＋</span> Jual
+                            <span aria-hidden="true">＋</span>Jual
                         </button>
                         <button type="button" class="shop-heading-back" onclick="showShopView('categories')" aria-label="Kembali ke kategori Shop">×</button>
                     </div>
@@ -140,30 +140,61 @@
             </div>
         </div>
 
-        <!-- TAB PINJAMAN: pilihan dan detail ditampilkan di dalam kategori -->
+        <!-- TAB PINJAMAN: navigasi dan halaman detail -->
         <div id="tab-pinjaman" class="tab-content">
-            <div id="loanCategoryView">
-                <div class="arcade-card" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa;margin-bottom:16px;text-align:center;" onclick="showLoanView('player')">
-                    <h3 style="font-size:1.15rem;color:white;">🤝 Pinjaman Player</h3>
-                    <p style="font-size:.85rem;opacity:.9;">Lihat dan atur penawaran pinjaman antar-player.</p>
+            <section id="loanCategoryView" class="loan-category-view">
+                <div class="shop-subview-heading loan-category-heading">
+                    <div class="shop-subview-heading-copy">
+                        <span class="store-eyebrow">RUANG MABAR • PINJAMAN</span>
+                        <h2>💎 Pusat Pinjaman</h2>
+                        <p>Pilih layanan pinjaman yang ingin kamu lihat.</p>
+                    </div>
                 </div>
-                <div class="arcade-card" style="background:linear-gradient(135deg,#0f172a,#334155);border-color:#94a3b8;margin-bottom:16px;text-align:center;" onclick="showLoanView('bank')">
-                    <h3 style="font-size:1.15rem;color:white;">🏦 Pinjaman Bank</h3>
-                    <p style="font-size:.85rem;opacity:.9;">Lihat pilihan pinjaman resmi yang disediakan admin.</p>
+                <nav class="loan-category-list" aria-label="Pilihan layanan pinjaman">
+                    <button type="button" class="loan-category-card loan-player-category" onclick="showLoanView('player')">
+                        <span class="loan-category-icon" aria-hidden="true">🤝</span>
+                        <span class="loan-category-copy"><strong>Pinjaman Antar-Player</strong><small>Lihat penawaran dan buat pinjaman bersama member lain.</small></span>
+                        <span class="loan-category-arrow" aria-hidden="true">›</span>
+                    </button>
+                    <button type="button" class="loan-category-card loan-bank-category" onclick="showLoanView('bank')">
+                        <span class="loan-category-icon" aria-hidden="true">🏦</span>
+                        <span class="loan-category-copy"><strong>Pinjaman Bank Resmi</strong><small>Lihat pilihan pinjaman resmi yang disediakan admin.</small></span>
+                        <span class="loan-category-arrow" aria-hidden="true">›</span>
+                    </button>
+                </nav>
+            </section>
+            <section id="loanPlayerView" class="loan-detail-view loan-player-view" style="display:none;">
+                <div class="shop-subview-heading loan-subview-heading loan-player-heading">
+                    <div class="shop-subview-heading-copy">
+                        <span class="store-eyebrow">RUANG MABAR • ANTAR-PLAYER</span>
+                        <h2 id="loansModalTitle">🤝 Penawaran Antar-Player</h2>
+                        <p>Atur penawaran atau lihat pinjaman yang tersedia dari member.</p>
+                    </div>
+                    <div class="shop-heading-actions">
+                        <button type="button" class="loan-create-button" onclick="openPlayerLoanEditor()"><span aria-hidden="true">＋</span>Buat</button>
+                        <button type="button" class="shop-heading-back" onclick="showLoanView('categories')" aria-label="Kembali ke pilihan pinjaman">×</button>
+                    </div>
                 </div>
-            </div>
-            <div id="loanPlayerView" style="display:none;">
-                <div class="loan-inline-heading"><h2 id="loansModalTitle">🤝 Pinjaman Player</h2><button type="button" class="btn-close" onclick="showLoanView('categories')" aria-label="Kembali ke pilihan pinjaman">&times;</button></div>
-                <div class="arcade-card" style="background:linear-gradient(135deg,#0f172a,#1e293b);border-color:#38bdf8;margin-bottom:16px;cursor:pointer;" onclick="openPlayerLoanEditor()">
-                    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;"><h3 style="font-size:1.05rem;color:#38bdf8;margin:0;">✏️ Buat Penawaran Pinjaman</h3><span style="font-size:1.8rem;">📝</span></div>
+                <section class="loan-section-placeholder loan-list-panel">
+                    <div class="loan-section-heading"><span>📋</span><div><h3>Penawaran Member</h3><p>Daftar penawaran dan status pinjaman antar-player.</p></div></div>
+                    <div id="playerLoanOffersList" class="loan-offers-list">Memuat penawaran...</div>
+                </section>
+            </section>
+            <section id="loanBankView" class="loan-detail-view loan-bank-view" style="display:none;">
+                <div class="shop-subview-heading loan-subview-heading loan-bank-heading">
+                    <div class="shop-subview-heading-copy">
+                        <span class="store-eyebrow">RUANG MABAR • BANK RESMI</span>
+                        <h2 id="loansBankTitle">🏦 Pinjaman Bank Resmi</h2>
+                        <p>Pilihan pinjaman resmi dengan ketentuan yang ditetapkan admin.</p>
+                    </div>
+                    <div class="shop-heading-actions"><button type="button" class="shop-heading-back" onclick="showLoanView('categories')" aria-label="Kembali ke pilihan pinjaman">×</button></div>
                 </div>
-                <section class="loan-section-placeholder" style="margin-top:14px;"><h3>📋 Daftar Penawaran Player</h3><div id="playerLoanOffersList" class="loan-offers-list">Memuat penawaran...</div></section>
-            </div>
-            <div id="loanBankView" style="display:none;">
-                <div class="loan-inline-heading"><h2 id="loansBankTitle">🏦 Pinjaman Bank</h2><button type="button" class="btn-close" onclick="showLoanView('categories')" aria-label="Kembali ke pilihan pinjaman">&times;</button></div>
-                <section class="loan-section-placeholder"><h3>🏦 Pinjaman Bank / Resmi</h3><p>Daftar pilihan pinjaman resmi dengan nominal dan bunga persentase yang ditetapkan admin.</p><div id="officialLoanOffersList" class="loan-offers-list">Memuat daftar pinjaman resmi...</div></section>
-                <p style="margin-top:10px;font-size:.82rem;color:#64748b;">Satu akun hanya dapat memiliki satu pinjaman aktif. Cicilan hanya bisa dibayar oleh akun peminjam.</p>
-            </div>
+                <section class="loan-section-placeholder loan-list-panel loan-bank-panel">
+                    <div class="loan-section-heading"><span>🏦</span><div><h3>Pilihan Pinjaman Resmi</h3><p>Periksa nominal dan total pelunasan sebelum mengajukan.</p></div></div>
+                    <div id="officialLoanOffersList" class="loan-offers-list">Memuat daftar pinjaman resmi...</div>
+                </section>
+                <p class="loan-policy-note">ℹ️ Satu akun hanya dapat memiliki satu pinjaman aktif. Cicilan hanya bisa dibayar oleh akun peminjam.</p>
+            </section>
         </div>
 
         <!-- TAB EVENT: mini-game dan shop event season -->
@@ -343,9 +374,11 @@
 
         <!-- TAB QUEST -->
         <div id="tab-quest" class="tab-content">
-            <div class="card-box">
-                <h3 style="color:#0f172a; margin-bottom:5px;">🎯 Quest Ruang Mabar</h3>
-                <p style="font-size:.82rem; color:#64748b;">Selesaikan misi, klaim hadiah, dan kumpulkan lebih banyak diamond serta star.</p>
+            <div class="quest-page">
+                <div class="quest-page-heading">
+                    <h3>🎯 Quest Ruang Mabar</h3>
+                    <p>Selesaikan misi, klaim hadiah, dan kumpulkan lebih banyak diamond serta star.</p>
+                </div>
                 <div class="quest-subtabs">
                     <button class="quest-subtab active" onclick="switchQuestTab('daily',this)">🌞 Misi Harian</button>
                     <button class="quest-subtab" onclick="switchQuestTab('weekly',this)">📅 Misi Mingguan</button>
@@ -376,24 +409,19 @@
         <!-- TAB CHAT -->
         <div id="tab-chat" class="tab-content">
             <div class="card-box" style="margin-bottom: 16px; background: transparent; border: none; box-shadow: none; padding: 0;">
-                <div class="card-box" style="margin-bottom: 16px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                        <span style="font-size: 1.2rem;">💬</span>
-                        <h3 style="color: #0f172a; font-size: 1.1rem;">Chat Ruang Mabar</h3>
-                    </div>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; width: 100%;">
-                        <input type="text" id="inputChatMessage" placeholder="Tulis pesan kamu..." onkeydown="if(event.key==='Enter') sendChatMessage()" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.95rem; outline: none; box-sizing: border-box;">
-                        <button class="btn-action" style="padding: 10px 16px;" onclick="sendChatMessage()">🚀 Kirim</button>
-                    </div>
-
-                    <small style="color: #64748b; font-size: 0.78rem;">*Ayo mengobrol! Pastikan kamu sudah login di tab <strong>Personalisasi</strong> agar identitas kamu muncul.</small>
+                <div class="chat-heading">
+                    <span aria-hidden="true">💬</span>
+                    <h3>Chat Ruang Mabar</h3>
                 </div>
 
                 <div id="loading-chat" class="empty-notice" style="margin-bottom: 12px;">Memuat obrolan...</div>
                 <div id="empty-chat" class="empty-notice" style="display: none; margin-bottom: 12px;">Belum ada pesan chat. Jadilah yang pertama mengirim pesan!</div>
                 
                 <div id="chat-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                <div class="chat-composer" role="group" aria-label="Tulis pesan chat">
+                    <input type="text" id="inputChatMessage" placeholder="Tulis pesan kamu..." aria-label="Tulis pesan kamu" onkeydown="if(event.key==='Enter' && !event.isComposing) sendChatMessage()">
+                    <button type="button" class="chat-send-button" onclick="sendChatMessage()" aria-label="Kirim pesan" title="Kirim pesan">➤</button>
+                </div>
             </div>
         </div>
 
@@ -408,11 +436,17 @@
                     <button class="leaderboard-category-btn active" data-leaderboard-category="diamond" onclick="selectLeaderboardCategory('diamond')">💎 Diamond</button>
                     <button class="leaderboard-category-btn" data-leaderboard-category="star" onclick="selectLeaderboardCategory('star')">⭐ Star</button>
                     <button class="leaderboard-category-btn" data-leaderboard-category="level" onclick="selectLeaderboardCategory('level')">📊 Level</button>
+                    <button class="leaderboard-category-btn" data-leaderboard-category="collection" onclick="selectLeaderboardCategory('collection')">🎒 Koleksi</button>
+                </div>
+                <div id="leaderboard-collection-panel" class="leaderboard-collection-panel" hidden>
+                    <div class="leaderboard-coming-soon-icon">🎒</div>
+                    <strong>Segera Hadir</strong>
+                    <p>Fitur Koleksi sedang disiapkan dan akan tersedia setelah penyesuaian selesai.</p>
                 </div>
                 <div id="leaderboard-claim-panel" class="leaderboard-claim-panel"></div>
                 <div id="leaderboard-status" class="empty-notice">Memuat papan peringkat...</div>
                 <div id="leaderboard-list" class="leaderboard-list"></div>
-                <p class="leaderboard-footnote">Hadiah untuk peringkat 1–100 berupa Diamond dan harus diklaim pada hari Minggu pukul 00.00–23.59. Peringkat diambil dari data awal minggu.</p>
+                <p id="leaderboard-footnote" class="leaderboard-footnote">Hadiah untuk peringkat 1–100 berupa Diamond dan harus diklaim pada hari Minggu pukul 00.00–23.59. Peringkat diambil dari data awal minggu.</p>
             </div>
         </div>
     </div>
@@ -433,19 +467,63 @@
     <!-- POPUP EDITOR PENAWARAN PINJAMAN PLAYER -->
     <div id="playerLoanEditorModal" class="modal-overlay" style="z-index:10020;">
         <div class="modal-content" style="max-width:520px;width:calc(100% - 28px);">
-            <div class="modal-header">
+            <div class="modal-header loan-editor-header">
                 <h2>✏️ Penawaran Pinjaman Player</h2>
-                <button class="btn-close" onclick="closeModal('playerLoanEditorModal')">&times;</button>
+                <div class="loan-editor-header-actions">
+                    <button type="button" class="loan-faq-button" onclick="openPlayerLoanFaq()" aria-label="FAQ Pinjaman Antar-Player" title="FAQ">?</button>
+                    <button type="button" class="btn-close" onclick="closeModal('playerLoanEditorModal')" aria-label="Tutup">&times;</button>
+                </div>
             </div>
             <div class="modal-body">
                 <p style="color:#64748b;margin-bottom:14px;">Atur nominal, bunga, dan tenggang waktu pinjaman.</p>
                 <div class="form-group"><label>Nominal pinjaman (💎):</label><input type="number" id="playerLoanAmount" min="1" step="1" placeholder="Contoh: 1000"></div>
                 <div class="form-group"><label>Bunga (%):</label><input type="number" id="playerLoanInterest" min="0" max="1000" step="0.1" placeholder="Contoh: 10"></div>
-                <div class="form-group"><label>Tenggang waktu (hari, 5–60):</label><input type="number" id="playerLoanDays" min="5" max="60" step="1" value="5"></div>
+                <div class="form-group"><label>Tenggang waktu (hari, 5–30):</label><input type="number" id="playerLoanDays" min="5" max="30" step="1" value="5"></div>
                 <button class="btn-action" onclick="savePlayerLoanOffer()">💾 Simpan Penawaran</button>
             </div>
         </div>
     </div>
+
+    <dialog id="playerLoanFaqDialog" class="loan-faq-dialog" aria-labelledby="playerLoanFaqTitle">
+        <div class="loan-faq-header">
+            <h2 id="playerLoanFaqTitle">❔ FAQ Pinjaman Antar-Player</h2>
+            <button type="button" class="loan-faq-close" onclick="document.getElementById('playerLoanFaqDialog').close()" aria-label="Tutup FAQ">×</button>
+        </div>
+        <div class="loan-faq-content">
+            <section>
+                <h3>Apa itu Pinjaman Antar-Player?</h3>
+                <p>Fitur ini memungkinkan member saling meminjamkan Diamond secara langsung. Member yang memiliki Diamond dapat membuat penawaran, sementara member lain dapat mengambil penawaran tersebut dan mengembalikannya melalui pembayaran bertahap atau pelunasan.</p>
+            </section>
+            <section>
+                <h3>Syarat Memberikan dan Mendapatkan Pinjaman</h3>
+                <ul>
+                    <li>Untuk mengajukan pinjaman, akun tidak boleh memiliki pinjaman aktif sebagai peminjam maupun sedang menjadi pemberi pinjaman.</li>
+                    <li>Untuk membuat penawaran, saldo Diamond harus mencukupi nominal yang ingin dipinjamkan.</li>
+                    <li>Diamond untuk penawaran akan ditahan dari saldo pemberi. Diamond tersebut dapat di-refund selama penawaran belum diambil oleh member lain.</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Sistem Pinjaman</h3>
+                <ul>
+                    <li>Setelah penawaran diambil, Diamond pinjaman masuk ke dompet peminjam. Setiap pembayaran cicilan dari peminjam langsung masuk ke dompet pemberi.</li>
+                    <li>Tenggang waktu dapat diatur mulai dari 5 hingga 30 hari.</li>
+                    <li>Bunga dapat ditentukan oleh pemberi dan akan ditambahkan ke total pinjaman yang harus dibayar.</li>
+                    <li>Nama pemberi dan peminjam akan tercantum pada kartu pinjaman, bersama status dan aktivitas pembayarannya.</li>
+                    <li>Peminjam dapat membayar secara bertahap sesuai kemampuan dan sisa Diamond yang dimiliki, selama pinjaman belum jatuh tempo.</li>
+                    <li>Kartu pinjaman akan dihapus 1 hari setelah pinjaman lunas atau dinyatakan tidak mampu membayar karena melewati jatuh tempo.</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Bagaimana jika pinjaman jatuh tempo dan belum lunas?</h3>
+                <ul>
+                    <li>Sisa utang yang belum dibayar akan dipotong dari saldo Diamond peminjam dan dialihkan ke dompet pemberi.</li>
+                    <li>Jika saldo peminjam tidak mencukupi, pemotongan tetap dicatat sesuai sisa kewajiban sehingga saldo dapat menjadi minus.</li>
+                    <li>Aktivitas pinjaman akan ditandai <strong>Belum Lunas</strong> dan statusnya dapat dilihat oleh semua member selama kartu masih ditampilkan.</li>
+                </ul>
+            </section>
+        </div>
+        <div class="loan-faq-footer"><button type="button" class="btn-action" onclick="document.getElementById('playerLoanFaqDialog').close()">Mengerti</button></div>
+    </dialog>
 
     <!-- MODAL PONDASI PINJAMAN -->
     <div id="createAccountModal" class="modal-overlay" style="z-index:1200;">
@@ -539,9 +617,12 @@
     <!-- MODAL JUAL ITEM -->
     <div id="sellItemModal" class="modal-overlay">
         <div class="modal-content" style="max-width: 420px;">
-            <div class="modal-header">
+            <div class="modal-header sell-modal-header">
                 <h2>🏷 Penjualan Hiasan</h2>
-                <button class="btn-close" onclick="closeModal('sellItemModal')">&times;</button>
+                <div class="sell-modal-header-actions">
+                    <button type="button" class="marketplace-faq-button" onclick="openMarketplaceSellFaq()" aria-label="FAQ Jual Marketplace" title="FAQ Jual Marketplace">?</button>
+                    <button class="btn-close" onclick="closeModal('sellItemModal')" aria-label="Tutup">&times;</button>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -563,6 +644,41 @@
                 </div>
                 <button class="btn-action" style="margin-top: 10px;" onclick="submitSellItemMarketplace()">Jual Sekarang</button>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL FAQ JUAL MARKETPLACE -->
+    <div id="marketplaceSellFaqModal" class="modal-overlay marketplace-sell-faq-overlay" role="dialog" aria-modal="true" aria-labelledby="marketplaceSellFaqTitle">
+        <div class="modal-content marketplace-sell-faq-content">
+            <div class="modal-header marketplace-sell-faq-header">
+                <h2 id="marketplaceSellFaqTitle">❔ FAQ Jual Marketplace</h2>
+                <button class="btn-close" onclick="closeModal('marketplaceSellFaqModal')" aria-label="Tutup FAQ">&times;</button>
+            </div>
+            <div class="modal-body marketplace-sell-faq-body">
+                <section class="marketplace-faq-section">
+                    <h3>Apa itu fitur Jual Marketplace?</h3>
+                    <p>Fitur ini memungkinkan kamu menawarkan item hiasan yang kamu miliki kepada member lain. Kamu bisa menentukan harga dalam Diamond dan jumlah stok yang ingin dijual. Jika ada member yang membeli, item akan dikirim ke pembeli dan Diamond hasil penjualan masuk ke saldo penjual.</p>
+                </section>
+                <section class="marketplace-faq-section">
+                    <h3>Syarat Menjual ke Marketplace</h3>
+                    <ul>
+                        <li>Kamu harus memiliki minimal <strong>2 item yang sama</strong> di Inventory sebelum bisa menjualnya.</li>
+                        <li>Harga wajib diisi, dengan nilai minimal <strong>1 Diamond</strong> untuk setiap item.</li>
+                        <li>Jumlah stok dapat kamu atur sesuai jumlah item yang dimiliki. Minimal <strong>1 item harus tetap tersisa</strong> di Inventory.</li>
+                    </ul>
+                </section>
+                <section class="marketplace-faq-section">
+                    <h3>Item yang Bisa Dijual</h3>
+                    <p>Saat ini, Marketplace menerima tiga kategori item hiasan berikut:</p>
+                    <ul>
+                        <li><strong>Hiasan Nama</strong></li>
+                        <li><strong>Hiasan Profil</strong></li>
+                        <li><strong>Hiasan Detail Profil</strong></li>
+                    </ul>
+                    <p class="marketplace-faq-note">Item VIP dan VIP Plus, termasuk hiasan khusus VIP, tidak dapat dijual di Marketplace.</p>
+                </section>
+            </div>
+            <div class="marketplace-sell-faq-footer"><button type="button" class="btn-action" onclick="closeModal('marketplaceSellFaqModal')">Mengerti</button></div>
         </div>
     </div>
 
@@ -879,21 +995,21 @@
         </div>
     </div>
 
-    <script src="00-core-and-shared-state.js"></script>
-<script src="01-member-and-loan-system.js"></script>
-<script src="02-admin-auth.js"></script>
-<script src="03-quest-system.js"></script>
-<script src="04-firebase-listeners.js"></script>
-<script src="05-profile-rendering.js"></script>
-<script src="06-profile-detail-and-inventory.js"></script>
-<script src="07-shop.js"></script>
-<script src="08-marketplace.js"></script>
-<script src="09-chat.js"></script>
-<script src="10-lucky-wheel.js"></script>
-<script src="11-super-wheel.js"></script>
-<script src="12-admin-tools.js"></script>
-<script src="13-season-event.js"></script>
-<script src="14-visual-effects.js"></script>
+    <script src="js/00-core-and-shared-state.js"></script>
+<script src="js/01-member-and-loan-system.js"></script>
+<script src="js/02-admin-auth.js"></script>
+<script src="js/03-quest-system.js"></script>
+<script src="js/04-firebase-listeners.js"></script>
+<script src="js/05-profile-rendering.js"></script>
+<script src="js/06-profile-detail-and-inventory.js"></script>
+<script src="js/07-shop.js"></script>
+<script src="js/08-marketplace.js"></script>
+<script src="js/09-chat.js"></script>
+<script src="js/10-lucky-wheel.js"></script>
+<script src="js/11-super-wheel.js"></script>
+<script src="js/12-admin-tools.js"></script>
+<script src="js/13-season-event.js"></script>
+<script src="js/14-visual-effects.js"></script>
 
 
 
@@ -903,6 +1019,28 @@
 
 
 
+
+
+    <!-- KONFIRMASI PEMBELIAN SHOP DAN MARKETPLACE -->
+    <dialog id="purchaseConfirmDialog" class="purchase-confirm-dialog" aria-labelledby="purchaseConfirmTitle" aria-describedby="purchaseConfirmDescription">
+        <div class="purchase-confirm-header">
+            <span class="purchase-confirm-icon" aria-hidden="true">🛒</span>
+            <h2 id="purchaseConfirmTitle">Konfirmasi Pembelian</h2>
+        </div>
+        <div class="purchase-confirm-body">
+            <p class="purchase-confirm-question">Kamu yakin ingin membeli item ini?</p>
+            <div class="purchase-confirm-item">
+                <strong id="purchaseConfirmName">Nama Item</strong>
+                <span id="purchaseConfirmType">Jenis Item</span>
+                <p id="purchaseConfirmDescription">Deskripsi item.</p>
+            </div>
+            <div class="purchase-confirm-price" id="purchaseConfirmPrice">💎 0 Diamond</div>
+        </div>
+        <form method="dialog" class="purchase-confirm-actions">
+            <button type="submit" value="cancel" class="purchase-confirm-no" autofocus>Tidak</button>
+            <button type="submit" value="confirm" class="purchase-confirm-yes">Iya</button>
+        </form>
+    </dialog>
 
 </body>
 </html>
